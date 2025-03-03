@@ -2,7 +2,9 @@
 // Model for setting system configs as we generate this or that page.
 // Custom this boardgame module: the allowed configs have to do with questions of
 // card size, how we print things, etc.
-define(["dojo/domReady!"], function () {
+define(["sharedJavascript/genericUtils", "dojo/domReady!"], function (
+  genericUtils
+) {
   var systemConfigs = {};
 
   var validSystemConfigKeys = {
@@ -11,10 +13,11 @@ define(["dojo/domReady!"], function () {
     demoBoard: true,
     skipBacks: true,
     smallCards: true,
+    smallSquares: true,
   };
 
   function sanityCheckConfigs(configs) {
-    sanityCheckTable(configs, validSystemConfigKeys);
+    genericUtils.sanityCheckTable(configs, validSystemConfigKeys);
   }
 
   function setSystemConfigs(c) {
