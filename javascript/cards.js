@@ -26,14 +26,15 @@ define([
 
   var ttsCardsPerPage = 70;
 
-  function setCardSize(node, configs) {
-    debugLog.debugLog("CardSize", "Doug: setCardSize configs = ", configs);
-    if (configs.smallSquares) {
+  function setCardSize(node) {
+    var sc = systemConfigs.getSystemConfigs();
+    debugLog.debugLog("CardSize", "Doug: setCardSize sc = ", sc);
+    if (sc.smallSquares) {
       domStyle.set(node, {
         width: `${gameUtils.smallCardWidth}px`,
         height: `${gameUtils.smallCardWidth}px`,
       });
-    } else if (configs.smallCards) {
+    } else if (sc.smallCards) {
       domStyle.set(node, {
         width: `${gameUtils.smallCardWidth}px`,
         height: `${gameUtils.smallCardHeight}px`,
@@ -46,11 +47,16 @@ define([
     }
   }
 
-  function addCardBack(parent, title, color) {
+  function addCardBack(parent, title, color, opt_backCallback) {
+    if (opt_backCallback) {
+      var node = opt_backCallback(parent, title, color);
+      return node;
+    }
+
     var sc = systemConfigs.getSystemConfigs();
     var node = gameUtils.addCard(parent, ["back"], "back");
 
-    setCardSize(node, sc);
+    setCardSize(node);
 
     var innerNode = gameUtils.addDiv(node, ["inset"], "inset");
     var otherColor = gameUtils.blendHexColors(color, "#ffffff");
@@ -64,19 +70,15 @@ define([
     style["font-size"] = sc.smallCards
       ? `${gameUtils.smallCardBackFontSize}px`
       : `${gameUtils.cardBackFontSize}px`;
-    if (sc.altCardBackTextColor) {
-      style["color"] = sc.altCardBackTextColor;
-    }
     domStyle.set(title, style);
 
     return node;
   }
 
   function addCardFront(parent, classArray, id) {
-    var sc = systemConfigs.getSystemConfigs();
     classArray.push("front");
     var node = gameUtils.addCard(parent, classArray, id);
-    setCardSize(node, sc);
+    setCardSize(node);
 
     return node;
   }
@@ -120,7 +122,7 @@ define([
     return addBoxCardSingleNut(parent, nutType, index, opt_classArray);
   }
 
-  function addCards(title, color, numCards, contentCallback) {
+  function addCards(title, color, numCards, frontCallback, opt_backCallback) {
     var sc = systemConfigs.getSystemConfigs();
     var bodyNode = dom.byId("body");
 
@@ -142,7 +144,7 @@ define([
         if (timeForNewPage == 0) {
           pageOfFronts = gameUtils.addPageOfItems(bodyNode);
         }
-        contentCallback(pageOfFronts, i);
+        frontCallback(pageOfFronts, i);
       }
 
       if (!sc.skipBacks) {
@@ -151,7 +153,7 @@ define([
           if (timeForNewPage == 0) {
             pageOfBacks = gameUtils.addPageOfItems(bodyNode, ["back"]);
           }
-          addCardBack(pageOfBacks, title, color);
+          addCardBack(pageOfBacks, title, color, opt_backCallback);
         }
       }
     } else {
@@ -163,28 +165,31 @@ define([
             pageOfBacks = gameUtils.addPageOfItems(bodyNode, ["back"]);
           }
         }
-        contentCallback(pageOfFronts, i);
+        frontCallback(pageOfFronts, i);
         if (!sc.skipBacks) {
-          addCardBack(pageOfBacks, title, color);
+          addCardBack(pageOfBacks, title, color, opt_backCallback);
         }
       }
     }
   }
 
   function getNumCardsFromConfigs(cardConfigs) {
+    console.log("Doug: getting numToyComponentCards get the count");
     var numCards = 0;
     for (var i = 0; i < cardConfigs.length; i++) {
-      numCards = numCards + cardConfigs[i].count;
+      var instanceCount = getInstanceCountFromConfig(cardConfigs, i);
+      numCards = numCards + instanceCount;
     }
     return numCards;
   }
 
-  function getCardConfigFromIndex(configs, index) {
-    for (var i = 0; i < configs.length; i++) {
-      if (index < configs[i].count) {
-        return configs[i];
+  function getCardConfigFromIndex(cardConfigs, index) {
+    for (var i = 0; i < cardConfigs.length; i++) {
+      var instanceCount = getInstanceCountFromConfig(cardConfigs, i);
+      if (index < instanceCount) {
+        return cardConfigs[i];
       }
-      index -= configs[i].count;
+      index -= instanceCount;
     }
     return null;
   }
@@ -230,27 +235,14 @@ define([
 
   // This returned object becomes the defined value of this module
   return {
+    getCardConfigFromIndex: getCardConfigFromIndex,
     addFormattedCardFront: addFormattedCardFront,
     getNumCardsFromConfigs: getNumCardsFromConfigs,
     addNthBoxCardSingleNut: addNthBoxCardSingleNut,
     addBoxCardSingleNut: addBoxCardSingleNut,
     getInstanceCountFromConfig: getInstanceCountFromConfig,
-
-    getCardDescAtIndex: function (index, descs) {
-      var count = 0;
-      for (key in descs) {
-        var cardDesc = descs[key];
-        var contribution = cardDesc.number ? cardDesc.number : 1;
-        count = count + contribution;
-        if (index < count) {
-          return cardDesc;
-        }
-      }
-      return null;
-    },
-
     addCardFront: addCardFront,
-
     addCards: addCards,
+    setCardSize: setCardSize,
   };
 });

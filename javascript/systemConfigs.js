@@ -8,11 +8,23 @@ define(["sharedJavascript/genericUtils", "dojo/domReady!"], function (
   var systemConfigs = {};
 
   var validSystemConfigKeys = {
-    ttsDie: true,
-    ttsCards: true,
+    // We are generating a png file for rules or whatever:
+    // a board with game state.
     demoBoard: true,
+    // Print landscape.
+    landscape: true,
+    // Making png image we can import for TTS to make a deck of cards.
+    ttsCards: true,
+    // Making png image we can import for TTS to make a die.
+    ttsDie: true,
+    // Do not render card backs.
     skipBacks: true,
+    // Do all card fronts separate from backs: we are not gonna print double sided,
+    // we print fronts and backs and then stick em together.
+    separateBacks: true,
+    // Mini playing cards.
     smallCards: true,
+    // Mini squares.
     smallSquares: true,
   };
 

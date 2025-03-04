@@ -1,7 +1,7 @@
 define(["dojo/domReady!"], function () {
   var debugFlags = {
-    CardSize: "off",
-    Random: "on",
+    SantaCards: "on",
+    Random: "off",
   };
 
   function debugLog(flag, statement) {
