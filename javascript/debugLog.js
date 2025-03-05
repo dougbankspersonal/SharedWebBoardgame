@@ -3,6 +3,7 @@ define(["dojo/domReady!"], function () {
     SantaCards: "off",
     Random: "off",
     Refactor: "on",
+    BoxRobotCards: "off",
   };
 
   function debugLog(flag, statement) {

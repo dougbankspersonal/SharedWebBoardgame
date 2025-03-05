@@ -97,33 +97,20 @@ define([
   }
 
   function getPageWidth() {
-    debugLog.debugLog("Refactor", "Doug: getPageWidth");
     var sc = systemConfigs.getSystemConfigs();
-    debugLog.debugLog("Refactor", "Doug: 001 sc = " + JSON.stringify(sc));
-    if (sc.demoBoard || sc.ttsCards || sc.ttsDie) {
-      debugLog.debugLog("Refactor", "Doug: returning null");
+    if (sc.pageless) {
       return null;
     }
     if (sc.landscape) {
-      debugLog.debugLog(
-        "Refactor",
-        "Doug: returning genericMeasurements.printedPageLandscapeWidth = " +
-          genericMeasurements.printedPageLandscapeWidth
-      );
       return genericMeasurements.printedPageLandscapeWidth;
     }
 
-    debugLog.debugLog(
-      "Refactor",
-      "Doug: returning genericMeasurements.printedPagePortraitWidth = " +
-        genericMeasurements.printedPagePortraitWidth
-    );
     return genericMeasurements.printedPagePortraitWidth;
   }
 
   var getPageHeight = function () {
     var sc = systemConfigs.getSystemConfigs();
-    if (sc.demoBoard || sc.ttsCards || sc.ttsDie) {
+    if (sc.pageless) {
       return null;
     }
     if (sc.landscape) {
@@ -159,21 +146,19 @@ define([
       });
     }
 
-    if (!sc.ttsCards && !sc.ttsDie && !sc.demoBoard) {
+    if (!sc.pageless) {
       domStyle.set(pageOfItems, {
         padding: genericMeasurements.pageOfItemsPaddingPx + "px",
       });
     }
 
     var childClassArray = ["page_of_items_contents"];
-    if (sc.ttsCards) {
-      childClassArray.push("tts_cards");
-    } else if (sc.ttsDie) {
-      childClassArray.push("tts_die");
-    } else if (sc.demoBoard) {
-      childClassArray.push("demo_board");
+
+    var extraClass = sc.extraClassForPageOfItemsContents;
+    if (extraClass) {
+      childClassArray.push(extraClass);
     } else {
-      childClassArray.push("non_tts");
+      childClassArray.push("normal");
     }
 
     var pageOfItemsContents = addDiv(
@@ -182,15 +167,27 @@ define([
       "pageOfItemsContents"
     );
 
+    if (sc.columnsPerPage) {
+      domStyle.set(pageOfItemsContents, {
+        "grid-template-columns": `repeat(${sc.columnsPerPage}, min-content)`,
+      });
+    }
+    if (sc.gridGap !== null) {
+      debugLog.debugLog(
+        "Refactor",
+        "Doug: addPageOfItems: sc.gridGap = " + sc.gridGap
+      );
+      domStyle.set(pageOfItemsContents, {
+        gap: `${sc.gridGap}px`,
+      });
+    }
+
     return pageOfItemsContents;
   }
 
   function addCard(parent, opt_classArray, opt_id) {
     console.assert(parent, "parent is null");
     var classArray = genericUtils.growOptStringArray(opt_classArray, "card");
-    if (systemConfigs.demoBoard) {
-      classArray.push("demoBoard");
-    }
     var cardId;
     if (opt_id) {
       cardId = opt_id;
@@ -199,7 +196,7 @@ define([
       cardNumber++;
     }
     var node = addDiv(parent, classArray, cardId);
-    if (systemConfigs.ttsCards) {
+    if (systemConfigs.cardsNoMargin) {
       domStyle.set(node, {
         "margin-bottom": "0px",
         "margin-right": "0px",

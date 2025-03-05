@@ -1,4 +1,22 @@
 define(["dojo/domReady!"], function () {
+  function getNumberThatFitAccountingForGap(containerWidth, itemWidth, gap) {
+    var total = 0;
+    var count = 0;
+    while (1) {
+      if (total == 0) {
+        total += itemWidth;
+      } else {
+        total += itemWidth + gap;
+      }
+      if (total > containerWidth) {
+        break;
+      } else {
+        count++;
+      }
+    }
+    return count;
+  }
+
   var standardBorderWidth = 2;
   var pageOfItemsPaddingPx = 10;
 
@@ -15,12 +33,25 @@ define(["dojo/domReady!"], function () {
 
   var adjustedPageWidth = printedPagePortraitWidth - 2 * pagePadding;
   var adjustedPageHeight = printedPagePortraitHeight - 2 * pagePadding;
+  var cardGap = 4;
 
-  var cardColumnsPerPage = Math.floor(adjustedPageWidth / cardWidth);
-  var cardRowsPerPage = Math.floor(adjustedPageHeight / cardHeight);
+  var cardColumnsPerPage = getNumberThatFitAccountingForGap(
+    adjustedPageWidth,
+    cardWidth,
+    cardGap
+  );
+  var cardRowsPerPage = getNumberThatFitAccountingForGap(
+    adjustedPageHeight,
+    cardHeight,
+    cardGap
+  );
   var cardsPerPage = cardColumnsPerPage * cardRowsPerPage;
 
+  var ttsCardsPerPage = 70;
+
   return {
+    getNumberThatFitAccountingForGap: getNumberThatFitAccountingForGap,
+
     standardBorderWidth: standardBorderWidth,
     pageOfItemsPaddingPx: pageOfItemsPaddingPx,
     printedPagePortraitWidth: printedPagePortraitWidth,
@@ -37,5 +68,7 @@ define(["dojo/domReady!"], function () {
     cardColumnsPerPage: cardColumnsPerPage,
     cardRowsPerPage: cardRowsPerPage,
     cardsPerPage: cardsPerPage,
+    ttsCardsPerPage: ttsCardsPerPage,
+    cardGap: cardGap,
   };
 });

@@ -16,8 +16,6 @@ define([
   htmlUtils,
   systemConfigs
 ) {
-  var ttsCardsPerPage = 70;
-
   function setCardSize(node) {
     var sc = systemConfigs.getSystemConfigs();
     debugLog.debugLog("CardSize", "Doug: setCardSize sc = ", sc);
@@ -69,24 +67,6 @@ define([
     return node;
   }
 
-  function addNutDesc(parent, nutType) {
-    var wrapper = htmlUtils.addDiv(parent, ["wrapper"], "wrapper");
-    var nutPropsTopNode = htmlUtils.addDiv(wrapper, ["nutProps"], "nutProps");
-
-    var nutType;
-    if (nutType == -1) {
-      nutType = "Wild";
-    }
-
-    var prop = htmlUtils.addDiv(
-      nutPropsTopNode,
-      ["nutProp", "nut_type"],
-      "nut_type"
-    );
-    htmlUtils.addImage(prop, ["nutType", nutType], "nut_type");
-    return wrapper;
-  }
-
   function addCards(title, color, numCards, frontCallback, opt_backCallback) {
     var sc = systemConfigs.getSystemConfigs();
     var bodyNode = dom.byId("body");
@@ -94,32 +74,22 @@ define([
     var pageOfFronts;
     var pageOfBacks;
 
-    var timeForNewPageDivisor;
-    if (sc.ttsCards) {
-      timeForNewPageDivisor = ttsCardsPerPage;
-    } else if (sc.smallCards) {
-      timeForNewPageDivisor = smallCardsPerPage;
-    } else {
-      timeForNewPageDivisor = genericMeasurements.cardsPerPage;
-    }
+    var cardsPerPage = sc.cardsPerPage
+      ? sc.cardsPerPage
+      : genericMeasurements.cardsPerPage;
 
     if (sc.separateBacks) {
       for (let i = 0; i < numCards; i++) {
-        var timeForNewPage = i % timeForNewPageDivisor;
+        var timeForNewPage = i % cardsPerPage;
         if (timeForNewPage == 0) {
           pageOfFronts = htmlUtils.addPageOfItems(bodyNode);
         }
         frontCallback(pageOfFronts, i);
       }
 
-      debugLog.debugLog(
-        "Refactor",
-        "Doug: addCards sc.skipBacks = ",
-        sc.skipBacks
-      );
-      if (!sc.skipBacks) {
+      if (!sc.skipCardBacks) {
         for (let i = 0; i < numCards; i++) {
-          var timeForNewPage = i % timeForNewPageDivisor;
+          var timeForNewPage = i % cardsPerPage;
           if (timeForNewPage == 0) {
             pageOfBacks = htmlUtils.addPageOfItems(bodyNode, ["back"]);
           }
@@ -128,15 +98,15 @@ define([
       }
     } else {
       for (let i = 0; i < numCards; i++) {
-        var timeForNewPage = i % timeForNewPageDivisor;
+        var timeForNewPage = i % cardsPerPage;
         if (timeForNewPage == 0) {
           pageOfFronts = htmlUtils.addPageOfItems(bodyNode);
-          if (!sc.skipBacks) {
+          if (!sc.skipCardBacks) {
             pageOfBacks = htmlUtils.addPageOfItems(bodyNode, ["back"]);
           }
         }
         frontCallback(pageOfFronts, i);
-        if (!sc.skipBacks) {
+        if (!sc.skipCardBacks) {
           addCardBack(pageOfBacks, title, color, opt_backCallback);
         }
       }
@@ -144,31 +114,25 @@ define([
   }
 
   function getNumCardsFromConfigs(cardConfigs) {
-    console.log("Doug: getting numToyComponentCards get the count");
     var numCards = 0;
     for (var i = 0; i < cardConfigs.length; i++) {
       var instanceCount = getInstanceCountFromConfig(cardConfigs, i);
+      debugLog.debugLog(
+        "BoxRobotCards",
+        "Doug: getNumCardsFromConfigs i = " +
+          i +
+          ", instanceCount = " +
+          instanceCount
+      );
+
       numCards = numCards + instanceCount;
     }
     return numCards;
   }
 
   function getCardConfigFromIndex(cardConfigs, index) {
-    debugLog.debugLog(
-      "Refactor",
-      "Doug: getCardConfigFromIndex index = " + JSON.stringify(cardConfigs)
-    );
-    debugLog.debugLog(
-      "Refactor",
-      "Doug: getCardConfigFromIndex cardConfigs = " +
-        JSON.stringify(cardConfigs)
-    );
     for (var i = 0; i < cardConfigs.length; i++) {
       var instanceCount = getInstanceCountFromConfig(cardConfigs, i);
-      debugLog.debugLog(
-        "Refactor",
-        "Doug: getCardConfigFromIndex instanceCount = " + instanceCount
-      );
       if (index < instanceCount) {
         return cardConfigs[i];
       }
@@ -204,10 +168,10 @@ define([
 
   function getInstanceCountFromConfig(cardConfigs, index) {
     var sc = systemConfigs.getSystemConfigs();
-    if (sc.singleCardInstance) {
-      // TTS is dumb, needs at least 12 cards.
-      if (cardConfigs.length < 12 && index == 0) {
-        return 12 - (cardConfigs.length - 1);
+    if (sc.minCardCount) {
+      // TTS enforces a min card count.
+      if (cardConfigs.length < sc.minCardCount && index == 0) {
+        return sc.minCardCount - (cardConfigs.length - 1);
       } else {
         return 1;
       }

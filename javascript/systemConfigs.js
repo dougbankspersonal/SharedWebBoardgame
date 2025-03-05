@@ -4,37 +4,127 @@
 // card size, how we print things, etc.
 define([
   "sharedJavascript/debugLog",
+  "sharedJavascript/genericMeasurements",
   "sharedJavascript/genericUtils",
   "dojo/domReady!",
-], function (debugLog, genericUtils) {
+], function (debugLog, genericMeasurements, genericUtils) {
   var _systemConfigs = {};
 
   var validSystemConfigKeys = {
-    // We are generating a png file for rules or whatever:
-    // a board with game state.
-    demoBoard: true,
-    // Print landscape.
-    landscape: true,
-    // Making png image we can import for TTS to make a deck of cards.
-    ttsCards: true,
-    // Making png image we can import for TTS to make a die.
-    ttsDie: true,
-    // Do not render card backs.
-    skipBacks: true,
-    // Do all card fronts separate from backs: we are not gonna print double sided,
-    // we print fronts and backs and then stick em together.
-    separateBacks: true,
+    // How many cards before we add a page break?
+    cardsPerPage: true,
+
     // Alt size of cards.
     altCardWidth: true,
     altCardHeight: true,
     altCardBackFontSize: true,
+
+    // Thing is pageless, we don't want boundaries on size or page breaks.
+    pageless: true,
+    // For cards, no margin around them.
+    cardsNoMargin: true,
+    // Extra class to apply to page_of_items div.
+    extraClassForPageOfItemsContents: true,
+
+    columnsPerPage: true,
+    gridGap: true,
+
+    // Do not render card backs.
+    skipCardBacks: true,
+
+    // Print landscape.
+    landscape: true,
+
+    // Do all card fronts separate from backs: we are not gonna print double sided,
+    // we print fronts and backs and then stick em together.
+    separateBacks: true,
+
+    // TTS requires at least 12 cards.
+    minCardCount: true,
   };
 
   function sanityCheckConfigs(configs) {
     genericUtils.sanityCheckTable(configs, validSystemConfigKeys);
   }
 
-  function setSystemConfigs(sc) {
+  function addCardSizingSystemConfigs(
+    opt_cardWidth,
+    opt_cardHeight,
+    opt_cardBackFontSize,
+    opt_scInput
+  ) {
+    var sc = opt_scInput ? opt_scInput : {};
+    var cardWidth = opt_cardWidth
+      ? opt_cardWidth
+      : genericMeasurements.cardWidth;
+    var cardHeight = opt_cardHeight
+      ? opt_cardHeight
+      : genericMeasurements.cardHeight;
+    var cardsPerPage =
+      Math.floor(genericMeasurements.adjustedPageWidth / cardWidth) *
+      Math.floor(genericMeasurements.adjustedPageHeight / cardHeight);
+    sc.cardsPerPage = cardsPerPage;
+    sc.altCardWidth = cardWidth;
+    sc.altCardHeight = cardHeight;
+    sc.altCardBackFontSize = opt_cardBackFontSize;
+    sc.extraClassForPageOfItemsContents = "cards";
+    sc.columnsPerPage = genericMeasurements.cardColumnsPerPage;
+    sc.gridGap = genericMeasurements.cardGap;
+
+    return sc;
+  }
+
+  function addTTSCardSystemConfigs(
+    opt_cardWidth,
+    opt_cardHeight,
+    opt_cardBackFontSize,
+    opt_scInput
+  ) {
+    var sc = addCardSizingSystemConfigs(
+      opt_cardWidth,
+      opt_cardHeight,
+      opt_cardBackFontSize,
+      opt_scInput
+    );
+    // Apply tweaks.
+    sc.pageless = true;
+    sc.cardsNoMargin = true;
+    sc.skipCardBacks = true;
+    sc.minCardCount = 12;
+    sc.cardsPerPage = genericMeasurements.ttsCardsPerPage;
+    sc.columnsPerPage = 10;
+    sc.gridGap = 0;
+    return sc;
+  }
+
+  function addTTSDieSystemConfigs(opt_scInput) {
+    var sc = opt_scInput ? opt_scInput : {};
+    sc.pageless = true;
+    sc.columnsPerPage = 3;
+    sc.gridGap = 0;
+    return sc;
+  }
+
+  function addGameBoardSystemConfigs(opt_scInput) {
+    var sc = opt_scInput ? opt_scInput : {};
+    sc.columnsPerPage = 1;
+    sc.gridGap = 0;
+    return sc;
+  }
+
+  function addTileSystemConfigs(gridGap, columnsPerPage, opt_scInput) {
+    var sc = opt_scInput ? opt_scInput : {};
+    sc.columnsPerPage = columnsPerPage;
+    sc.gridGap = gridGap;
+    debugLog.debugLog(
+      "Refactor",
+      "Doug: addTileSystemConfigs: sc = " + JSON.stringify(sc)
+    );
+    return sc;
+  }
+
+  function setSystemConfigs(opt_sc) {
+    var sc = opt_sc ? opt_sc : {};
     sanityCheckConfigs(sc);
     _systemConfigs = sc;
     // tts -> should avoid card backs.
@@ -42,9 +132,6 @@ define([
       "Refactor",
       "Doug: _systemConfigs = " + JSON.stringify(_systemConfigs)
     );
-    if (_systemConfigs.ttsCards) {
-      _systemConfigs.skipBacks = true;
-    }
   }
 
   function getSystemConfigs() {
@@ -55,5 +142,10 @@ define([
   return {
     setSystemConfigs: setSystemConfigs,
     getSystemConfigs: getSystemConfigs,
+    addCardSizingSystemConfigs: addCardSizingSystemConfigs,
+    addTTSCardSystemConfigs: addTTSCardSystemConfigs,
+    addTTSDieSystemConfigs: addTTSDieSystemConfigs,
+    addGameBoardSystemConfigs: addGameBoardSystemConfigs,
+    addTileSystemConfigs: addTileSystemConfigs,
   };
 });

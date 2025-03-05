@@ -21,38 +21,10 @@ body {
   transform: translate(-50%, -50%);
 }
 
-.page_of_items_contents.non_tts {
-  display: flex; /* Flexbox is the magic here */
-  flex-wrap: wrap; /* Break onto new rows */
-  row-gap: 5px; /* Optional spacing between items */
-  column-gap: 5px; /* Optional spacing between items */
-  width: max-content; /* Makes the parent snugly fit its children */
-  justify-content: center;
-}
-
-.page_of_items_contents.demo_baord {
+.page_of_items_contents {
   display: grid;
-  grid-template-columns: repeat(1, min-content); /* Exactly 10 columns */
-  row-gap: 0px; /* Optional spacing between items */
-  column-gap: 0px; /* Optional spacing between items */
-  justify-content: start; /* Align grid to the left */
-  width: max-content; /* Makes the parent only as wide as its content */
-}
-
-.page_of_items_contents.tts_cards {
-  display: grid;
-  grid-template-columns: repeat(10, min-content); /* Exactly 10 columns */
-  row-gap: 0px; /* Optional spacing between items */
-  column-gap: 0px; /* Optional spacing between items */
-  justify-content: start; /* Align grid to the left */
-  width: max-content; /* Makes the parent only as wide as its content */
-}
-
-.page_of_items_contents.tts_die {
-  display: grid;
-  grid-template-columns: repeat(3, min-content); /* Exactly 3 columns */
-  row-gap: 0px; /* Optional spacing between items */
-  column-gap: 0px; /* Optional spacing between items */
-  justify-content: start; /* Align grid to the left */
-  width: max-content; /* Makes the parent only as wide as its content */
+  gap: 5px; /* Optional space between items */
+  justify-content: start; /* Align items to the left */
+  align-items: start; /* Compress rows to the top */
+  width: max-content; /* Makes the container shrink-wrap its items */
 }
