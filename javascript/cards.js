@@ -154,8 +154,21 @@ define([
   }
 
   function getCardConfigFromIndex(cardConfigs, index) {
+    debugLog.debugLog(
+      "Refactor",
+      "Doug: getCardConfigFromIndex index = " + JSON.stringify(cardConfigs)
+    );
+    debugLog.debugLog(
+      "Refactor",
+      "Doug: getCardConfigFromIndex cardConfigs = " +
+        JSON.stringify(cardConfigs)
+    );
     for (var i = 0; i < cardConfigs.length; i++) {
       var instanceCount = getInstanceCountFromConfig(cardConfigs, i);
+      debugLog.debugLog(
+        "Refactor",
+        "Doug: getCardConfigFromIndex instanceCount = " + instanceCount
+      );
       if (index < instanceCount) {
         return cardConfigs[i];
       }

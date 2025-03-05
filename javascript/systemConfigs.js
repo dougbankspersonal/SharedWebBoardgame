@@ -40,8 +40,7 @@ define([
     // tts -> should avoid card backs.
     debugLog.debugLog(
       "Refactor",
-      "Doug: _systemConfigs = ",
-      JSON.stringify(_systemConfigs)
+      "Doug: _systemConfigs = " + JSON.stringify(_systemConfigs)
     );
     if (_systemConfigs.ttsCards) {
       _systemConfigs.skipBacks = true;
