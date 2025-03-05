@@ -2,10 +2,12 @@
 // Model for setting system configs as we generate this or that page.
 // Custom this boardgame module: the allowed configs have to do with questions of
 // card size, how we print things, etc.
-define(["sharedJavascript/genericUtils", "dojo/domReady!"], function (
-  genericUtils
-) {
-  var systemConfigs = {};
+define([
+  "sharedJavascript/debugLog",
+  "sharedJavascript/genericUtils",
+  "dojo/domReady!",
+], function (debugLog, genericUtils) {
+  var _systemConfigs = {};
 
   var validSystemConfigKeys = {
     // We are generating a png file for rules or whatever:
@@ -22,27 +24,32 @@ define(["sharedJavascript/genericUtils", "dojo/domReady!"], function (
     // Do all card fronts separate from backs: we are not gonna print double sided,
     // we print fronts and backs and then stick em together.
     separateBacks: true,
-    // Mini playing cards.
-    smallCards: true,
-    // Mini squares.
-    smallSquares: true,
+    // Alt size of cards.
+    altCardWidth: true,
+    altCardHeight: true,
+    altCardBackFontSize: true,
   };
 
   function sanityCheckConfigs(configs) {
     genericUtils.sanityCheckTable(configs, validSystemConfigKeys);
   }
 
-  function setSystemConfigs(c) {
-    sanityCheckConfigs(c);
-    systemConfigs = c;
+  function setSystemConfigs(sc) {
+    sanityCheckConfigs(sc);
+    _systemConfigs = sc;
     // tts -> should avoid card backs.
-    if (systemConfigs.ttsCards) {
-      systemConfigs.skipBacks = true;
+    debugLog.debugLog(
+      "Refactor",
+      "Doug: _systemConfigs = ",
+      JSON.stringify(_systemConfigs)
+    );
+    if (_systemConfigs.ttsCards) {
+      _systemConfigs.skipBacks = true;
     }
   }
 
   function getSystemConfigs() {
-    return systemConfigs;
+    return _systemConfigs;
   }
 
   // This returned object becomes the defined value of this module

@@ -4,6 +4,7 @@ define([
   "dojo/dom-style",
   "sharedJavascript/debugLog",
   "sharedJavascript/genericMeasurements",
+  "sharedJavascript/htmlUtils",
   "sharedJavascript/systemConfigs",
   "dojo/domReady!",
 ], function (
@@ -12,47 +13,24 @@ define([
   domStyle,
   debugLog,
   genericMeasurements,
+  htmlUtils,
   systemConfigs
 ) {
-  var adjustedPageWidth =
-    genericMeasurements.printedPagePortraitWidth -
-    2 * genericMeasurements.pagePadding;
-  var adjustedPageHeight =
-    gameUtils.printedPagePortraitHeight - 2 * genericMeasurements.pagePadding;
-  var smallCardFitHorizontally = Math.floor(
-    adjustedPageWidth / gameUtils.smallCardWidth
-  );
-  var smallCardFitVertically = Math.floor(
-    adjustedPageHeight / gameUtils.smallCardHeight
-  );
-
-  var cardFitHorizontally = Math.floor(adjustedPageWidth / gameUtils.cardWidth);
-  var cardFitVertically = Math.floor(adjustedPageHeight / gameUtils.cardHeight);
-
-  var smallCardsPerPage = smallCardFitHorizontally * smallCardFitVertically;
-  var cardsPerPage = cardFitHorizontally * cardFitVertically;
-
   var ttsCardsPerPage = 70;
 
   function setCardSize(node) {
     var sc = systemConfigs.getSystemConfigs();
     debugLog.debugLog("CardSize", "Doug: setCardSize sc = ", sc);
-    if (sc.smallSquares) {
-      domStyle.set(node, {
-        width: `${gameUtils.smallCardWidth}px`,
-        height: `${gameUtils.smallCardWidth}px`,
-      });
-    } else if (sc.smallCards) {
-      domStyle.set(node, {
-        width: `${gameUtils.smallCardWidth}px`,
-        height: `${gameUtils.smallCardHeight}px`,
-      });
-    } else {
-      domStyle.set(node, {
-        width: `${gameUtils.cardWidth}px`,
-        height: `${gameUtils.cardHeight}px`,
-      });
-    }
+    var cardWidth = sc.altCardWidth
+      ? sc.altCardWidth
+      : genericMeasurements.cardWidth;
+    var cardHeight = sc.altCardHeight
+      ? sc.altCardHeight
+      : genericMeasurements.cardHeight;
+    domStyle.set(node, {
+      width: `${cardWidth}px`,
+      height: `${cardHeight}px`,
+    });
   }
 
   function addCardBack(parent, title, color, opt_backCallback) {
@@ -75,9 +53,9 @@ define([
     domStyle.set(innerNode, "background", gradient);
     var title = htmlUtils.addDiv(innerNode, ["title"], "title", title);
     var style = {};
-    style["font-size"] = sc.smallCards
-      ? `${gameUtils.smallCardBackFontSize}px`
-      : `${gameUtils.cardBackFontSize}px`;
+    style["font-size"] = sc.altCardBackFontSize
+      ? `${sc.altCardBackFontSize}px`
+      : `${genericMeasurements.cardBackFontSize}px`;
     domStyle.set(title, style);
 
     return node;
@@ -109,27 +87,6 @@ define([
     return wrapper;
   }
 
-  function addBoxCardSingleNut(parent, nutType, index, opt_classArray) {
-    var classArray = gameUtils.extendOptClassArray(opt_classArray, "box");
-    var cardId = "box.".concat(index.toString());
-    var node = addCardFront(parent, classArray, cardId);
-    addNutDesc(node, nutType);
-    return node;
-  }
-
-  function addNthBoxCardSingleNut(
-    parent,
-    index,
-    numBoxCardsEachType,
-    opt_classArray
-  ) {
-    var nutTypeIndex = Math.floor(index / numBoxCardsEachType);
-    var nutTypes = gameUtils.nutTypes;
-    var nutType = nutTypes[nutTypeIndex];
-
-    return addBoxCardSingleNut(parent, nutType, index, opt_classArray);
-  }
-
   function addCards(title, color, numCards, frontCallback, opt_backCallback) {
     var sc = systemConfigs.getSystemConfigs();
     var bodyNode = dom.byId("body");
@@ -143,7 +100,7 @@ define([
     } else if (sc.smallCards) {
       timeForNewPageDivisor = smallCardsPerPage;
     } else {
-      timeForNewPageDivisor = cardsPerPage;
+      timeForNewPageDivisor = genericMeasurements.cardsPerPage;
     }
 
     if (sc.separateBacks) {
@@ -155,6 +112,11 @@ define([
         frontCallback(pageOfFronts, i);
       }
 
+      debugLog.debugLog(
+        "Refactor",
+        "Doug: addCards sc.skipBacks = ",
+        sc.skipBacks
+      );
       if (!sc.skipBacks) {
         for (let i = 0; i < numCards; i++) {
           var timeForNewPage = i % timeForNewPageDivisor;
@@ -246,8 +208,6 @@ define([
     getCardConfigFromIndex: getCardConfigFromIndex,
     addFormattedCardFront: addFormattedCardFront,
     getNumCardsFromConfigs: getNumCardsFromConfigs,
-    addNthBoxCardSingleNut: addNthBoxCardSingleNut,
-    addBoxCardSingleNut: addBoxCardSingleNut,
     getInstanceCountFromConfig: getInstanceCountFromConfig,
     addCardFront: addCardFront,
     addCards: addCards,

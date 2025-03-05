@@ -1,12 +1,22 @@
 // Utilities for Html manipulation using dojo.
 define([
   "sharedJavascript/debugLog",
-  "dojo/dom",
+  "sharedJavascript/genericMeasurements",
+  "sharedJavascript/genericUtils",
+  "sharedJavascript/systemConfigs",
   "dojo/dom-construct",
   "dojo/dom-style",
-  "dojo/query",
   "dojo/domReady!",
-], function (debugLog, dom, domConstruct, domStyle, query) {
+], function (
+  debugLog,
+  genericMeasurements,
+  genericUtils,
+  systemConfigs,
+  domConstruct,
+  domStyle
+) {
+  var pageNumber = 0;
+
   function addDiv(parent, classArray, id, opt_innerHTML = "") {
     console.assert(parent, "parent is null");
     var classes = classArray.join(" ");
@@ -46,7 +56,7 @@ define([
 
   function addStandardBorder(node) {
     domStyle.set(node, {
-      border: standardBorderWidth + "px solid black",
+      border: genericMeasurements.standardBorderWidth + "px solid black",
     });
   }
 
@@ -87,15 +97,28 @@ define([
   }
 
   function getPageWidth() {
+    debugLog.debugLog("Refactor", "Doug: getPageWidth");
     var sc = systemConfigs.getSystemConfigs();
+    debugLog.debugLog("Refactor", "Doug: 001 sc = " + JSON.stringify(sc));
     if (sc.demoBoard || sc.ttsCards || sc.ttsDie) {
+      debugLog.debugLog("Refactor", "Doug: returning null");
       return null;
     }
     if (sc.landscape) {
-      return printedPageLandscapeWidth;
+      debugLog.debugLog(
+        "Refactor",
+        "Doug: returning genericMeasurements.printedPageLandscapeWidth = " +
+          genericMeasurements.printedPageLandscapeWidth
+      );
+      return genericMeasurements.printedPageLandscapeWidth;
     }
 
-    return printedPagePortraitWidth;
+    debugLog.debugLog(
+      "Refactor",
+      "Doug: returning genericMeasurements.printedPagePortraitWidth = " +
+        genericMeasurements.printedPagePortraitWidth
+    );
+    return genericMeasurements.printedPagePortraitWidth;
   }
 
   var getPageHeight = function () {
@@ -113,13 +136,18 @@ define([
   function addPageOfItems(parent, opt_classArray) {
     var sc = systemConfigs.getSystemConfigs();
     console.assert(parent, "parent is null");
-    var classArray = extendOptClassArray(opt_classArray, "page_of_items");
+    var classArray = genericUtils.growOptStringArray(
+      opt_classArray,
+      "page_of_items"
+    );
     var pageId = "pageOfItems_".concat(pageNumber.toString());
     pageNumber++;
 
     var pageOfItems = addDiv(parent, classArray, pageId);
     var width = getPageWidth();
     var height = getPageHeight();
+    debugLog.debugLog("Refactor", "Doug: addPageOfItems: width = " + width);
+    debugLog.debugLog("Refactor", "Doug: addPageOfItems: height = " + height);
     if (width !== null) {
       domStyle.set(pageOfItems, {
         width: width + "px",
@@ -159,10 +187,7 @@ define([
 
   function addCard(parent, opt_classArray, opt_id) {
     console.assert(parent, "parent is null");
-    var classArray = genericUtils.extendWithStringOrArrayOfStrings(
-      "card",
-      opt_classArray
-    );
+    var classArray = genericUtils.growOptStringArray(opt_classArray, "card");
     if (systemConfigs.demoBoard) {
       classArray.push("demoBoard");
     }
@@ -181,7 +206,7 @@ define([
       });
     }
     domStyle.set(node, {
-      border: `${cardBorderWidth}px solid #000`,
+      border: `${genericMeasurements.cardBorderWidth}px solid #000`,
     });
     return node;
   }

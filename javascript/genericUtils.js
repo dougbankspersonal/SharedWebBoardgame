@@ -43,18 +43,6 @@ define(["dojo/domReady!"], function () {
   }
 
   function getRandomArrayElements(array, numElements, randFunction) {
-    debugLog.debugLog(
-      "Random",
-      "Doug getRandomArrayElements: array = " + array
-    );
-    debugLog.debugLog(
-      "Random",
-      "Doug getRandomArrayElements: numElements = " + numElements
-    );
-    debugLog.debugLog(
-      "Random",
-      "Doug getRandomArrayElements: randFunction = " + randFunction
-    );
     var shuffled = array.slice(0),
       i = array.length,
       min = i - numElements,
@@ -74,12 +62,41 @@ define(["dojo/domReady!"], function () {
     return getRandomArrayElements(array, 1, randFunction)[0];
   }
 
+  function isString(value) {
+    return typeof value === "string";
+  }
+
+  // opt_stringArray is array of strings or null.
+  // If null treat like empty array.
+  // addedStringOrStrings is string or array of strings.
+  // If addedStringOrStrings is a string, add to opt_stringArray.
+  // If addedStringOrStrings is an array, concatenate to opt_stringArray.
+  function growOptStringArray(opt_existingStringArray, addedStringOrStrings) {
+    var existingStringArray = opt_existingStringArray
+      ? opt_existingStringArray
+      : [];
+    console.assert(
+      typeof existingStringArray === "object",
+      "existingStringArray is not an object"
+    );
+    if (isString(addedStringOrStrings)) {
+      existingStringArray.push(addedStringOrStrings);
+      return existingStringArray;
+    } else {
+      // must be an array
+      var newStringArray = existingStringArray.concat(addedStringOrStrings);
+      return newStringArray;
+    }
+  }
+
   return {
     sanityCheckTable: sanityCheckTable,
     getIndexOfFirstInstanceInArray: getIndexOfFirstInstanceInArray,
+    getRandomInt: getRandomInt,
     seededRandom: seededRandom,
     getIntRandomInRange: getIntRandomInRange,
     getRandomArrayElement: getRandomArrayElement,
     getRandomArrayElements: getRandomArrayElements,
+    growOptStringArray: growOptStringArray,
   };
 });
