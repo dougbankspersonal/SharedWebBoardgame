@@ -2,15 +2,23 @@ define([
   "dojo/string",
   "dojo/dom",
   "dojo/dom-style",
-  "javascript/gameUtils",
   "sharedJavascript/debugLog",
+  "sharedJavascript/genericMeasurements",
   "sharedJavascript/systemConfigs",
   "dojo/domReady!",
-], function (string, dom, domStyle, gameUtils, debugLog, systemConfigs) {
+], function (
+  string,
+  dom,
+  domStyle,
+  debugLog,
+  genericMeasurements,
+  systemConfigs
+) {
   var adjustedPageWidth =
-    gameUtils.printedPagePortraitWidth - 2 * gameUtils.pagePadding;
+    genericMeasurements.printedPagePortraitWidth -
+    2 * genericMeasurements.pagePadding;
   var adjustedPageHeight =
-    gameUtils.printedPagePortraitHeight - 2 * gameUtils.pagePadding;
+    gameUtils.printedPagePortraitHeight - 2 * genericMeasurements.pagePadding;
   var smallCardFitHorizontally = Math.floor(
     adjustedPageWidth / gameUtils.smallCardWidth
   );
@@ -142,7 +150,7 @@ define([
       for (let i = 0; i < numCards; i++) {
         var timeForNewPage = i % timeForNewPageDivisor;
         if (timeForNewPage == 0) {
-          pageOfFronts = gameUtils.addPageOfItems(bodyNode);
+          pageOfFronts = htmlUtils.addPageOfItems(bodyNode);
         }
         frontCallback(pageOfFronts, i);
       }
@@ -151,7 +159,7 @@ define([
         for (let i = 0; i < numCards; i++) {
           var timeForNewPage = i % timeForNewPageDivisor;
           if (timeForNewPage == 0) {
-            pageOfBacks = gameUtils.addPageOfItems(bodyNode, ["back"]);
+            pageOfBacks = htmlUtils.addPageOfItems(bodyNode, ["back"]);
           }
           addCardBack(pageOfBacks, title, color, opt_backCallback);
         }
@@ -160,9 +168,9 @@ define([
       for (let i = 0; i < numCards; i++) {
         var timeForNewPage = i % timeForNewPageDivisor;
         if (timeForNewPage == 0) {
-          pageOfFronts = gameUtils.addPageOfItems(bodyNode);
+          pageOfFronts = htmlUtils.addPageOfItems(bodyNode);
           if (!sc.skipBacks) {
-            pageOfBacks = gameUtils.addPageOfItems(bodyNode, ["back"]);
+            pageOfBacks = htmlUtils.addPageOfItems(bodyNode, ["back"]);
           }
         }
         frontCallback(pageOfFronts, i);
