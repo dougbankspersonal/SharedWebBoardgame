@@ -195,21 +195,6 @@ define([
     });
   }
 
-  var cardSlotOutlineHeight = 4;
-
-  var beltSegmentZIndex = 1000000;
-  var beltZIndex = 2;
-  var elementZIndex = beltZIndex + 1;
-  var markerZIndex = elementZIndex + 1;
-  var conveyorTileZIndex = markerZIndex + 1;
-  var arrowZIndex = conveyorTileZIndex + 1;
-
-  var beltSegmentsPerRow = 8;
-  var beltSegmentOffset = rowTypes.standardRowHeight / beltSegmentsPerRow;
-  var beltSegmentHeight = beltSegmentOffset + 2;
-  var beltSegmentWidth = 40;
-
-  // This returned object becomes the defined value of this module
   return {
     addDiv: addDiv,
     addImage: addImage,
@@ -218,8 +203,6 @@ define([
     rgbToHex: rgbToHex,
     componentToHex: componentToHex,
     blendHexColors: blendHexColors,
-    getPageWidth: getPageWidth,
-    getPageHeight: getPageHeight,
     addPageOfItems: addPageOfItems,
     addCard: addCard,
     addQuasiRandomTilt: addQuasiRandomTilt,

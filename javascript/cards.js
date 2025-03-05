@@ -62,18 +62,18 @@ define([
     }
 
     var sc = systemConfigs.getSystemConfigs();
-    var node = gameUtils.addCard(parent, ["back"], "back");
+    var node = htmlUtils.addCard(parent, ["back"], "back");
 
     setCardSize(node);
 
-    var innerNode = gameUtils.addDiv(node, ["inset"], "inset");
-    var otherColor = gameUtils.blendHexColors(color, "#ffffff");
+    var innerNode = htmlUtils.addDiv(node, ["inset"], "inset");
+    var otherColor = htmlUtils.blendHexColors(color, "#ffffff");
     var gradient = string.substitute("radial-gradient(${color1}, ${color2})", {
       color1: otherColor,
       color2: color,
     });
     domStyle.set(innerNode, "background", gradient);
-    var title = gameUtils.addDiv(innerNode, ["title"], "title", title);
+    var title = htmlUtils.addDiv(innerNode, ["title"], "title", title);
     var style = {};
     style["font-size"] = sc.smallCards
       ? `${gameUtils.smallCardBackFontSize}px`
@@ -85,27 +85,27 @@ define([
 
   function addCardFront(parent, classArray, id) {
     classArray.push("front");
-    var node = gameUtils.addCard(parent, classArray, id);
+    var node = htmlUtils.addCard(parent, classArray, id);
     setCardSize(node);
 
     return node;
   }
 
   function addNutDesc(parent, nutType) {
-    var wrapper = gameUtils.addDiv(parent, ["wrapper"], "wrapper");
-    var nutPropsTopNode = gameUtils.addDiv(wrapper, ["nutProps"], "nutProps");
+    var wrapper = htmlUtils.addDiv(parent, ["wrapper"], "wrapper");
+    var nutPropsTopNode = htmlUtils.addDiv(wrapper, ["nutProps"], "nutProps");
 
     var nutType;
     if (nutType == -1) {
       nutType = "Wild";
     }
 
-    var prop = gameUtils.addDiv(
+    var prop = htmlUtils.addDiv(
       nutPropsTopNode,
       ["nutProp", "nut_type"],
       "nut_type"
     );
-    gameUtils.addImage(prop, ["nutType", nutType], "nut_type");
+    htmlUtils.addImage(prop, ["nutType", nutType], "nut_type");
     return wrapper;
   }
 
@@ -210,19 +210,19 @@ define([
     var classArray = [className];
     var frontNode = addCardFront(parent, classArray, id);
 
-    var wrapper = gameUtils.addDiv(
+    var wrapper = htmlUtils.addDiv(
       frontNode,
       ["formatted_wrapper"],
       "formatted_wrapper"
     );
     if (config.title) {
-      gameUtils.addDiv(wrapper, ["title"], "title", config.title);
+      htmlUtils.addDiv(wrapper, ["title"], "title", config.title);
     }
     if (config.subtitle) {
-      gameUtils.addDiv(wrapper, ["subtitle"], "subtitle", config.subtitle);
+      htmlUtils.addDiv(wrapper, ["subtitle"], "subtitle", config.subtitle);
     }
     if (config.rulesText) {
-      var rulesTextNode = gameUtils.addDiv(wrapper, ["rulesText"], "rulesText");
+      var rulesTextNode = htmlUtils.addDiv(wrapper, ["rulesText"], "rulesText");
       rulesTextNode.innerHTML = config.rulesText;
     }
   }
