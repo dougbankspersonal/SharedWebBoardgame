@@ -1,9 +1,9 @@
 define(["dojo/domReady!"], function () {
   var standardBorderWidth = 2;
-  var pageOfItemsContentsPaddingPx = 10;
+  var pageOfItemsPaddingPx = 10;
 
   return {
     standardBorderWidth: standardBorderWidth,
-    pageOfItemsContentsPaddingPx: pageOfItemsContentsPaddingPx,
+    pageOfItemsPaddingPx: pageOfItemsPaddingPx,
   };
 });
