@@ -49,6 +49,9 @@ define(["dojo/domReady!"], function () {
 
   var ttsCardsPerPage = 70;
 
+  var dieWidth = 150;
+  var dieHeight = dieWidth;
+
   return {
     getNumberThatFitAccountingForGap: getNumberThatFitAccountingForGap,
 
@@ -70,5 +73,8 @@ define(["dojo/domReady!"], function () {
     cardsPerPage: cardsPerPage,
     ttsCardsPerPage: ttsCardsPerPage,
     cardGap: cardGap,
+
+    dieWidth: dieWidth,
+    dieHeight: dieHeight,
   };
 });

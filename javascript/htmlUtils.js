@@ -97,14 +97,33 @@ define([
   }
 
   function getPageWidth() {
+    debugLog.debugLog("Layout", "Doug: getPageWidth 001");
     var sc = systemConfigs.getSystemConfigs();
+    if (sc.explicitPageWidth) {
+      debugLog.debugLog(
+        "Layout",
+        "Doug: getPageWidth sc.explicitPageWidth = " + sc.explicitPageWidth
+      );
+      return sc.explicitPageWidth;
+    }
     if (sc.pageless) {
+      debugLog.debugLog("Layout", "Doug: getPageWidth null");
       return null;
     }
     if (sc.landscape) {
+      debugLog.debugLog(
+        "Layout",
+        "Doug: getPageWidth genericMeasurements.printedPageLandscapeWidth = " +
+          genericMeasurements.printedPageLandscapeWidth
+      );
       return genericMeasurements.printedPageLandscapeWidth;
     }
 
+    debugLog.debugLog(
+      "Layout",
+      "Doug: getPageWidth genericMeasurements.printedPagePortraitWidth = " +
+        genericMeasurements.printedPagePortraitWidth
+    );
     return genericMeasurements.printedPagePortraitWidth;
   }
 
@@ -146,19 +165,15 @@ define([
       });
     }
 
-    if (!sc.pageless) {
-      domStyle.set(pageOfItems, {
-        padding: genericMeasurements.pageOfItemsPaddingPx + "px",
-      });
-    }
+    domStyle.set(pageOfItems, {
+      padding: genericMeasurements.pageOfItemsPaddingPx + "px",
+    });
 
     var childClassArray = ["page_of_items_contents"];
 
     var extraClass = sc.extraClassForPageOfItemsContents;
     if (extraClass) {
       childClassArray.push(extraClass);
-    } else {
-      childClassArray.push("normal");
     }
 
     var pageOfItemsContents = addDiv(
@@ -167,11 +182,6 @@ define([
       "pageOfItemsContents"
     );
 
-    if (sc.columnsPerPage) {
-      domStyle.set(pageOfItemsContents, {
-        "grid-template-columns": `repeat(${sc.columnsPerPage}, min-content)`,
-      });
-    }
     if (sc.gridGap !== null) {
       debugLog.debugLog(
         "Refactor",

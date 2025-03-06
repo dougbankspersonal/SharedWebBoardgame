@@ -19,11 +19,9 @@ define([
   function setCardSize(node) {
     var sc = systemConfigs.getSystemConfigs();
     debugLog.debugLog("CardSize", "Doug: setCardSize sc = ", sc);
-    var cardWidth = sc.altCardWidth
-      ? sc.altCardWidth
-      : genericMeasurements.cardWidth;
-    var cardHeight = sc.altCardHeight
-      ? sc.altCardHeight
+    var cardWidth = sc.cardWidth ? sc.cardWidth : genericMeasurements.cardWidth;
+    var cardHeight = sc.cardHeight
+      ? sc.cardHeight
       : genericMeasurements.cardHeight;
     domStyle.set(node, {
       width: `${cardWidth}px`,
@@ -51,8 +49,8 @@ define([
     domStyle.set(innerNode, "background", gradient);
     var title = htmlUtils.addDiv(innerNode, ["title"], "title", title);
     var style = {};
-    style["font-size"] = sc.altCardBackFontSize
-      ? `${sc.altCardBackFontSize}px`
+    style["font-size"] = sc.cardBackFontSize
+      ? `${sc.cardBackFontSize}px`
       : `${genericMeasurements.cardBackFontSize}px`;
     domStyle.set(title, style);
 
@@ -114,19 +112,52 @@ define([
   }
 
   function getNumCardsFromConfigs(cardConfigs) {
+    debugLog.debugLog(
+      "Cards",
+      "Doug: getNumCardsFromConfigs: cardConfigs = " +
+        JSON.stringify(cardConfigs)
+    );
+    // If we are doing single-instance of each card config, rewrite the array.
+    var sc = systemConfigs.getSystemConfigs();
+    if (sc.singleCardInstance) {
+      for (var i = 0; i < cardConfigs.length; i++) {
+        cardConfigs[i].count = 1;
+      }
+      debugLog.debugLog(
+        "Cards",
+        "Doug: getNumCardsFromConfigs: singleCardInstance is true: cardConfigs = " +
+          JSON.stringify(cardConfigs)
+      );
+    }
+
+    // Now count.
     var numCards = 0;
     for (var i = 0; i < cardConfigs.length; i++) {
       var instanceCount = getInstanceCountFromConfig(cardConfigs, i);
-      debugLog.debugLog(
-        "BoxRobotCards",
-        "Doug: getNumCardsFromConfigs i = " +
-          i +
-          ", instanceCount = " +
-          instanceCount
-      );
-
       numCards = numCards + instanceCount;
     }
+
+    debugLog.debugLog(
+      "Cards",
+      "Doug: getNumCardsFromConfigs: numCards = " + numCards
+    );
+
+    // If we have some min, and this isn't enough, change count on first card to hit max.
+    if (sc.minCardCount && numCards < sc.minCardCount) {
+      var firstCount = cardConfigs[0].count ? cardConfigs[0].count : 1;
+      cardConfigs[0].count = firstCount + sc.minCardCount - numCards;
+      numCards = sc.minCardCount;
+      debugLog.debugLog(
+        "Cards",
+        "Doug: getNumCardsFromConfigs: sc.minCardCount = " + sc.minCardCount
+      );
+      debugLog.debugLog(
+        "Cards",
+        "Doug: getNumCardsFromConfigs: adjusted card configs: cardConfigs = " +
+          JSON.stringify(cardConfigs)
+      );
+    }
+
     return numCards;
   }
 
@@ -167,17 +198,7 @@ define([
   }
 
   function getInstanceCountFromConfig(cardConfigs, index) {
-    var sc = systemConfigs.getSystemConfigs();
-    if (sc.minCardCount) {
-      // TTS enforces a min card count.
-      if (cardConfigs.length < sc.minCardCount && index == 0) {
-        return sc.minCardCount - (cardConfigs.length - 1);
-      } else {
-        return 1;
-      }
-    } else {
-      return cardConfigs[index].count ? cardConfigs[index].count : 1;
-    }
+    return cardConfigs[index].count ? cardConfigs[index].count : 1;
   }
 
   // This returned object becomes the defined value of this module

@@ -15,18 +15,21 @@ define([
     cardsPerPage: true,
 
     // Alt size of cards.
-    altCardWidth: true,
-    altCardHeight: true,
-    altCardBackFontSize: true,
+    cardWidth: true,
+    cardHeight: true,
+    cardBackFontSize: true,
 
     // Thing is pageless, we don't want boundaries on size or page breaks.
     pageless: true,
+    // Can override page width.
+    explicitPageWidth: true,
+
     // For cards, no margin around them.
     cardsNoMargin: true,
     // Extra class to apply to page_of_items div.
     extraClassForPageOfItemsContents: true,
+    explicitPageWidth: true,
 
-    columnsPerPage: true,
     gridGap: true,
 
     // Do not render card backs.
@@ -41,6 +44,8 @@ define([
 
     // TTS requires at least 12 cards.
     minCardCount: true,
+    // Sometimes we just want one of each type of card, no dups.
+    singleCardInstance: true,
   };
 
   function sanityCheckConfigs(configs) {
@@ -64,11 +69,9 @@ define([
       Math.floor(genericMeasurements.adjustedPageWidth / cardWidth) *
       Math.floor(genericMeasurements.adjustedPageHeight / cardHeight);
     sc.cardsPerPage = cardsPerPage;
-    sc.altCardWidth = cardWidth;
-    sc.altCardHeight = cardHeight;
-    sc.altCardBackFontSize = opt_cardBackFontSize;
-    sc.extraClassForPageOfItemsContents = "cards";
-    sc.columnsPerPage = genericMeasurements.cardColumnsPerPage;
+    sc.cardWidth = cardWidth;
+    sc.cardHeight = cardHeight;
+    sc.cardBackFontSize = opt_cardBackFontSize;
     sc.gridGap = genericMeasurements.cardGap;
 
     return sc;
@@ -88,11 +91,11 @@ define([
     );
     // Apply tweaks.
     sc.pageless = true;
-    sc.cardsNoMargin = true;
+    sc.explicitPageWidth = 10 * sc.cardWidth;
     sc.skipCardBacks = true;
     sc.minCardCount = 12;
     sc.cardsPerPage = genericMeasurements.ttsCardsPerPage;
-    sc.columnsPerPage = 10;
+    sc.extraClassForPageOfItemsContents = "tts";
     sc.gridGap = 0;
     return sc;
   }
@@ -100,24 +103,23 @@ define([
   function addTTSDieSystemConfigs(opt_scInput) {
     var sc = opt_scInput ? opt_scInput : {};
     sc.pageless = true;
-    sc.columnsPerPage = 3;
     sc.gridGap = 0;
+    sc.explicitPageWidth = 3 * genericMeasurements.dieWidth;
     return sc;
   }
 
   function addGameBoardSystemConfigs(opt_scInput) {
     var sc = opt_scInput ? opt_scInput : {};
-    sc.columnsPerPage = 1;
     sc.gridGap = 0;
+    sc.extraClassForPageOfItemsContents = "tts";
     return sc;
   }
 
-  function addTileSystemConfigs(gridGap, columnsPerPage, opt_scInput) {
+  function addTileSystemConfigs(gridGap, opt_scInput) {
     var sc = opt_scInput ? opt_scInput : {};
-    sc.columnsPerPage = columnsPerPage;
     sc.gridGap = gridGap;
     debugLog.debugLog(
-      "Refactor",
+      "SystemConfigs",
       "Doug: addTileSystemConfigs: sc = " + JSON.stringify(sc)
     );
     return sc;
@@ -129,7 +131,7 @@ define([
     _systemConfigs = sc;
     // tts -> should avoid card backs.
     debugLog.debugLog(
-      "Refactor",
+      "SystemConfigs",
       "Doug: _systemConfigs = " + JSON.stringify(_systemConfigs)
     );
   }
