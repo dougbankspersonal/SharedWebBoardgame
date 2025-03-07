@@ -1,0 +1,60 @@
+.card {
+  margin: 0px;
+  display: inline-block;
+  overflow: hidden;
+  text-align: center;
+}
+
+.card.front {
+  box-sizing: border-box;
+  border-radius: 8px;
+}
+
+/* Generic formatted card */
+.card.front .formatted_wrapper {
+  margin: 15px;
+}
+.card.front .formatted_wrapper .title {
+  margin-top: 28px;
+  margin-right: 10px;
+  margin-left: 10px;
+  font-family: "DynaPuff", serif;
+  font-size: 30px;
+}
+
+.card.front .formatted_wrapper .subtitle {
+  margin-top: 20px;
+  margin-right: 10px;
+  margin-left: 10px;
+  font-family: "DynaPuff", serif;
+  font-style: italic;
+  font-size: 14px;
+}
+
+.card.front .formatted_wrapper .rulesText {
+  margin-top: 20px;
+  margin-right: 10px;
+  margin-left: 10px;
+  font-family: "DynaPuff", serif;
+  font-size: 16px;
+}
+
+/* Card backs*/
+.card.back {
+  box-sizing: border-box;
+  position: relative;
+  border-radius: 8px;
+}
+
+.card.back .inset {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 90%;
+  height: 90%;
+  transform: translate(-50%, -50%);
+  border-radius: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
