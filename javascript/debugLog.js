@@ -1,8 +1,8 @@
 define(["dojo/domReady!"], function () {
   var debugFlags = {
     BoxRobotCards: "off",
-    Cards: "on",
-    Layout: "off",
+    Cards: "off",
+    Layout: "on",
     Random: "off",
     Refactor: "off",
     SantaCards: "off",

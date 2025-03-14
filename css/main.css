@@ -30,3 +30,7 @@ body {
 .page_of_items_contents.tts {
   justify-content: left;
 }
+
+.page_of_items_contents.tts.column {
+  flex-direction: column;
+}
