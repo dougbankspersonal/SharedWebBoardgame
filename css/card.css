@@ -8,6 +8,7 @@
 .card.front {
   box-sizing: border-box;
   border-radius: 8px;
+  border-color: black;
 }
 
 /* Generic formatted card */
@@ -18,24 +19,25 @@
   margin-top: 28px;
   margin-right: 10px;
   margin-left: 10px;
-  font-family: "DynaPuff", serif;
   font-size: 30px;
+}
+
+.card.front .formatted_wrapper .subscript {
+  font-size: 60%;
 }
 
 .card.front .formatted_wrapper .subtitle {
   margin-top: 20px;
   margin-right: 10px;
   margin-left: 10px;
-  font-family: "DynaPuff", serif;
   font-style: italic;
   font-size: 14px;
 }
 
-.card.front .formatted_wrapper .rulesText {
+.card.front .formatted_wrapper .rules_text {
   margin-top: 20px;
   margin-right: 10px;
   margin-left: 10px;
-  font-family: "DynaPuff", serif;
   font-size: 16px;
 }
 

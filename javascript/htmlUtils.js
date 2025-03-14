@@ -213,14 +213,16 @@ define([
       });
     }
     domStyle.set(node, {
-      border: `${genericMeasurements.cardBorderWidth}px solid #000`,
+      "border-width": `${genericMeasurements.cardBorderWidth}px`,
+      "border-style": "solid",
     });
     return node;
   }
 
-  const tiltRandom = genericUtils.seededRandom(234232443);
+  const seededZeroToOneRandomFunction =
+    genericUtils.createSeededGetZeroToOneRandomFunction(234232443);
   function addQuasiRandomTilt(node, minTilt, maxTilt) {
-    var zeroToOneRandom = tiltRandom();
+    var zeroToOneRandom = seededZeroToOneRandomFunction();
     var tilt = minTilt + zeroToOneRandom * (maxTilt - minTilt);
     domStyle.set(node, {
       transform: `rotate(${tilt}deg)`,

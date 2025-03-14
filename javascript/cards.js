@@ -49,6 +49,7 @@ define([
     domStyle.set(innerNode, "background", gradient);
     var title = htmlUtils.addDiv(innerNode, ["title"], "title", title);
     var style = {};
+    debugLog.debugLog("Cards", "Doug addCardBack sc = " + JSON.stringify(sc));
     style["font-size"] = sc.cardBackFontSize
       ? `${sc.cardBackFontSize}px`
       : `${genericMeasurements.cardBackFontSize}px`;
@@ -75,6 +76,13 @@ define([
     var cardsPerPage = sc.cardsPerPage
       ? sc.cardsPerPage
       : genericMeasurements.cardsPerPage;
+
+    debugLog.debugLog("Cards", "Doug: addCards: sc = " + JSON.stringify(sc));
+    debugLog.debugLog("Cards", "Doug: addCards: numCards = " + numCards);
+    debugLog.debugLog(
+      "Cards",
+      "Doug: addCards: cardsPerPage = " + cardsPerPage
+    );
 
     if (sc.separateBacks) {
       for (let i = 0; i < numCards; i++) {
@@ -104,7 +112,10 @@ define([
           }
         }
         frontCallback(pageOfFronts, i);
+        debugLog.debugLog("Cards", "Doug: addCards: hit he front callback");
+
         if (!sc.skipCardBacks) {
+          debugLog.debugLog("Cards", "Doug: addCards: calling addCardBack");
           addCardBack(pageOfBacks, title, color, opt_backCallback);
         }
       }
@@ -113,7 +124,7 @@ define([
 
   function getNumCardsFromConfigs(cardConfigs) {
     debugLog.debugLog(
-      "Cards",
+      "CardCount",
       "Doug: getNumCardsFromConfigs: cardConfigs = " +
         JSON.stringify(cardConfigs)
     );
@@ -124,7 +135,7 @@ define([
         cardConfigs[i].count = 1;
       }
       debugLog.debugLog(
-        "Cards",
+        "CardCount",
         "Doug: getNumCardsFromConfigs: singleCardInstance is true: cardConfigs = " +
           JSON.stringify(cardConfigs)
       );
@@ -138,8 +149,8 @@ define([
     }
 
     debugLog.debugLog(
-      "Cards",
-      "Doug: getNumCardsFromConfigs: numCards = " + numCards
+      "CardCount",
+      "Doug: getNumCardsFromConfigs: initial numCards = " + numCards
     );
 
     // If we have some min, and this isn't enough, change count on first card to hit max.
@@ -148,20 +159,29 @@ define([
       cardConfigs[0].count = firstCount + sc.minCardCount - numCards;
       numCards = sc.minCardCount;
       debugLog.debugLog(
-        "Cards",
+        "CardCount",
         "Doug: getNumCardsFromConfigs: sc.minCardCount = " + sc.minCardCount
       );
       debugLog.debugLog(
-        "Cards",
+        "CardCount",
         "Doug: getNumCardsFromConfigs: adjusted card configs: cardConfigs = " +
           JSON.stringify(cardConfigs)
       );
     }
 
+    debugLog.debugLog(
+      "CardCount",
+      "Doug: getNumCardsFromConfigs: final numCards = " + numCards
+    );
     return numCards;
   }
 
   function getCardConfigFromIndex(cardConfigs, index) {
+    debugLog.debugLog(
+      "Cards",
+      "Doug: getCardConfigFromIndex: cardConfigs = " +
+        JSON.stringify(cardConfigs)
+    );
     for (var i = 0; i < cardConfigs.length; i++) {
       var instanceCount = getInstanceCountFromConfig(cardConfigs, i);
       if (index < instanceCount) {
@@ -192,7 +212,11 @@ define([
       htmlUtils.addDiv(wrapper, ["subtitle"], "subtitle", config.subtitle);
     }
     if (config.rulesText) {
-      var rulesTextNode = htmlUtils.addDiv(wrapper, ["rulesText"], "rulesText");
+      var rulesTextNode = htmlUtils.addDiv(
+        wrapper,
+        ["rules_text"],
+        "rulesText"
+      );
       rulesTextNode.innerHTML = config.rulesText;
     }
   }
