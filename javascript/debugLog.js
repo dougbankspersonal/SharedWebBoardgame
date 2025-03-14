@@ -2,10 +2,13 @@ define(["dojo/domReady!"], function () {
   var debugFlags = {
     BoxRobotCards: "off",
     Cards: "off",
-    Layout: "on",
+    CardConfigs: "off",
+    CardCount: "on",
+    Layout: "off",
     Random: "off",
     Refactor: "off",
     SantaCards: "off",
+    Special: "off",
     SystemConfigs: "off",
   };
 

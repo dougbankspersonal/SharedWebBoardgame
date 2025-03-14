@@ -1,4 +1,4 @@
-define(["dojo/domReady!"], function () {
+define(["sharedJavascript/debugLog", "dojo/domReady!"], function (debugLog) {
   // validKeys maps keys to "true".
   // Passes if every key in table is in validKeys.
   // Does not check types.
@@ -27,7 +27,7 @@ define(["dojo/domReady!"], function () {
     return Math.floor(Math.random() * max);
   }
 
-  function seededRandom(seed) {
+  function createSeededGetZeroToOneRandomFunction(seed) {
     let currentSeed = seed;
 
     // Simple linear congruential generator (LCG)
@@ -37,19 +37,20 @@ define(["dojo/domReady!"], function () {
     };
   }
 
-  // Equal chance of being min, min -1, ... max.
-  function getIntRandomInRange(min, max, zeroToOneRandom) {
-    return Math.floor(min + zeroToOneRandom * (max - min));
+  // Equal chance of being min, min + 1, max.
+  // Note max is INCLUDED: range is [min, max]
+  function getIntRandomInRange(min, max, getRandomZeroToOne) {
+    return Math.floor(min + getRandomZeroToOne() * (1 + max - min));
   }
 
-  function getRandomArrayElements(array, numElements, randFunction) {
+  function getRandomArrayElements(array, numElements, getRandomZeroToOne) {
     var shuffled = array.slice(0),
       i = array.length,
       min = i - numElements,
       temp,
       index;
     while (i-- > min) {
-      index = Math.floor((i + 1) * randFunction());
+      index = Math.floor((i + 1) * getRandomZeroToOne());
       temp = shuffled[index];
       shuffled[index] = shuffled[i];
       shuffled[i] = temp;
@@ -57,9 +58,22 @@ define(["dojo/domReady!"], function () {
     return shuffled.slice(min);
   }
 
-  function getRandomArrayElement(array, randFunction) {
+  function getRandomArrayElement(array, getRandomZeroToOne) {
     debugLog.debugLog("Random", "Doug getRandomArrayElement: array = " + array);
-    return getRandomArrayElements(array, 1, randFunction)[0];
+    return getRandomArrayElements(array, 1, getRandomZeroToOne)[0];
+  }
+
+  function getRandomArrayElementNotMatching(
+    array,
+    skippedValue,
+    getRandomZeroToOne
+  ) {
+    while (1) {
+      var element = getRandomArrayElement(array, getRandomZeroToOne);
+      if (element != skippedValue) {
+        return element;
+      }
+    }
   }
 
   function isString(value) {
@@ -93,9 +107,11 @@ define(["dojo/domReady!"], function () {
     sanityCheckTable: sanityCheckTable,
     getIndexOfFirstInstanceInArray: getIndexOfFirstInstanceInArray,
     getRandomInt: getRandomInt,
-    seededRandom: seededRandom,
+    createSeededGetZeroToOneRandomFunction:
+      createSeededGetZeroToOneRandomFunction,
     getIntRandomInRange: getIntRandomInRange,
     getRandomArrayElement: getRandomArrayElement,
+    getRandomArrayElementNotMatching: getRandomArrayElementNotMatching,
     getRandomArrayElements: getRandomArrayElements,
     growOptStringArray: growOptStringArray,
   };
