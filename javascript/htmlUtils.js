@@ -60,12 +60,6 @@ define([
     });
   }
 
-  function addStandardOutline(node) {
-    domStyle.set(node, {
-      border: genericMeasurements.standardBorderWidth + "px solid black",
-    });
-  }
-
   // Function to convert hexadecimal color to RGB
   function hexToRgb(hex) {
     var r = parseInt(hex.substring(1, 3), 16);
@@ -252,7 +246,6 @@ define([
     addDiv: addDiv,
     addImage: addImage,
     addStandardBorder: addStandardBorder,
-    addStandardOutline: addStandardOutline,
     hexToRgb: hexToRgb,
     rgbToHex: rgbToHex,
     componentToHex: componentToHex,
