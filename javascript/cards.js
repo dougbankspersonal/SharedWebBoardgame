@@ -18,11 +18,21 @@ define([
 ) {
   function setCardSize(node) {
     var sc = systemConfigs.getSystemConfigs();
-    debugLog.debugLog("CardSize", "Doug: setCardSize sc = ", sc);
+    debugLog.debugLog(
+      "CardSize",
+      "Doug: setCardSize sc.cardHeight = ",
+      sc.cardHeight
+    );
+    debugLog.debugLog(
+      "CardSize",
+      "Doug: setCardSize sc.cardWidth = ",
+      sc.cardWidth
+    );
     var cardWidth = sc.cardWidth ? sc.cardWidth : genericMeasurements.cardWidth;
     var cardHeight = sc.cardHeight
       ? sc.cardHeight
       : genericMeasurements.cardHeight;
+
     domStyle.set(node, {
       width: `${cardWidth}px`,
       height: `${cardHeight}px`,
@@ -234,5 +244,6 @@ define([
     addCardFront: addCardFront,
     addCards: addCards,
     setCardSize: setCardSize,
+    addCardBack: addCardBack,
   };
 });
