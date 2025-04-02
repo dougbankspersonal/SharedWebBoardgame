@@ -22,13 +22,13 @@ body {
 }
 
 .page_of_items_contents {
-  display: flex;
+  display: inline-block;
   flex-wrap: wrap; /* Allows items to wrap onto new rows */
-  justify-content: center;
+  text-align: center;
 }
 
 .page_of_items_contents.tts {
-  justify-content: left;
+  text-align: left;
 }
 
 .page_of_items_contents.tts.column {
