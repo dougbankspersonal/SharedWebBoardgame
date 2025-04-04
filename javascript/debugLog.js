@@ -12,9 +12,10 @@ define(["dojo/domReady!"], function () {
     Random: "off",
     Refactor: "off",
     SantaCards: "off",
-    Special: "off",
+    ScalingText: "off",
+    Special: "on",
     SystemConfigs: "off",
-    Truck: "on",
+    Truck: "off",
   };
 
   function debugLog(flag, statement) {
