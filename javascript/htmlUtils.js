@@ -165,6 +165,19 @@ define([
       });
     }
 
+    domStyle.set(pageOfItems, {
+      padding: genericMeasurements.pageOfItemsPaddingPx + "px",
+    });
+
+    if (sc.addPageNumbers) {
+      var pageNumberNode = addDiv(
+        pageOfItems,
+        ["page_number"],
+        "pageNumber",
+        pageNumber.toString()
+      );
+    }
+
     var childClassArray = ["page_of_items_contents"];
 
     var extraClasses = sc.extraClassesForPageOfItemsContents;

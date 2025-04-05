@@ -48,6 +48,9 @@ define([
     singleCardInstance: true,
 
     pageOfItemsContentsPaddingPx: true,
+
+    // Add page numbers to bottom corner of page.
+    addPageNumbers: true,
   };
 
   function sanityCheckConfigs(configs) {
@@ -75,6 +78,7 @@ define([
     sc.cardHeight = cardHeight;
     sc.cardBackFontSize = opt_cardBackFontSize;
     sc.gridGap = genericMeasurements.cardGap;
+    sc.addPageNumbers = true;
 
     return sc;
   }
