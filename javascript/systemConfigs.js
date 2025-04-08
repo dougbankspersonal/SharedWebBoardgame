@@ -27,7 +27,7 @@ define([
     // For cards, no margin around them.
     cardsNoMargin: true,
     // Extra class to apply to page_of_items div.
-    extraClassForPageOfItemsContents: true,
+    extraClassesForPageOfItemsContents: true,
     explicitPageWidth: true,
 
     gridGap: true,
@@ -46,6 +46,11 @@ define([
     minCardCount: true,
     // Sometimes we just want one of each type of card, no dups.
     singleCardInstance: true,
+
+    pageOfItemsContentsPaddingPx: true,
+
+    // Add page numbers to bottom corner of page.
+    addPageNumbers: true,
   };
 
   function sanityCheckConfigs(configs) {
@@ -73,6 +78,7 @@ define([
     sc.cardHeight = cardHeight;
     sc.cardBackFontSize = opt_cardBackFontSize;
     sc.gridGap = genericMeasurements.cardGap;
+    sc.addPageNumbers = true;
 
     return sc;
   }
@@ -95,7 +101,7 @@ define([
     sc.skipCardBacks = true;
     sc.minCardCount = 12;
     sc.cardsPerPage = genericMeasurements.ttsCardsPerPage;
-    sc.extraClassForPageOfItemsContents = "tts";
+    sc.extraClassesForPageOfItemsContents = ["tts"];
     sc.gridGap = 0;
     return sc;
   }
@@ -111,7 +117,7 @@ define([
   function addGameBoardSystemConfigs(opt_scInput) {
     var sc = opt_scInput ? opt_scInput : {};
     sc.gridGap = 0;
-    sc.extraClassForPageOfItemsContents = "tts";
+    sc.extraClassesForPageOfItemsContents = ["tts"];
     return sc;
   }
 

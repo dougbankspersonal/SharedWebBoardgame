@@ -170,11 +170,23 @@ define([
       padding: genericMeasurements.pageOfItemsPaddingPx + "px",
     });
 
+    if (sc.addPageNumbers) {
+      var pageNumberNode = addDiv(
+        pageOfItems,
+        ["page_number"],
+        "pageNumber",
+        pageNumber.toString()
+      );
+    }
+
     var childClassArray = ["page_of_items_contents"];
 
-    var extraClass = sc.extraClassForPageOfItemsContents;
-    if (extraClass) {
-      childClassArray.push(extraClass);
+    var extraClasses = sc.extraClassesForPageOfItemsContents;
+    if (extraClasses) {
+      for (var i = 0; i < extraClasses.length; i++) {
+        var extraClass = extraClasses[i];
+        childClassArray.push(extraClass);
+      }
     }
 
     var pageOfItemsContents = addDiv(
@@ -192,6 +204,20 @@ define([
         gap: `${sc.gridGap}px`,
       });
     }
+
+    debugLog.debugLog(
+      "Layout",
+      "Doug: sc.pageOfItemsContentsPaddingPx = " +
+        sc.pageOfItemsContentsPaddingPx
+    );
+    if (sc.pageOfItemsContentsPaddingPx > 0) {
+      domStyle.set(pageOfItemsContents, {
+        padding: `${sc.pageOfItemsContentsPaddingPx}px`,
+      });
+    }
+    domStyle.set(pageOfItems, {
+      padding: genericMeasurements.pageOfItemsPaddingPx + "px",
+    });
 
     return pageOfItemsContents;
   }

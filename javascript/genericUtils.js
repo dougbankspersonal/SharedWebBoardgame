@@ -39,7 +39,7 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (debugLog) {
 
   // Equal chance of being min, min + 1, max.
   // Note max is INCLUDED: range is [min, max]
-  function getIntRandomInRange(min, max, getRandomZeroToOne) {
+  function getRandomIntInRange(min, max, getRandomZeroToOne) {
     return Math.floor(min + getRandomZeroToOne() * (1 + max - min));
   }
 
@@ -109,7 +109,7 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (debugLog) {
     getRandomInt: getRandomInt,
     createSeededGetZeroToOneRandomFunction:
       createSeededGetZeroToOneRandomFunction,
-    getIntRandomInRange: getIntRandomInRange,
+    getRandomIntInRange: getRandomIntInRange,
     getRandomArrayElement: getRandomArrayElement,
     getRandomArrayElementNotMatching: getRandomArrayElementNotMatching,
     getRandomArrayElements: getRandomArrayElements,
