@@ -15,6 +15,7 @@ body {
 
   .page_of_items_contents {
     display: flex;
+    flex-direction: column;
     flex-wrap: wrap; /* Allows items to wrap onto new rows */
     justify-content: center;
   }
