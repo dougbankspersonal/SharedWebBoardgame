@@ -13,7 +13,8 @@ define(["dojo/domReady!"], function () {
     Refactor: "off",
     SantaCards: "off",
     ScalingText: "off",
-    Special: "on",
+    ScoringTrack: "on",
+    Special: "off",
     SystemConfigs: "off",
     Truck: "off",
   };
@@ -26,5 +27,6 @@ define(["dojo/domReady!"], function () {
 
   return {
     debugLog: debugLog,
+    debugFlags: debugFlags,
   };
 });
