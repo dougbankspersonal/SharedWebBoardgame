@@ -16,6 +16,7 @@ define([
   domStyle
 ) {
   var pageNumber = 0;
+  var cardFrontBorderWidth = 10;
 
   function addDiv(parent, classArray, id, opt_innerHTML = "") {
     console.assert(parent, "parent is null");
@@ -243,7 +244,7 @@ define([
       });
     }
     domStyle.set(node, {
-      "border-width": `${genericMeasurements.cardBorderWidth}px`,
+      "border-width": `${cardFrontBorderWidth}px`,
       "border-style": "solid",
     });
     return node;
