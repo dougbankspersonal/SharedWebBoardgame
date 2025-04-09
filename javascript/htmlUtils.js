@@ -149,29 +149,29 @@ define([
     var pageId = "pageOfItems_".concat(pageNumber.toString());
     pageNumber++;
 
-    var pageOfItems = addDiv(parent, classArray, pageId);
+    var pageOfItemsNode = addDiv(parent, classArray, pageId);
     var width = getPageWidth();
     var height = getPageHeight();
     debugLog.debugLog("Refactor", "Doug: addPageOfItems: width = " + width);
     debugLog.debugLog("Refactor", "Doug: addPageOfItems: height = " + height);
     if (width !== null) {
-      domStyle.set(pageOfItems, {
+      domStyle.set(pageOfItemsNode, {
         width: width + "px",
       });
     }
     if (height !== null) {
-      domStyle.set(pageOfItems, {
+      domStyle.set(pageOfItemsNode, {
         height: height + "px",
       });
     }
 
-    domStyle.set(pageOfItems, {
+    domStyle.set(pageOfItemsNode, {
       padding: genericMeasurements.pageOfItemsPaddingPx + "px",
     });
 
     if (sc.addPageNumbers) {
       var pageNumberNode = addDiv(
-        pageOfItems,
+        pageOfItemsNode,
         ["page_number"],
         "pageNumber",
         pageNumber.toString()
@@ -179,6 +179,10 @@ define([
     }
 
     var childClassArray = ["page_of_items_contents"];
+
+    if (sc.demoBoard) {
+      childClassArray.push("demo_board");
+    }
 
     var extraClasses = sc.extraClassesForPageOfItemsContents;
     if (extraClasses) {
@@ -188,8 +192,8 @@ define([
       }
     }
 
-    var pageOfItemsContents = addDiv(
-      pageOfItems,
+    var pageOfItemsContentsNode = addDiv(
+      pageOfItemsNode,
       childClassArray,
       "pageOfItemsContents"
     );
@@ -199,7 +203,7 @@ define([
         "Refactor",
         "Doug: addPageOfItems: sc.gridGap = " + sc.gridGap
       );
-      domStyle.set(pageOfItemsContents, {
+      domStyle.set(pageOfItemsContentsNode, {
         gap: `${sc.gridGap}px`,
       });
     }
@@ -210,15 +214,15 @@ define([
         sc.pageOfItemsContentsPaddingPx
     );
     if (sc.pageOfItemsContentsPaddingPx > 0) {
-      domStyle.set(pageOfItemsContents, {
+      domStyle.set(pageOfItemsContentsNode, {
         padding: `${sc.pageOfItemsContentsPaddingPx}px`,
       });
     }
-    domStyle.set(pageOfItems, {
+    domStyle.set(pageOfItemsNode, {
       padding: genericMeasurements.pageOfItemsPaddingPx + "px",
     });
 
-    return pageOfItemsContents;
+    return pageOfItemsContentsNode;
   }
 
   function addCard(parent, opt_classArray, opt_id) {

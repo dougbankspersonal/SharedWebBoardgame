@@ -78,6 +78,9 @@ define([
 
   function addCards(title, color, numCards, frontCallback, opt_backCallback) {
     var sc = systemConfigs.getSystemConfigs();
+    // Better be in cards mode.
+    console.assert(sc.isCards, "Not in cards mode");
+
     var bodyNode = dom.byId("body");
 
     var pageOfFronts;

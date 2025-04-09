@@ -11,41 +11,59 @@ define([
   var _systemConfigs = {};
 
   var validSystemConfigKeys = {
+    //---------------------------
+    //
+    // Vars for cards
+    //
+    //---------------------------
+    isCards: true,
     // How many cards before we add a page break?
     cardsPerPage: true,
-
     // Alt size of cards.
     cardWidth: true,
     cardHeight: true,
     cardBackFontSize: true,
+    // Do all card fronts separate from backs: we are not gonna print double sided,
+    // we print fronts and backs and then stick em together.
+    separateBacks: true,
+    // TTS requires at least 12 cards.
+    minCardCount: true,
+    // Sometimes we just want one of each type of card, no dups.
+    singleCardInstance: true,
+    // Do not render card backs.
+    skipCardBacks: true,
+    // For cards, no margin around them.
+    cardsNoMargin: true,
 
+    //---------------------------
+    //
+    // Vars for boards
+    //
+    //---------------------------
+    maxRowsPerPage: true,
+    maxColumnsPerPage: true,
+
+    //---------------------------
+    //
+    // Other stuff.
+    //
+    //---------------------------
     // Thing is pageless, we don't want boundaries on size or page breaks.
     pageless: true,
+    // This is a demo game board (demo meaning it's an image of a game board, not
+    // the board broken into pieces across pages for printing)
+    demoBoard: true,
     // Can override page width.
     explicitPageWidth: true,
 
-    // For cards, no margin around them.
-    cardsNoMargin: true,
     // Extra class to apply to page_of_items div.
     extraClassesForPageOfItemsContents: true,
     explicitPageWidth: true,
 
     gridGap: true,
 
-    // Do not render card backs.
-    skipCardBacks: true,
-
     // Print landscape.
     landscape: true,
-
-    // Do all card fronts separate from backs: we are not gonna print double sided,
-    // we print fronts and backs and then stick em together.
-    separateBacks: true,
-
-    // TTS requires at least 12 cards.
-    minCardCount: true,
-    // Sometimes we just want one of each type of card, no dups.
-    singleCardInstance: true,
 
     pageOfItemsContentsPaddingPx: true,
 
@@ -79,6 +97,7 @@ define([
     sc.cardBackFontSize = opt_cardBackFontSize;
     sc.gridGap = genericMeasurements.cardGap;
     sc.addPageNumbers = true;
+    sc.isCards = true;
 
     return sc;
   }
@@ -103,6 +122,8 @@ define([
     sc.cardsPerPage = genericMeasurements.ttsCardsPerPage;
     sc.extraClassesForPageOfItemsContents = ["tts"];
     sc.gridGap = 0;
+    sc.isCards = true;
+
     return sc;
   }
 
@@ -111,19 +132,14 @@ define([
     sc.pageless = true;
     sc.gridGap = 0;
     sc.explicitPageWidth = 3 * genericMeasurements.dieWidth;
-    return sc;
-  }
-
-  function addGameBoardSystemConfigs(opt_scInput) {
-    var sc = opt_scInput ? opt_scInput : {};
-    sc.gridGap = 0;
-    sc.extraClassesForPageOfItemsContents = ["tts"];
+    sc.isCards = false;
     return sc;
   }
 
   function addTileSystemConfigs(gridGap, opt_scInput) {
     var sc = opt_scInput ? opt_scInput : {};
     sc.gridGap = gridGap;
+    sc.isCards = false;
     debugLog.debugLog(
       "SystemConfigs",
       "Doug: addTileSystemConfigs: sc = " + JSON.stringify(sc)
@@ -153,7 +169,6 @@ define([
     addCardSizingSystemConfigs: addCardSizingSystemConfigs,
     addTTSCardSystemConfigs: addTTSCardSystemConfigs,
     addTTSDieSystemConfigs: addTTSDieSystemConfigs,
-    addGameBoardSystemConfigs: addGameBoardSystemConfigs,
     addTileSystemConfigs: addTileSystemConfigs,
   };
 });
