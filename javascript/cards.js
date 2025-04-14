@@ -59,7 +59,7 @@ define([
     domStyle.set(innerNode, "background", gradient);
     var title = htmlUtils.addDiv(innerNode, ["title"], "title", title);
     var style = {};
-    debugLog.debugLog("Cards", "Doug addCardBack sc = " + JSON.stringify(sc));
+    debugLog.debugLog("Cards", "Doug: addCardBack sc = " + JSON.stringify(sc));
     style["font-size"] = sc.cardBackFontSize
       ? `${sc.cardBackFontSize}px`
       : `${genericMeasurements.cardBackFontSize}px`;

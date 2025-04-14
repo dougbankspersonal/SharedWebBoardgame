@@ -1,12 +1,14 @@
 define(["dojo/domReady!"], function () {
   var debugFlags = {
     Belts: "off",
-    BoxRobotCards: "off",
+    BoxHolderCards: "off",
     Cards: "off",
     CardConfigs: "off",
     CardCount: "off",
     CardSize: "off",
-    GameBoard: "on",
+    ConveyorTiles: "off",
+    GameBoard: "off",
+    Highlight: "on",
     Layout: "off",
     Machines: "off",
     Markers: "off",

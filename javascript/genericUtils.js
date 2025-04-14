@@ -59,7 +59,10 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (debugLog) {
   }
 
   function getRandomArrayElement(array, getRandomZeroToOne) {
-    debugLog.debugLog("Random", "Doug getRandomArrayElement: array = " + array);
+    debugLog.debugLog(
+      "Random",
+      "Doug: getRandomArrayElement: array = " + array
+    );
     return getRandomArrayElements(array, 1, getRandomZeroToOne)[0];
   }
 
