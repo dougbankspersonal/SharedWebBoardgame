@@ -4,6 +4,7 @@ define([
   "dojo/dom-style",
   "sharedJavascript/debugLog",
   "sharedJavascript/genericMeasurements",
+  "sharedJavascript/genericUtils",
   "sharedJavascript/htmlUtils",
   "sharedJavascript/systemConfigs",
   "dojo/domReady!",
@@ -13,6 +14,7 @@ define([
   domStyle,
   debugLog,
   genericMeasurements,
+  genericUtils,
   htmlUtils,
   systemConfigs
 ) {
@@ -37,6 +39,15 @@ define([
       width: `${cardWidth}px`,
       height: `${cardHeight}px`,
     });
+  }
+
+  function addPageOfCards(parent, opt_classArray) {
+    console.log("Doug: hi there");
+    var classes = genericUtils.growOptStringArray(
+      opt_classArray,
+      "page_of_cards"
+    );
+    return htmlUtils.addPageOfItems(parent, classes);
   }
 
   function addCardBack(parent, title, color, opt_backCallback) {
@@ -101,7 +112,7 @@ define([
       for (let i = 0; i < numCards; i++) {
         var timeForNewPage = i % cardsPerPage;
         if (timeForNewPage == 0) {
-          pageOfFronts = htmlUtils.addPageOfItems(bodyNode);
+          pageOfFronts = addPageOfCards(bodyNode);
         }
         frontCallback(pageOfFronts, i);
       }
@@ -110,7 +121,7 @@ define([
         for (let i = 0; i < numCards; i++) {
           var timeForNewPage = i % cardsPerPage;
           if (timeForNewPage == 0) {
-            pageOfBacks = htmlUtils.addPageOfItems(bodyNode, ["back"]);
+            pageOfBacks = addPageOfCards(bodyNode, ["back"]);
           }
           addCardBack(pageOfBacks, title, color, opt_backCallback);
         }
@@ -119,9 +130,9 @@ define([
       for (let i = 0; i < numCards; i++) {
         var timeForNewPage = i % cardsPerPage;
         if (timeForNewPage == 0) {
-          pageOfFronts = htmlUtils.addPageOfItems(bodyNode);
+          pageOfFronts = addPageOfCards(bodyNode);
           if (!sc.skipCardBacks) {
-            pageOfBacks = htmlUtils.addPageOfItems(bodyNode, ["back"]);
+            pageOfBacks = addPageOfCards(bodyNode, ["back"]);
           }
         }
         frontCallback(pageOfFronts, i);

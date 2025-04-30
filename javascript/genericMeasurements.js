@@ -33,7 +33,7 @@ define(["dojo/domReady!"], function () {
 
   var adjustedPageWidth = printedPagePortraitWidth - 2 * pagePadding;
   var adjustedPageHeight = printedPagePortraitHeight - 2 * pagePadding;
-  var cardGap = 4;
+  var cardGap = 1;
 
   var cardColumnsPerPage = getNumberThatFitAccountingForGap(
     adjustedPageWidth,
