@@ -131,14 +131,13 @@ define([
     var sc = opt_scInput ? opt_scInput : {};
     sc.pageless = true;
     sc.gridGap = 0;
-    sc.explicitPageWidth = 3 * genericMeasurements.dieWidth;
+    // sc.explicitPageWidth = 3 * genericMeasurements.dieWidth;
     sc.isCards = false;
     return sc;
   }
 
-  function addTileSystemConfigs(gridGap, opt_scInput) {
+  function addTileSystemConfigs(opt_scInput) {
     var sc = opt_scInput ? opt_scInput : {};
-    sc.gridGap = gridGap;
     sc.isCards = false;
     debugLog.debugLog(
       "SystemConfigs",

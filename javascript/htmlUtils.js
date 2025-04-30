@@ -199,8 +199,15 @@ define([
       "pageOfItemsContents"
     );
 
-    var gridGap = sc.gridGap ? sc.gridGap : genericMeasurements.standardPageGap;
-    debugLog.debugLog("Refactor", "Doug: addPageOfItems: gridGap = " + gridGap);
+    debugLog.debugLog(
+      "Layout",
+      "Doug: addPageOfItems: sc.gridGap = " + sc.gridGap
+    );
+    var gridGapIsPresent = sc.gridGap !== null && sc.gridGap !== undefined;
+    var gridGap = gridGapIsPresent
+      ? sc.gridGap
+      : genericMeasurements.standardPageGap;
+    debugLog.debugLog("Layout", "Doug: addPageOfItems: gridGap = " + gridGap);
     domStyle.set(pageOfItemsContentsNode, {
       gap: `${gridGap}px`,
     });

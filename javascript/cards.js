@@ -42,7 +42,6 @@ define([
   }
 
   function addPageOfCards(parent, opt_classArray) {
-    console.log("Doug: hi there");
     var classes = genericUtils.growOptStringArray(
       opt_classArray,
       "page_of_cards"
