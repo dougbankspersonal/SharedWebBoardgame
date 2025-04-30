@@ -199,15 +199,11 @@ define([
       "pageOfItemsContents"
     );
 
-    if (sc.gridGap !== null) {
-      debugLog.debugLog(
-        "Refactor",
-        "Doug: addPageOfItems: sc.gridGap = " + sc.gridGap
-      );
-      domStyle.set(pageOfItemsContentsNode, {
-        gap: `${sc.gridGap}px`,
-      });
-    }
+    var gridGap = sc.gridGap ? sc.gridGap : genericMeasurements.standardPageGap;
+    debugLog.debugLog("Refactor", "Doug: addPageOfItems: gridGap = " + gridGap);
+    domStyle.set(pageOfItemsContentsNode, {
+      gap: `${gridGap}px`,
+    });
 
     debugLog.debugLog(
       "Layout",

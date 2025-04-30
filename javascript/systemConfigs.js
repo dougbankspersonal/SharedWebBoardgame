@@ -95,7 +95,7 @@ define([
     sc.cardWidth = cardWidth;
     sc.cardHeight = cardHeight;
     sc.cardBackFontSize = opt_cardBackFontSize;
-    sc.gridGap = genericMeasurements.cardGap;
+    sc.gridGap = genericMeasurements.standardPageGap;
     sc.addPageNumbers = true;
     sc.isCards = true;
 
