@@ -22,22 +22,24 @@ define([
     var sc = systemConfigs.getSystemConfigs();
     debugLog.debugLog(
       "CardSize",
-      "Doug: setCardSize sc.cardHeight = ",
-      sc.cardHeight
+      "Doug: setCardSize sc.cardHeightPx = ",
+      sc.cardHeightPx
     );
     debugLog.debugLog(
       "CardSize",
-      "Doug: setCardSize sc.cardWidth = ",
-      sc.cardWidth
+      "Doug: setCardSize sc.cardWidthPx = ",
+      sc.cardWidthPx
     );
-    var cardWidth = sc.cardWidth ? sc.cardWidth : genericMeasurements.cardWidth;
-    var cardHeight = sc.cardHeight
-      ? sc.cardHeight
-      : genericMeasurements.cardHeight;
+    var cardWidthPx = sc.cardWidthPx
+      ? sc.cardWidthPx
+      : genericMeasurements.standardCardWidthPx;
+    var cardHeightPx = sc.cardHeightPx
+      ? sc.cardHeightPx
+      : genericMeasurements.standardCardHeightPx;
 
     domStyle.set(node, {
-      width: `${cardWidth}px`,
-      height: `${cardHeight}px`,
+      width: `${cardWidthPx}px`,
+      height: `${cardHeightPx}px`,
     });
   }
 

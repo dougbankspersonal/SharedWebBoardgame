@@ -122,10 +122,10 @@ define([
 
     debugLog.debugLog(
       "Layout",
-      "Doug: getPageWidth genericMeasurements.printedPagePortraitWidth = " +
-        genericMeasurements.printedPagePortraitWidth
+      "Doug: getPageWidth genericMeasurements.printedPagePortraitWidthPx = " +
+        genericMeasurements.printedPagePortraitWidthPx
     );
-    return genericMeasurements.printedPagePortraitWidth;
+    return genericMeasurements.printedPagePortraitWidthPx;
   }
 
   var getPageHeight = function () {
@@ -137,7 +137,7 @@ define([
       return genericMeasurements.printedPageLandscapeHeight;
     }
 
-    return genericMeasurements.printedPagePortraitHeight;
+    return genericMeasurements.printedPagePortraitHeightPx;
   };
 
   function addPageOfItems(parent, opt_classArray) {
