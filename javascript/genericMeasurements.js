@@ -17,32 +17,40 @@ define(["dojo/domReady!"], function () {
     return count;
   }
 
+  var printedPagePortraitWidthPx = 816;
+  var printedPagePortraitHeightPx = 1056;
+
+  var printedPagePortraitWidthIn = 8.5;
+
+  var pixelsPerInch = printedPagePortraitWidthPx / printedPagePortraitWidthIn;
+
+  var standardCardWidthInches = 2.5;
+  var standardCardHeightInches = 3.5;
+  var standardCardWidthPx = standardCardWidthInches * pixelsPerInch;
+  var standardCardHeightPx = standardCardHeightInches * pixelsPerInch;
+
   var standardBorderWidth = 2;
   var pageOfItemsPaddingPx = 10;
 
-  var printedPagePortraitWidth = 816;
-  var printedPagePortraitHeight = 1056;
-  var printedPageLandscapeWidth = printedPagePortraitHeight;
-  var printedPageLandscapeHeight = printedPagePortraitWidth;
+  var printedPageLandscapeWidth = printedPagePortraitHeightPx;
+  var printedPageLandscapeHeight = printedPagePortraitWidthPx;
   var pagePadding = 10;
 
-  var cardWidth = 224;
-  var cardHeight = 314;
-  var cardBackFontSize = cardWidth * 0.2;
+  var cardBackFontSize = standardCardWidthPx * 0.2;
   var cardBorderWidth = 5;
 
-  var adjustedPageWidth = printedPagePortraitWidth - 2 * pagePadding;
-  var adjustedPageHeight = printedPagePortraitHeight - 2 * pagePadding;
+  var adjustedPageWidth = printedPagePortraitWidthPx - 2 * pagePadding;
+  var adjustedPageHeight = printedPagePortraitHeightPx - 2 * pagePadding;
   var standardPageGap = 1;
 
   var cardColumnsPerPage = getNumberThatFitAccountingForGap(
     adjustedPageWidth,
-    cardWidth,
+    standardCardWidthPx,
     standardPageGap
   );
   var cardRowsPerPage = getNumberThatFitAccountingForGap(
     adjustedPageHeight,
-    cardHeight,
+    standardCardHeightPx,
     standardPageGap
   );
   var cardsPerPage = cardColumnsPerPage * cardRowsPerPage;
@@ -57,12 +65,12 @@ define(["dojo/domReady!"], function () {
 
     standardBorderWidth: standardBorderWidth,
     pageOfItemsPaddingPx: pageOfItemsPaddingPx,
-    printedPagePortraitWidth: printedPagePortraitWidth,
-    printedPagePortraitHeight: printedPagePortraitHeight,
+    printedPagePortraitWidthPx: printedPagePortraitWidthPx,
+    printedPagePortraitHeightPx: printedPagePortraitHeightPx,
     printedPageLandscapeWidth: printedPageLandscapeWidth,
     printedPageLandscapeHeight: printedPageLandscapeHeight,
-    cardWidth: cardWidth,
-    cardHeight: cardHeight,
+    standardCardWidthPx: standardCardWidthPx,
+    standardCardHeightPx: standardCardHeightPx,
     cardBackFontSize: cardBackFontSize,
     cardBorderWidth: cardBorderWidth,
 

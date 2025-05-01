@@ -20,8 +20,8 @@ define([
     // How many cards before we add a page break?
     cardsPerPage: true,
     // Alt size of cards.
-    cardWidth: true,
-    cardHeight: true,
+    cardWidthPx: true,
+    cardHeightPx: true,
     cardBackFontSize: true,
     // Do all card fronts separate from backs: we are not gonna print double sided,
     // we print fronts and backs and then stick em together.
@@ -76,24 +76,36 @@ define([
   }
 
   function addCardSizingSystemConfigs(
-    opt_cardWidth,
-    opt_cardHeight,
+    opt_cardWidthPx,
+    opt_cardHeightPx,
     opt_cardBackFontSize,
     opt_scInput
   ) {
     var sc = opt_scInput ? opt_scInput : {};
-    var cardWidth = opt_cardWidth
-      ? opt_cardWidth
-      : genericMeasurements.cardWidth;
-    var cardHeight = opt_cardHeight
-      ? opt_cardHeight
-      : genericMeasurements.cardHeight;
+    var cardWidthPx = opt_cardWidthPx
+      ? opt_cardWidthPx
+      : genericMeasurements.standardCardWidthPx;
+    var cardHeightPx = opt_cardHeightPx
+      ? opt_cardHeightPx
+      : genericMeasurements.standardCardHeightPx;
     var cardsPerPage =
-      Math.floor(genericMeasurements.adjustedPageWidth / cardWidth) *
-      Math.floor(genericMeasurements.adjustedPageHeight / cardHeight);
+      Math.floor(genericMeasurements.adjustedPageWidth / cardWidthPx) *
+      Math.floor(genericMeasurements.adjustedPageHeight / cardHeightPx);
+    debugLog.debugLog(
+      "Cards",
+      "Doug: genericMeasurements.adjustedPageWidth = " +
+        genericMeasurements.adjustedPageWidth
+    );
+    debugLog.debugLog("Cards", "Doug: cardWidthPx = " + cardWidthPx);
+    debugLog.debugLog(
+      "Cards",
+      "Doug: genericMeasurements.adjustedPageHeight = " +
+        genericMeasurements.adjustedPageHeight
+    );
+    debugLog.debugLog("Cards", "Doug: cardHeightPx = " + cardHeightPx);
     sc.cardsPerPage = cardsPerPage;
-    sc.cardWidth = cardWidth;
-    sc.cardHeight = cardHeight;
+    sc.cardWidthPx = cardWidthPx;
+    sc.cardHeightPx = cardHeightPx;
     sc.cardBackFontSize = opt_cardBackFontSize;
     sc.gridGap = genericMeasurements.standardPageGap;
     sc.addPageNumbers = true;
@@ -116,7 +128,7 @@ define([
     );
     // Apply tweaks.
     sc.pageless = true;
-    sc.explicitPageWidth = 10 * sc.cardWidth;
+    sc.explicitPageWidth = 10 * sc.cardWidthPx;
     sc.skipCardBacks = true;
     sc.minCardCount = 12;
     sc.cardsPerPage = genericMeasurements.ttsCardsPerPage;
