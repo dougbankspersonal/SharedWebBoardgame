@@ -102,6 +102,13 @@ define([
     return sc;
   }
 
+  function addLandscapeSystemConfigs(opt_scInput) {
+    var sc = opt_scInput ? opt_scInput : {};
+    sc.landscape = true;
+
+    return sc;
+  }
+
   function addTTSCardSystemConfigs(
     opt_cardWidth,
     opt_cardHeight,
@@ -169,5 +176,6 @@ define([
     addTTSCardSystemConfigs: addTTSCardSystemConfigs,
     addTTSDieSystemConfigs: addTTSDieSystemConfigs,
     addTileSystemConfigs: addTileSystemConfigs,
+    addLandscapeSystemConfigs: addLandscapeSystemConfigs,
   };
 });
