@@ -37,7 +37,7 @@ define(["dojo/domReady!"], function () {
   var pagePadding = 10;
 
   var cardBackFontSize = standardCardWidthPx * 0.2;
-  var cardBorderWidth = 5;
+  var cardBorderWidthPx = 5;
 
   var adjustedPageWidth = printedPagePortraitWidthPx - 2 * pagePadding;
   var adjustedPageHeight = printedPagePortraitHeightPx - 2 * pagePadding;
@@ -72,7 +72,7 @@ define(["dojo/domReady!"], function () {
     standardCardWidthPx: standardCardWidthPx,
     standardCardHeightPx: standardCardHeightPx,
     cardBackFontSize: cardBackFontSize,
-    cardBorderWidth: cardBorderWidth,
+    cardBorderWidthPx: cardBorderWidthPx,
 
     adjustedPageWidth: adjustedPageWidth,
     adjustedPageHeight: adjustedPageHeight,
