@@ -167,7 +167,7 @@ define([
     }
 
     domStyle.set(pageOfItemsNode, {
-      padding: genericMeasurements.pageOfItemsPaddingPx + "px",
+      margin: genericMeasurements.pageOfItemsMarginPx + "px",
     });
 
     if (sc.addPageNumbers) {
@@ -222,9 +222,6 @@ define([
         padding: `${sc.pageOfItemsContentsPaddingPx}px`,
       });
     }
-    domStyle.set(pageOfItemsNode, {
-      padding: genericMeasurements.pageOfItemsPaddingPx + "px",
-    });
 
     return pageOfItemsContentsNode;
   }
