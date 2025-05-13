@@ -69,6 +69,9 @@ define([
 
     // Add page numbers to bottom corner of page.
     addPageNumbers: true,
+
+    // Die is scaled to be the size of a real die.
+    usePhysicalDieSize: true,
   };
 
   function sanityCheckConfigs(configs) {

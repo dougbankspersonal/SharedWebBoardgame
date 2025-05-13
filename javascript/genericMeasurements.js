@@ -60,6 +60,10 @@ define(["dojo/domReady!"], function () {
   var dieWidth = 150;
   var dieHeight = dieWidth;
 
+  var dieFaceInches = 0.63;
+  var physicalDieWidthPx = dieFaceInches * pixelsPerInch;
+  var physicalDieHeightPx = physicalDieWidthPx;
+
   return {
     getNumberThatFitAccountingForGap: getNumberThatFitAccountingForGap,
 
@@ -84,5 +88,8 @@ define(["dojo/domReady!"], function () {
 
     dieWidth: dieWidth,
     dieHeight: dieHeight,
+
+    physicalDieWidthPx,
+    physicalDieHeightPx,
   };
 });

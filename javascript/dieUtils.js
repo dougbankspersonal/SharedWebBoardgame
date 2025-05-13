@@ -1,10 +1,19 @@
 define([
   "dojo/dom",
   "dojo/dom-style",
+  "sharedJavascript/debugLog",
   "sharedJavascript/genericMeasurements",
   "sharedJavascript/htmlUtils",
+  "sharedJavascript/systemConfigs",
   "dojo/domReady!",
-], function (dom, domStyle, genericMeasurements, htmlUtils) {
+], function (
+  dom,
+  domStyle,
+  debugLog,
+  genericMeasurements,
+  htmlUtils,
+  systemConfigs
+) {
   function addDieFace(parent, opt_styleDescs) {
     var dieFace = htmlUtils.addDiv(parent, ["die_face"], "dieFace");
     domStyle.set(dieFace, {
@@ -43,6 +52,19 @@ define([
     }
     for (var i = 0; i < 6; i++) {
       addNthFaceCallback(pageOfItems, i);
+    }
+
+    var sc = systemConfigs.getSystemConfigs();
+
+    if (sc.usePhysicalDieSize) {
+      debugLog.debugLog("Dice", "Scaling");
+      // Scale the whole thing.
+      var scale =
+        genericMeasurements.physicalDieWidthPx / genericMeasurements.dieWidth;
+      domStyle.set(pageOfItems, {
+        transform: "scale(" + scale + ")",
+        "transform-origin": "top left",
+      });
     }
   }
 

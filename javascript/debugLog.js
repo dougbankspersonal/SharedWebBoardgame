@@ -7,6 +7,7 @@ define(["dojo/domReady!"], function () {
     CardCount: "off",
     CardSize: "off",
     ConveyorTiles: "off",
+    Dice: "on",
     GameBoard: "off",
     Highlight: "off",
     Layout: "off",
