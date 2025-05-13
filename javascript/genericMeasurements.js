@@ -30,7 +30,7 @@ define(["dojo/domReady!"], function () {
   var standardCardHeightPx = standardCardHeightInches * pixelsPerInch;
 
   var standardBorderWidth = 2;
-  var pageOfItemsPaddingPx = 10;
+  var pageOfItemsMarginPx = 10;
 
   var printedPageLandscapeWidth = printedPagePortraitHeightPx;
   var printedPageLandscapeHeight = printedPagePortraitWidthPx;
@@ -68,7 +68,7 @@ define(["dojo/domReady!"], function () {
     getNumberThatFitAccountingForGap: getNumberThatFitAccountingForGap,
 
     standardBorderWidth: standardBorderWidth,
-    pageOfItemsPaddingPx: pageOfItemsPaddingPx,
+    pageOfItemsMarginPx: pageOfItemsMarginPx,
     printedPagePortraitWidthPx: printedPagePortraitWidthPx,
     printedPagePortraitHeightPx: printedPagePortraitHeightPx,
     printedPageLandscapeWidth: printedPageLandscapeWidth,
