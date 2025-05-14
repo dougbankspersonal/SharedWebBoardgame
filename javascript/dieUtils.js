@@ -44,6 +44,7 @@ define([
       display: "grid",
       "grid-template-columns": "repeat(3, auto)",
       "grid-auto-rows": "auto",
+      margin: "10px",
       gap: "0px",
     });
 

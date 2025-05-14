@@ -4,7 +4,8 @@ define(["sharedJavascript/dieUtils", "dojo/domReady!"], function (dieUtils) {
   var stopImage = "../images/Dice/stop.png";
   var rollImage = "../images/Dice/roll.png";
 
-  var scale = 0.9;
+  var genericImageScale = 0.9;
+  var dieScale = 0.7;
 
   function addStopFace(parent) {
     return dieUtils.addDieFace(parent, [
@@ -19,8 +20,8 @@ define(["sharedJavascript/dieUtils", "dojo/domReady!"], function (dieUtils) {
     return dieUtils.addDieFace(parent, [
       {
         img: scamperImage,
-        transform: `scale(${scale})`,
-        "max-width": `${scale * 100}%`,
+        transform: `scale(${genericImageScale})`,
+        "max-width": `${genericImageScale * 100}%`,
       },
     ]);
   }
@@ -29,26 +30,27 @@ define(["sharedJavascript/dieUtils", "dojo/domReady!"], function (dieUtils) {
     return dieUtils.addDieFace(parent, [
       {
         img: huntImage,
-        transform: `scale(${scale})`,
-        "max-width": `${scale * 100}%`,
+        transform: `scale(${genericImageScale})`,
+        "max-width": `${genericImageScale * 100}%`,
       },
     ]);
   }
 
   function addHuntAndRollFace(parent) {
-    var imageOffset = 15;
+    var rollOffsetPx = -25;
+    var huntOffsetPx = 30;
     return dieUtils.addDieFace(parent, [
       {
         img: rollImage,
-        transform: `scale(${scale}) translateY(${-imageOffset}%)`,
-        "max-width": `${scale * 100}%`,
+        transform: `scale(${dieScale}) translateY(${rollOffsetPx}%)`,
+        "max-width": `${dieScale * 100}%`,
         "z-index": 1,
         position: "absolute",
       },
       {
         img: huntImage,
-        transform: `scale(${scale}) translateY(${imageOffset}%)`,
-        "max-width": `${scale * 100}%`,
+        transform: `scale(${genericImageScale}) translateY(${huntOffsetPx}%)`,
+        "max-width": `${genericImageScale * 100}%`,
         "z-index": 2,
         position: "absolute",
       },
