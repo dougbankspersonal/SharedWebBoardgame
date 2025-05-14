@@ -69,9 +69,6 @@ define([
 
     // Add page numbers to bottom corner of page.
     addPageNumbers: true,
-
-    // Die is scaled to be the size of a real die.
-    usePhysicalDieSize: true,
   };
 
   function sanityCheckConfigs(configs) {
@@ -153,7 +150,7 @@ define([
     var sc = opt_scInput ? opt_scInput : {};
     sc.pageless = true;
     sc.gridGap = 0;
-    // sc.explicitPageWidth = 3 * genericMeasurements.dieWidth;
+    // sc.explicitPageWidth = 3 * genericMeasurements.dieWidthPx;
     sc.isCards = false;
     return sc;
   }

@@ -29,11 +29,11 @@ define(["dojo/domReady!"], function () {
   var standardCardWidthPx = standardCardWidthInches * pixelsPerInch;
   var standardCardHeightPx = standardCardHeightInches * pixelsPerInch;
 
-  var standardBorderWidth = 2;
+  var standardBorderWidthPx = 2;
   var pageOfItemsMarginPx = 10;
 
-  var printedPageLandscapeWidth = printedPagePortraitHeightPx;
-  var printedPageLandscapeHeight = printedPagePortraitWidthPx;
+  var printedPageLandscapeWidthPx = printedPagePortraitHeightPx;
+  var printedPageLandscapeHeightPx = printedPagePortraitWidthPx;
   var pagePadding = 10;
 
   var cardBackFontSize = standardCardWidthPx * 0.2;
@@ -57,8 +57,8 @@ define(["dojo/domReady!"], function () {
 
   var ttsCardsPerPage = 70;
 
-  var dieWidth = 150;
-  var dieHeight = dieWidth;
+  var dieWidthPx = 150;
+  var dieHeightPx = dieWidthPx;
 
   var dieFaceInches = 0.63;
   var physicalDieWidthPx = dieFaceInches * pixelsPerInch;
@@ -67,12 +67,12 @@ define(["dojo/domReady!"], function () {
   return {
     getNumberThatFitAccountingForGap: getNumberThatFitAccountingForGap,
 
-    standardBorderWidth: standardBorderWidth,
+    standardBorderWidthPx: standardBorderWidthPx,
     pageOfItemsMarginPx: pageOfItemsMarginPx,
     printedPagePortraitWidthPx: printedPagePortraitWidthPx,
     printedPagePortraitHeightPx: printedPagePortraitHeightPx,
-    printedPageLandscapeWidth: printedPageLandscapeWidth,
-    printedPageLandscapeHeight: printedPageLandscapeHeight,
+    printedPageLandscapeWidthPx: printedPageLandscapeWidthPx,
+    printedPageLandscapeHeightPx: printedPageLandscapeHeightPx,
     standardCardWidthPx: standardCardWidthPx,
     standardCardHeightPx: standardCardHeightPx,
     cardBackFontSize: cardBackFontSize,
@@ -86,8 +86,8 @@ define(["dojo/domReady!"], function () {
     ttsCardsPerPage: ttsCardsPerPage,
     standardPageGap: standardPageGap,
 
-    dieWidth: dieWidth,
-    dieHeight: dieHeight,
+    dieWidthPx: dieWidthPx,
+    dieHeightPx: dieHeightPx,
 
     physicalDieWidthPx,
     physicalDieHeightPx,

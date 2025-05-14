@@ -57,7 +57,7 @@ define([
 
   function addStandardBorder(node) {
     domStyle.set(node, {
-      border: genericMeasurements.standardBorderWidth + "px solid black",
+      border: genericMeasurements.standardBorderWidthPx + "px solid black",
     });
   }
 
@@ -114,10 +114,10 @@ define([
     if (sc.landscape) {
       debugLog.debugLog(
         "Layout",
-        "Doug: getPageWidth genericMeasurements.printedPageLandscapeWidth = " +
-          genericMeasurements.printedPageLandscapeWidth
+        "Doug: getPageWidth genericMeasurements.printedPageLandscapeWidthPx = " +
+          genericMeasurements.printedPageLandscapeWidthPx
       );
-      return genericMeasurements.printedPageLandscapeWidth;
+      return genericMeasurements.printedPageLandscapeWidthPx;
     }
 
     debugLog.debugLog(
@@ -134,7 +134,7 @@ define([
       return null;
     }
     if (sc.landscape) {
-      return genericMeasurements.printedPageLandscapeHeight;
+      return genericMeasurements.printedPageLandscapeHeightPx;
     }
 
     return genericMeasurements.printedPagePortraitHeightPx;
