@@ -14,23 +14,30 @@ define([
   htmlUtils,
   systemConfigs
 ) {
-  function addDieFace(parent, opt_styleDescs) {
-    var dieFace = htmlUtils.addDiv(parent, ["die_face"], "dieFace");
+  function addDieFace(parent, options) {
+    var options = options ? options : {};
+    var text = options.text;
+    var classes = ["die_face"];
+    if (options.classes) {
+      classes = classes.concat(options.classes);
+    }
+    var dieFace = htmlUtils.addDiv(parent, classes, "dieFace", text);
     domStyle.set(dieFace, {
       height: genericMeasurements.dieHeight + "px",
       width: genericMeasurements.dieWidth + "px",
     });
 
-    if (opt_styleDescs) {
-      for (var styleDesc of opt_styleDescs) {
-        var image = htmlUtils.addImage(
-          dieFace,
-          ["die_image"],
-          "dieImage",
-          styleDesc.img
-        );
-        domStyle.set(image, styleDesc);
-      }
+    var imagesWithStyling = options.imagesWithStyling
+      ? options.imagesWithStyling
+      : [];
+    for (var imageWithStyling of imagesWithStyling) {
+      var image = htmlUtils.addImage(
+        dieFace,
+        ["die_image"],
+        "dieImage",
+        imageWithStyling.img
+      );
+      domStyle.set(image, imageWithStyling.styling);
     }
     return dieFace;
   }
@@ -63,7 +70,6 @@ define([
         genericMeasurements.physicalDieWidthPx / genericMeasurements.dieWidth;
       domStyle.set(pageOfItems, {
         transform: "scale(" + scale + ")",
-        "transform-origin": "top left",
       });
     }
   }

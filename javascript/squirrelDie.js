@@ -7,52 +7,69 @@ define(["sharedJavascript/dieUtils", "dojo/domReady!"], function (dieUtils) {
   var scale = 0.9;
 
   function addStopFace(parent) {
-    return dieUtils.addDieFace(parent, [
-      {
-        img: stopImage,
-        "max-width": `100%`,
-      },
+    return dieUtils.addDieFace(parent, {
+      imagesWithStyling = [
+        {
+          img: stopImage,
+          styling: {
+            "max-width": `100%`,
+          }
+        },
     ]);
   }
 
   function addScamperFace(parent) {
-    return dieUtils.addDieFace(parent, [
-      {
-        img: scamperImage,
-        transform: `scale(${scale})`,
-        "max-width": `${scale * 100}%`,
-      },
-    ]);
+    return dieUtils.addDieFace(parent, {
+      imagesWithStyling = [
+        {
+          img: scamperImage,
+          styling: {
+            transform: `scale(${scale})`,
+            "max-width": `${scale * 100}%`,
+          },
+        },
+      ],
+    });
   }
 
   function addHuntFace(parent) {
-    return dieUtils.addDieFace(parent, [
-      {
-        img: huntImage,
-        transform: `scale(${scale})`,
-        "max-width": `${scale * 100}%`,
-      },
-    ]);
+    return dieUtils.addDieFace(parent, {
+      imagesWithStyling = [
+        {
+          img: huntImage,
+          styling: {
+            transform: `scale(${scale})`,
+            "max-width": `${scale * 100}%`,
+          },
+        }
+      ],
+    });
   }
 
   function addHuntAndRollFace(parent) {
     var imageOffset = 15;
-    return dieUtils.addDieFace(parent, [
-      {
-        img: rollImage,
-        transform: `scale(${scale}) translateY(${-imageOffset}%)`,
-        "max-width": `${scale * 100}%`,
-        "z-index": 1,
-        position: "absolute",
-      },
-      {
-        img: huntImage,
-        transform: `scale(${scale}) translateY(${imageOffset}%)`,
-        "max-width": `${scale * 100}%`,
-        "z-index": 2,
-        position: "absolute",
-      },
-    ]);
+    return dieUtils.addDieFace(parent, {
+      imagesWithStyling = [
+        {
+          img: rollImage,
+          styling: {
+            transform: `scale(${scale}) translateY(${-imageOffset}%)`,
+            "max-width": `${scale * 100,}%`,
+            "z-index": 1,
+            position: "absolute",
+          }
+        },
+        {
+          img: huntImage,
+          styling: {
+              transform: `scale(${scale}) translateY(${imageOffset}%)`,
+            "max-width": `${scale * 100}%`,
+            "z-index": 2,
+            position: "absolute",
+          },
+        },
+      ],
+    },
   }
 
   function addNthFace(parent, index) {
