@@ -4,7 +4,8 @@ define(["sharedJavascript/dieUtils", "dojo/domReady!"], function (dieUtils) {
   var stopImage = "../images/Dice/stop.png";
   var rollImage = "../images/Dice/roll.png";
 
-  var scale = 0.9;
+  var genericImageScale = 0.9;
+  var dieScale = 0.7;
 
   function addStopFace(parent) {
     return dieUtils.addDieFace(parent, {
@@ -24,8 +25,8 @@ define(["sharedJavascript/dieUtils", "dojo/domReady!"], function (dieUtils) {
         {
           img: scamperImage,
           styling: {
-            transform: `scale(${scale})`,
-            "max-width": `${scale * 100}%`,
+            transform: `scale(${genericImageScale})`,
+            "max-width": `${genericImageScale * 100}%`,
           },
         },
       ],
@@ -38,8 +39,8 @@ define(["sharedJavascript/dieUtils", "dojo/domReady!"], function (dieUtils) {
         {
           img: huntImage,
           styling: {
-            transform: `scale(${scale})`,
-            "max-width": `${scale * 100}%`,
+            transform: `scale(${genericImageScale})`,
+            "max-width": `${genericImageScale * 100}%`,
           },
         }
       ],
@@ -53,8 +54,8 @@ define(["sharedJavascript/dieUtils", "dojo/domReady!"], function (dieUtils) {
         {
           img: rollImage,
           styling: {
-            transform: `scale(${scale}) translateY(${-imageOffset}%)`,
-            "max-width": `${scale * 100,}%`,
+            transform: `scale(${dieScale}) translateY(${-imageOffset}%)`,
+            "max-width": `${dieScale * 100,}%`,
             "z-index": 1,
             position: "absolute",
           }
@@ -62,8 +63,8 @@ define(["sharedJavascript/dieUtils", "dojo/domReady!"], function (dieUtils) {
         {
           img: huntImage,
           styling: {
-              transform: `scale(${scale}) translateY(${imageOffset}%)`,
-            "max-width": `${scale * 100}%`,
+              transform: `scale(${genericImageScale}) translateY(${imageOffset}%)`,
+            "max-width": `${genericImageScale * 100}%`,
             "z-index": 2,
             position: "absolute",
           },
