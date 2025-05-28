@@ -34,6 +34,9 @@ define([
     skipCardBacks: true,
     // For cards, no margin around them.
     cardsNoMargin: true,
+    // Should be able to figure out cards per row based on card width and page width but
+    // somehow it's off and I'm too lazy to fix.
+    cardsPerRow: true,
 
     //---------------------------
     //
@@ -78,6 +81,7 @@ define([
   function addCardSizingSystemConfigs(
     opt_cardWidthPx,
     opt_cardHeightPx,
+    opt_cardsPerRow,
     opt_cardBackFontSize,
     opt_scInput
   ) {
@@ -91,6 +95,9 @@ define([
     var cardsPerPage =
       Math.floor(genericMeasurements.adjustedPageWidth / cardWidthPx) *
       Math.floor(genericMeasurements.adjustedPageHeight / cardHeightPx);
+    var cardsPerRow = opt_cardsPerRow
+      ? opt_cardsPerRow
+      : Math.floor(genericMeasurements.adjustedPageWidth / cardWidthPx);
     debugLog.debugLog(
       "Cards",
       "Doug: genericMeasurements.adjustedPageWidth = " +
@@ -106,12 +113,22 @@ define([
     sc.cardsPerPage = cardsPerPage;
     sc.cardWidthPx = cardWidthPx;
     sc.cardHeightPx = cardHeightPx;
+    sc.cardsPerRow = cardsPerRow;
     sc.cardBackFontSize = opt_cardBackFontSize;
     sc.gridGap = genericMeasurements.standardPageGap;
-    sc.addPageNumbers = true;
     sc.isCards = true;
 
     return sc;
+  }
+
+  function addSmallCardSizingSystemConfigs(opt_scInput) {
+    return addCardSizingSystemConfigs(
+      genericMeasurements.smallCardWidthPx,
+      genericMeasurements.smallCardHeightPx,
+      genericMeasurements.smallCardsPerRow,
+      genericMeasurements.smallCardBackFontSize,
+      opt_scInput
+    );
   }
 
   function addLandscapeSystemConfigs(opt_scInput) {
@@ -124,12 +141,14 @@ define([
   function addTTSCardSystemConfigs(
     opt_cardWidth,
     opt_cardHeight,
+    opt_cardsPerRow,
     opt_cardBackFontSize,
     opt_scInput
   ) {
     var sc = addCardSizingSystemConfigs(
       opt_cardWidth,
       opt_cardHeight,
+      opt_cardsPerRow,
       opt_cardBackFontSize,
       opt_scInput
     );
@@ -142,8 +161,19 @@ define([
     sc.extraClassesForPageOfItemsContents = ["tts"];
     sc.gridGap = 0;
     sc.isCards = true;
+    sc.addPageNumbers = false;
 
     return sc;
+  }
+
+  function addSmallCardTTSCardSystemConfigs(opt_scInput) {
+    return addTTSCardSystemConfigs(
+      genericMeasurements.smallCardWidthPx,
+      genericMeasurements.smallCardHeightPx,
+      genericMeasurements.smallCardsPerRow,
+      genericMeasurements.smallCardBackFontSize,
+      opt_scInput
+    );
   }
 
   function addTTSDieSystemConfigs(opt_scInput) {
@@ -185,7 +215,9 @@ define([
     setSystemConfigs: setSystemConfigs,
     getSystemConfigs: getSystemConfigs,
     addCardSizingSystemConfigs: addCardSizingSystemConfigs,
+    addSmallCardSizingSystemConfigs: addSmallCardSizingSystemConfigs,
     addTTSCardSystemConfigs: addTTSCardSystemConfigs,
+    addSmallCardTTSCardSystemConfigs: addSmallCardTTSCardSystemConfigs,
     addTTSDieSystemConfigs: addTTSDieSystemConfigs,
     addTileSystemConfigs: addTileSystemConfigs,
     addLandscapeSystemConfigs: addLandscapeSystemConfigs,

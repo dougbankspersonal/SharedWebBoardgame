@@ -1,3 +1,17 @@
+.page_of_items.page_of_cards {
+  align-items: center;
+}
+.page_of_items.page_of_cards .page_of_items_contents {
+  flex-direction: column;
+}
+.page_of_items.page_of_cards .page_of_items_contents .row_of_cards {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+}
+
 .card {
   margin: 0px;
   display: inline-block;

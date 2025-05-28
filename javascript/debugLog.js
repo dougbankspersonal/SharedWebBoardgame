@@ -2,7 +2,7 @@ define(["dojo/domReady!"], function () {
   var debugFlags = {
     Belts: "off",
     BoxHolderCards: "off",
-    Cards: "off",
+    Cards: "on",
     CardConfigs: "off",
     CardCount: "off",
     CardSize: "off",
@@ -13,6 +13,7 @@ define(["dojo/domReady!"], function () {
     Layout: "off",
     Machines: "off",
     Markers: "off",
+    ParamCards: "on",
     Random: "off",
     Refactor: "off",
     SantaCards: "off",

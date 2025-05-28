@@ -31,6 +31,7 @@ define(["dojo/domReady!"], function () {
 
   var standardBorderWidthPx = 2;
   var pageOfItemsMarginPx = 10;
+  var pageOfItemsCardsMarginPx = 40;
 
   var printedPageLandscapeWidthPx = printedPagePortraitHeightPx;
   var printedPageLandscapeHeightPx = printedPagePortraitWidthPx;
@@ -64,11 +65,20 @@ define(["dojo/domReady!"], function () {
   var physicalDieWidthPx = dieFaceInches * pixelsPerInch;
   var physicalDieHeightPx = physicalDieWidthPx;
 
+  var smallCardWidthPx = 160;
+  var smallCardHeightPx = 1.4 * smallCardWidthPx;
+  var smallCardBackFontSize = 24;
+  // Math is going bad here somehow, just be explicit.
+  var smallCardsPerRow = 4;
+  var smallCardsPerColumn = Math.floor(adjustedPageHeight / smallCardHeightPx);
+  var smallCardsPerPage = smallCardsPerRow * smallCardsPerColumn;
+
   return {
     getNumberThatFitAccountingForGap: getNumberThatFitAccountingForGap,
 
     standardBorderWidthPx: standardBorderWidthPx,
     pageOfItemsMarginPx: pageOfItemsMarginPx,
+    pageOfItemsCardsMarginPx: pageOfItemsCardsMarginPx,
     printedPagePortraitWidthPx: printedPagePortraitWidthPx,
     printedPagePortraitHeightPx: printedPagePortraitHeightPx,
     printedPageLandscapeWidthPx: printedPageLandscapeWidthPx,
@@ -91,5 +101,11 @@ define(["dojo/domReady!"], function () {
 
     physicalDieWidthPx,
     physicalDieHeightPx,
+
+    smallCardWidthPx: smallCardWidthPx,
+    smallCardHeightPx: smallCardHeightPx,
+    smallCardsPerRow: smallCardsPerRow,
+    smallCardBackFontSize: smallCardBackFontSize,
+    smallCardsPerPage: smallCardsPerPage,
   };
 });

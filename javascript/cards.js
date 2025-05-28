@@ -51,11 +51,38 @@ define([
     return htmlUtils.addPageOfItems(parent, classes);
   }
 
-  function addCardBack(parent, title, color, opt_backCallback) {
+  function addRowOfCards(parent) {
+    return htmlUtils.addDiv(parent, ["row_of_cards"], "rowOfCards");
+  }
+
+  function addCardBack(parent, title, hexColorString, index, opt_backCallback) {
     if (opt_backCallback) {
-      var node = opt_backCallback(parent, title, color);
+      console.assert(
+        typeof opt_backCallback,
+        "function",
+        "Expected opt_backCallback function"
+      );
+    }
+    var cardsPerRow = systemConfigs.getSystemConfigs().cardsPerRow;
+    debugLog.debugLog("Cards", "addCardBack cardsPerRow = " + cardsPerRow);
+    debugLog.debugLog("Cards", "addCardBack index = " + index);
+    // This is dumb but the backs have to go backwards across the column to
+    // align with fronts.
+    var offset = index % cardsPerRow;
+    debugLog.debugLog("Cards", "addCardBack offset = " + offset);
+    var adjustedIndex = index - offset;
+    adjustedIndex = adjustedIndex + cardsPerRow - 1 - offset;
+    debugLog.debugLog("Cards", "addCardBack adjustedIndex = " + adjustedIndex);
+    if (opt_backCallback) {
+      console.log("opt_backCallack = " + opt_backCallback);
+      var node = opt_backCallback(parent, title, hexColorString, adjustedIndex);
       return node;
     }
+
+    debugLog.debugLog(
+      "ParamCards",
+      "Doug: addCardBack: color = " + hexColorString
+    );
 
     var sc = systemConfigs.getSystemConfigs();
     var node = htmlUtils.addCard(parent, ["back"], "back");
@@ -63,10 +90,10 @@ define([
     setCardSize(node);
 
     var innerNode = htmlUtils.addDiv(node, ["inset"], "inset");
-    var otherColor = htmlUtils.blendHexColors(color, "#ffffff");
+    var otherColor = htmlUtils.blendHexColors(hexColorString, "#ffffff");
     var gradient = string.substitute("radial-gradient(${color1}, ${color2})", {
       color1: otherColor,
-      color2: color,
+      color2: hexColorString,
     });
     domStyle.set(innerNode, "background", gradient);
     var title = htmlUtils.addDiv(innerNode, ["title"], "title", title);
@@ -81,6 +108,7 @@ define([
   }
 
   function addCardFront(parent, classArray, id) {
+    console.assert(parent, "parent is null");
     classArray.push("front");
     var node = htmlUtils.addCard(parent, classArray, id);
     setCardSize(node);
@@ -88,8 +116,63 @@ define([
     return node;
   }
 
-  function addCards(title, color, numCards, frontCallback, opt_backCallback) {
+  function maybeNewPage(parent, currentPage, index) {
+    debugLog.debugLog("Cards", "maybeNewPage index = " + index.toString());
+    var cardsPerPage = systemConfigs.getSystemConfigs().cardsPerPage;
+    var needNew = index % cardsPerPage;
+    if (needNew == 0) {
+      debugLog.debugLog(
+        "Cards",
+        "maybeNewPage adding new page for index = " + index.toString()
+      );
+      return addPageOfCards(parent);
+    }
+    return currentPage;
+  }
+
+  function maybeNewRow(parent, currentRow, index) {
+    var cardsPerRow = systemConfigs.getSystemConfigs().cardsPerRow;
+    var needNew = index % cardsPerRow;
+    console.log("Hi 001");
+    if (needNew == 0) {
+      console.log("Hi 002");
+      debugLog.debugLog(
+        "Cards",
+        "NewCardFu adding new row for index = " + index.toString()
+      );
+      return addRowOfCards(parent);
+    }
+    return currentRow;
+  }
+
+  function addNthCard(
+    bodyNode,
+    pageOfCards,
+    rowOfCards,
+    addNthCardCallback,
+    index
+  ) {
+    debugLog.debugLog("Cards", "addNthCard index = " + index.toString());
+    pageOfCards = maybeNewPage(bodyNode, pageOfCards, index);
+    console.assert(pageOfCards, "pageOfCards is null");
+    rowOfCards = maybeNewRow(pageOfCards, rowOfCards, index);
+    console.assert(rowOfCards, "rowOfCards is null");
+    var card = addNthCardCallback(rowOfCards, index);
+    return [pageOfCards, rowOfCards, card];
+  }
+
+  function addCards(
+    title,
+    backHexColorString,
+    numCards,
+    frontCallback,
+    opt_backCallback
+  ) {
     var sc = systemConfigs.getSystemConfigs();
+
+    debugLog.debugLog("Cards", "Doug: addCards: sc = " + JSON.stringify(sc));
+    debugLog.debugLog("Cards", "Doug: addCards: numCards = " + numCards);
+    debugLog.debugLog("Cards", "opt_backCallback = ", opt_backCallback);
     // Better be in cards mode.
     console.assert(sc.isCards, "Not in cards mode");
 
@@ -97,51 +180,69 @@ define([
 
     var pageOfFronts;
     var pageOfBacks;
-
-    var cardsPerPage = sc.cardsPerPage
-      ? sc.cardsPerPage
-      : genericMeasurements.cardsPerPage;
-
-    debugLog.debugLog("Cards", "Doug: addCards: sc = " + JSON.stringify(sc));
-    debugLog.debugLog("Cards", "Doug: addCards: numCards = " + numCards);
-    debugLog.debugLog(
-      "Cards",
-      "Doug: addCards: cardsPerPage = " + cardsPerPage
-    );
+    var rowOfFronts;
+    var rowOfBacks;
+    var dummyCard;
 
     if (sc.separateBacks) {
-      for (let i = 0; i < numCards; i++) {
-        var timeForNewPage = i % cardsPerPage;
-        if (timeForNewPage == 0) {
-          pageOfFronts = addPageOfCards(bodyNode);
-        }
-        frontCallback(pageOfFronts, i);
+      for (let index = 0; index < numCards; index++) {
+        debugLog.debugLog("Cards", "addCards 001 i = " + index.toString());
+        [pageOfFronts, rowOfFronts, dummyCard] = addNthCard(
+          bodyNode,
+          pageOfFronts,
+          rowOfFronts,
+          frontCallback,
+          index
+        );
       }
 
       if (!sc.skipCardBacks) {
-        for (let i = 0; i < numCards; i++) {
-          var timeForNewPage = i % cardsPerPage;
-          if (timeForNewPage == 0) {
-            pageOfBacks = addPageOfCards(bodyNode, ["back"]);
-          }
-          addCardBack(pageOfBacks, title, color, opt_backCallback);
-        }
+        debugLog.debugLog("Cards", "addCards 002 i = " + i.toString());
+        [pageOfBacks, rowOfBacks, dummyCard] = addNthCard(
+          bodyNode,
+          pageOfBacks,
+          rowOfBacks,
+          function (rowOfCards, index) {
+            i.toString();
+            addCardBack(
+              rowOfCards,
+              title,
+              backHexColorString,
+              i,
+              opt_backCallback
+            );
+          },
+          i
+        );
       }
     } else {
-      for (let i = 0; i < numCards; i++) {
-        var timeForNewPage = i % cardsPerPage;
-        if (timeForNewPage == 0) {
-          pageOfFronts = addPageOfCards(bodyNode);
-          if (!sc.skipCardBacks) {
-            pageOfBacks = addPageOfCards(bodyNode, ["back"]);
-          }
-        }
-        frontCallback(pageOfFronts, i);
-        debugLog.debugLog("Cards", "Doug: addCards: hit he front callback");
+      for (let index = 0; index < numCards; index++) {
+        debugLog.debugLog("Cards", "addCards 003 i = " + index.toString());
+        [pageOfFronts, rowOfFronts, dummyCard] = addNthCard(
+          bodyNode,
+          pageOfFronts,
+          rowOfFronts,
+          frontCallback,
+          index
+        );
 
         if (!sc.skipCardBacks) {
-          debugLog.debugLog("Cards", "Doug: addCards: calling addCardBack");
-          addCardBack(pageOfBacks, title, color, opt_backCallback);
+          debugLog.debugLog("Cards", "addCards 004 i = " + index.toString());
+          [pageOfBacks, rowOfBacks, dummyCard] = addNthCard(
+            bodyNode,
+            pageOfBacks,
+            rowOfBacks,
+            function (rowOfCards, index) {
+              addCardBack(
+                rowOfCards,
+                title,
+                backHexColorString,
+                index,
+                opt_backCallback
+              );
+            },
+            index
+          );
         }
       }
     }

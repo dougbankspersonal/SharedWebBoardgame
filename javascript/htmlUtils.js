@@ -74,6 +74,18 @@ define([
     return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
   }
 
+  function rgbStringToHex(rgbString) {
+    // Example input: "rgb(255, 0, 0)"
+    var rgbValues = rgbString.match(/\d+/g);
+    if (!rgbValues || rgbValues.length !== 3) {
+      throw new Error("Invalid RGB string format");
+    }
+    var r = parseInt(rgbValues[0], 10);
+    var g = parseInt(rgbValues[1], 10);
+    var b = parseInt(rgbValues[2], 10);
+    return rgbToHex(r, g, b);
+  }
+
   function componentToHex(c) {
     var hex = c.toString(16);
     return hex.length == 1 ? "0" + hex : hex;
@@ -166,9 +178,11 @@ define([
       });
     }
 
+    /*
     domStyle.set(pageOfItemsNode, {
       margin: genericMeasurements.pageOfItemsMarginPx + "px",
     });
+*/
 
     if (sc.addPageNumbers) {
       var pageNumberNode = addDiv(
@@ -266,6 +280,7 @@ define([
     addStandardBorder: addStandardBorder,
     hexToRgb: hexToRgb,
     rgbToHex: rgbToHex,
+    rgbStringToHex: rgbStringToHex,
     componentToHex: componentToHex,
     blendHexColors: blendHexColors,
     addPageOfItems: addPageOfItems,
