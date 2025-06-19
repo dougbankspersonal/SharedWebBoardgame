@@ -74,6 +74,8 @@ define([
     addPageNumbers: true,
   };
 
+  var ttsCardsPerRow = 10;
+
   function sanityCheckConfigs(configs) {
     genericUtils.sanityCheckTable(configs, validSystemConfigKeys);
   }
@@ -145,10 +147,11 @@ define([
     opt_cardBackFontSize,
     opt_scInput
   ) {
+    var cardsPerRow = opt_cardsPerRow ? opt_cardsPerRow : ttsCardsPerRow;
     var sc = addCardSizingSystemConfigs(
       opt_cardWidth,
       opt_cardHeight,
-      opt_cardsPerRow,
+      cardsPerRow,
       opt_cardBackFontSize,
       opt_scInput
     );
@@ -180,7 +183,6 @@ define([
     var sc = opt_scInput ? opt_scInput : {};
     sc.pageless = true;
     sc.gridGap = 0;
-    // sc.explicitPageWidth = 3 * genericMeasurements.dieWidthPx;
     sc.isCards = false;
     return sc;
   }
@@ -221,5 +223,7 @@ define([
     addTTSDieSystemConfigs: addTTSDieSystemConfigs,
     addTileSystemConfigs: addTileSystemConfigs,
     addLandscapeSystemConfigs: addLandscapeSystemConfigs,
+
+    ttsCardsPerRow: ttsCardsPerRow,
   };
 });
