@@ -51,7 +51,7 @@ define([
     return htmlUtils.addPageOfItems(parent, classes);
   }
 
-function addRowOfCards(parent) {
+  function addRowOfCards(parent) {
     return htmlUtils.addDiv(parent, ["row_of_cards"], "rowOfCards");
   }
 
@@ -63,8 +63,11 @@ function addRowOfCards(parent) {
         "Expected opt_backCallback function"
       );
     } else {
-      assert(backConfig.hexColorString, "No hexColorString in backConfig");
-      assert(backConfig.title, "No title in backConfig");
+      console.assert(
+        backConfig.hexColorString,
+        "No hexColorString in backConfig"
+      );
+      console.assert(backConfig.title, "No title in backConfig");
     }
 
     var cardsPerRow = systemConfigs.getSystemConfigs().cardsPerRow;
@@ -78,7 +81,6 @@ function addRowOfCards(parent) {
     adjustedIndex = adjustedIndex + cardsPerRow - 1 - offset;
     debugLog.debugLog("Cards", "addCardBack adjustedIndex = " + adjustedIndex);
     if (backConfig.callback) {
-      console.log("backConfig.callback = " + backConfig.callback);
       var node = backConfig.callback(
         parent,
         backConfig.title,
@@ -90,7 +92,7 @@ function addRowOfCards(parent) {
 
     debugLog.debugLog(
       "ParamCards",
-      "Doug: addCardBack: color = " + hexColorString
+      "Doug: addCardBack: color = " + backConfig.hexColorString
     );
 
     var sc = systemConfigs.getSystemConfigs();
@@ -150,9 +152,7 @@ function addRowOfCards(parent) {
   function maybeNewRow(parent, currentRow, index) {
     var cardsPerRow = systemConfigs.getSystemConfigs().cardsPerRow;
     var needNew = index % cardsPerRow;
-    console.log("Hi 001");
     if (needNew == 0) {
-      console.log("Hi 002");
       debugLog.debugLog(
         "Cards",
         "NewCardFu adding new row for index = " + index.toString()
