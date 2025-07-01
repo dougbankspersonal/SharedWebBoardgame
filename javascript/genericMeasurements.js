@@ -66,6 +66,10 @@ define(["dojo/domReady!"], function () {
   var physicalDieHeightPx = physicalDieWidthPx;
 
   var smallCardWidthPx = 160;
+  var smallCardWidthInches = smallCardWidthPx / pixelsPerInch;
+  console.log(
+    "Doug: smallCardWidthInches = " + smallCardWidthInches.toFixed(2)
+  );
   var smallCardHeightPx = 1.4 * smallCardWidthPx;
   var smallCardBackFontSize = 24;
   // Math is going bad here somehow, just be explicit.
