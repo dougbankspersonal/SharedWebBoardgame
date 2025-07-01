@@ -51,7 +51,7 @@ define([
     return htmlUtils.addPageOfItems(parent, classes);
   }
 
-  function addRowOfCards(parent) {
+function addRowOfCards(parent) {
     return htmlUtils.addDiv(parent, ["row_of_cards"], "rowOfCards");
   }
 
