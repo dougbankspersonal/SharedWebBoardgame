@@ -55,14 +55,18 @@ define([
     return htmlUtils.addDiv(parent, ["row_of_cards"], "rowOfCards");
   }
 
-  function addCardBack(parent, title, hexColorString, index, opt_backCallback) {
-    if (opt_backCallback) {
+  function addCardBack(parent, index, backConfig) {
+    if (backConfig.callback) {
       console.assert(
-        typeof opt_backCallback,
+        typeof backConfig.callback,
         "function",
         "Expected opt_backCallback function"
       );
+    } else {
+      assert(backConfig.hexColorString, "No hexColorString in backConfig");
+      assert(backConfig.title, "No title in backConfig");
     }
+
     var cardsPerRow = systemConfigs.getSystemConfigs().cardsPerRow;
     debugLog.debugLog("Cards", "addCardBack cardsPerRow = " + cardsPerRow);
     debugLog.debugLog("Cards", "addCardBack index = " + index);
@@ -73,9 +77,14 @@ define([
     var adjustedIndex = index - offset;
     adjustedIndex = adjustedIndex + cardsPerRow - 1 - offset;
     debugLog.debugLog("Cards", "addCardBack adjustedIndex = " + adjustedIndex);
-    if (opt_backCallback) {
-      console.log("opt_backCallack = " + opt_backCallback);
-      var node = opt_backCallback(parent, title, hexColorString, adjustedIndex);
+    if (backConfig.callback) {
+      console.log("backConfig.callback = " + backConfig.callback);
+      var node = backConfig.callback(
+        parent,
+        backConfig.title,
+        backConfig.hexColorString,
+        adjustedIndex
+      );
       return node;
     }
 
@@ -90,19 +99,27 @@ define([
     setCardSize(node);
 
     var innerNode = htmlUtils.addDiv(node, ["inset"], "inset");
-    var otherColor = htmlUtils.blendHexColors(hexColorString, "#ffffff");
+    var otherColor = htmlUtils.blendHexColors(
+      backConfig.hexColorString,
+      "#ffffff"
+    );
     var gradient = string.substitute("radial-gradient(${color1}, ${color2})", {
       color1: otherColor,
-      color2: hexColorString,
+      color2: backConfig.hexColorString,
     });
     domStyle.set(innerNode, "background", gradient);
-    var title = htmlUtils.addDiv(innerNode, ["title"], "title", title);
+    var titleNode = htmlUtils.addDiv(
+      innerNode,
+      ["title"],
+      "title",
+      backConfig.title
+    );
     var style = {};
     debugLog.debugLog("Cards", "Doug: addCardBack sc = " + JSON.stringify(sc));
     style["font-size"] = sc.cardBackFontSize
       ? `${sc.cardBackFontSize}px`
       : `${genericMeasurements.cardBackFontSize}px`;
-    domStyle.set(title, style);
+    domStyle.set(titleNode, style);
 
     return node;
   }
@@ -161,18 +178,11 @@ define([
     return [pageOfCards, rowOfCards, card];
   }
 
-  function addCards(
-    title,
-    backHexColorString,
-    numCards,
-    frontCallback,
-    opt_backCallback
-  ) {
+  function addCards(numCards, frontCallback, backConfig) {
     var sc = systemConfigs.getSystemConfigs();
 
     debugLog.debugLog("Cards", "Doug: addCards: sc = " + JSON.stringify(sc));
     debugLog.debugLog("Cards", "Doug: addCards: numCards = " + numCards);
-    debugLog.debugLog("Cards", "opt_backCallback = ", opt_backCallback);
     // Better be in cards mode.
     console.assert(sc.isCards, "Not in cards mode");
 
@@ -204,13 +214,7 @@ define([
           rowOfBacks,
           function (rowOfCards, index) {
             i.toString();
-            addCardBack(
-              rowOfCards,
-              title,
-              backHexColorString,
-              i,
-              opt_backCallback
-            );
+            addCardBack(rowOfCards, i, backConfig);
           },
           i
         );
@@ -233,13 +237,7 @@ define([
             pageOfBacks,
             rowOfBacks,
             function (rowOfCards, index) {
-              addCardBack(
-                rowOfCards,
-                title,
-                backHexColorString,
-                index,
-                opt_backCallback
-              );
+              addCardBack(rowOfCards, index, backConfig);
             },
             index
           );

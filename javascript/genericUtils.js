@@ -106,6 +106,13 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (debugLog) {
     }
   }
 
+  function stringToBoolean(str) {
+    if (typeof str !== "string") {
+      return false;
+    }
+    return str === "true";
+  }
+
   return {
     sanityCheckTable: sanityCheckTable,
     getIndexOfFirstInstanceInArray: getIndexOfFirstInstanceInArray,
@@ -117,5 +124,6 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (debugLog) {
     getRandomArrayElementNotMatching: getRandomArrayElementNotMatching,
     getRandomArrayElements: getRandomArrayElements,
     growOptStringArray: growOptStringArray,
+    stringToBoolean: stringToBoolean,
   };
 });
