@@ -318,6 +318,22 @@ function addRowOfCards(parent) {
     return null;
   }
 
+  function getIndexWithinConfig(cardConfigs, index) {
+    debugLog.debugLog(
+      "Cards",
+      "Doug: getIndexWithinConfig: cardConfigs = " + JSON.stringify(cardConfigs)
+    );
+    debugLog.debugLog("Cards", "Doug: getIndexWithinConfig: index = " + index);
+    for (var i = 0; i < cardConfigs.length; i++) {
+      var instanceCount = getInstanceCountFromConfig(cardConfigs, i);
+      if (index < instanceCount) {
+        return index;
+      }
+      index -= instanceCount;
+    }
+    return -1; // Not found.
+  }
+
   function addFormattedCardFront(parent, index, className, configs) {
     var config = getCardConfigFromIndex(configs, index);
 
@@ -354,6 +370,7 @@ function addRowOfCards(parent) {
   // This returned object becomes the defined value of this module
   return {
     getCardConfigFromIndex: getCardConfigFromIndex,
+    getIndexWithinConfig: getIndexWithinConfig,
     addFormattedCardFront: addFormattedCardFront,
     getNumCardsFromConfigs: getNumCardsFromConfigs,
     getInstanceCountFromConfig: getInstanceCountFromConfig,
