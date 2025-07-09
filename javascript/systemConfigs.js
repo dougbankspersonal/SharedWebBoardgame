@@ -173,7 +173,7 @@ define([
     return addTTSCardSystemConfigs(
       genericMeasurements.smallCardWidthPx,
       genericMeasurements.smallCardHeightPx,
-      genericMeasurements.smallCardsPerRow,
+      ttsCardsPerRow,
       genericMeasurements.smallCardBackFontSize,
       opt_scInput
     );

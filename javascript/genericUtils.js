@@ -113,6 +113,19 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (debugLog) {
     return str === "true";
   }
 
+  function getCommonQueryParams() {
+    var queryString = window.location.search;
+    // Create a URLSearchParams object
+    var params = new URLSearchParams(queryString);
+    // Get individual parameters
+    var isTTS = stringToBoolean(params.get("isTTS"));
+    var skipCardBacks = stringToBoolean(params.get("skipCardBacks"));
+    return {
+      isTTS: isTTS,
+      skipCardBacks: skipCardBacks,
+    };
+  }
+
   return {
     sanityCheckTable: sanityCheckTable,
     getIndexOfFirstInstanceInArray: getIndexOfFirstInstanceInArray,
@@ -125,5 +138,6 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (debugLog) {
     getRandomArrayElements: getRandomArrayElements,
     growOptStringArray: growOptStringArray,
     stringToBoolean: stringToBoolean,
+    getCommonQueryParams: getCommonQueryParams,
   };
 });

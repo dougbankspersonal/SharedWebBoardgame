@@ -63,8 +63,11 @@ define([
         "Expected opt_backCallback function"
       );
     } else {
-      assert(backConfig.hexColorString, "No hexColorString in backConfig");
-      assert(backConfig.title, "No title in backConfig");
+      console.assert(
+        backConfig.hexColorString,
+        "No hexColorString in backConfig"
+      );
+      console.assert(backConfig.title, "No title in backConfig");
     }
 
     var cardsPerRow = systemConfigs.getSystemConfigs().cardsPerRow;
@@ -89,7 +92,7 @@ define([
 
     debugLog.debugLog(
       "ParamCards",
-      "Doug: addCardBack: color = " + hexColorString
+      "Doug: addCardBack: color = " + backConfig.hexColorString
     );
 
     var sc = systemConfigs.getSystemConfigs();
