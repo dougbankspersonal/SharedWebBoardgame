@@ -12,6 +12,10 @@
       justify-content: center;
       gap: 1px;
     }
+
+    .row_of_cards.row_of_cards_back {
+      flex-direction: row-reverse;
+    }
   }
 }
 
