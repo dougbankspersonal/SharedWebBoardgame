@@ -11,6 +11,9 @@
   justify-content: center;
   gap: 1px;
 }
+.page_of_items.page_of_cards .page_of_items_contents .row_of_cards.row_of_cards_back {
+  flex-direction: row-reverse;
+}
 
 .card {
   margin: 0px;

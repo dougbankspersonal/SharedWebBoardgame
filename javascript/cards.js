@@ -51,8 +51,12 @@ define([
     return htmlUtils.addPageOfItems(parent, classes);
   }
 
-  function addRowOfCards(parent) {
-    return htmlUtils.addDiv(parent, ["row_of_cards"], "rowOfCards");
+  function addRowOfCards(parent, opt_isCardBack) {
+    var classes = ["row_of_cards"];
+    if (opt_isCardBack) {
+      classes.push("row_of_cards_back");
+    }
+    return htmlUtils.addDiv(parent, classes, "rowOfCards");
   }
 
   function addCardBack(parent, index, backConfig) {
@@ -73,19 +77,12 @@ define([
     var cardsPerRow = systemConfigs.getSystemConfigs().cardsPerRow;
     debugLog.debugLog("Cards", "addCardBack cardsPerRow = " + cardsPerRow);
     debugLog.debugLog("Cards", "addCardBack index = " + index);
-    // This is dumb but the backs have to go backwards across the column to
-    // align with fronts.
-    var offset = index % cardsPerRow;
-    debugLog.debugLog("Cards", "addCardBack offset = " + offset);
-    var adjustedIndex = index - offset;
-    adjustedIndex = adjustedIndex + cardsPerRow - 1 - offset;
-    debugLog.debugLog("Cards", "addCardBack adjustedIndex = " + adjustedIndex);
     if (backConfig.callback) {
       var node = backConfig.callback(
         parent,
         backConfig.title,
         backConfig.hexColorString,
-        adjustedIndex
+        index
       );
       return node;
     }
@@ -149,7 +146,7 @@ define([
     return currentPage;
   }
 
-  function maybeNewRow(parent, currentRow, index) {
+  function maybeNewRow(parent, currentRow, index, opt_isCardBack) {
     var cardsPerRow = systemConfigs.getSystemConfigs().cardsPerRow;
     var needNew = index % cardsPerRow;
     if (needNew == 0) {
@@ -157,7 +154,7 @@ define([
         "Cards",
         "NewCardFu adding new row for index = " + index.toString()
       );
-      return addRowOfCards(parent);
+      return addRowOfCards(parent, opt_isCardBack);
     }
     return currentRow;
   }
@@ -167,12 +164,13 @@ define([
     pageOfCards,
     rowOfCards,
     addNthCardCallback,
-    index
+    index,
+    opt_isCardBack
   ) {
     debugLog.debugLog("Cards", "addNthCard index = " + index.toString());
     pageOfCards = maybeNewPage(bodyNode, pageOfCards, index);
     console.assert(pageOfCards, "pageOfCards is null");
-    rowOfCards = maybeNewRow(pageOfCards, rowOfCards, index);
+    rowOfCards = maybeNewRow(pageOfCards, rowOfCards, index, opt_isCardBack);
     console.assert(rowOfCards, "rowOfCards is null");
     var card = addNthCardCallback(rowOfCards, index);
     return [pageOfCards, rowOfCards, card];
@@ -216,7 +214,8 @@ define([
             i.toString();
             addCardBack(rowOfCards, i, backConfig);
           },
-          i
+          i,
+          true
         );
       }
     } else {
@@ -239,7 +238,8 @@ define([
             function (rowOfCards, index) {
               addCardBack(rowOfCards, index, backConfig);
             },
-            index
+            index,
+            true
           );
         }
       }
