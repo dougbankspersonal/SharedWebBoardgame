@@ -11,10 +11,6 @@
   justify-content: center;
   gap: 1px;
 }
-.page_of_items.page_of_cards .page_of_items_contents.tts .row_of_cards {
-  gap: 0px;
-  justify-content: left;
-}
 
 .card {
   margin: 0px;
