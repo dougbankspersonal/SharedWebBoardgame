@@ -1,8 +1,10 @@
-
 .page_of_items.page_of_cards {
   align-items: center;
+
   .page_of_items_contents {
-    flex-direction: column;;
+    flex-direction: column;
+    ;
+
     .row_of_cards {
       display: flex;
       flex-direction: row;
@@ -30,6 +32,7 @@
 .card.front .formatted_wrapper {
   margin: 15px;
 }
+
 .card.front .formatted_wrapper .title {
   margin-top: 28px;
   margin-right: 10px;
