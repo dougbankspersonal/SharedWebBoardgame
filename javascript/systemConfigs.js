@@ -212,6 +212,20 @@ define([
     return _systemConfigs;
   }
 
+  function getCardSystemConfigs() {
+    var queryParams = genericUtils.getCommonQueryParams();
+
+    var sc;
+    if (queryParams.isTTS) {
+      sc = addTTSCardSystemConfigs();
+    } else {
+      sc = addCardSizingSystemConfigs();
+      sc.skipCardBacks = queryParams.skipCardBacks;
+    }
+    sc.singleCardInstance = queryParams.singleCardInstance;
+    return sc;
+  }
+
   // This returned object becomes the defined value of this module
   return {
     setSystemConfigs: setSystemConfigs,
@@ -223,6 +237,7 @@ define([
     addTTSDieSystemConfigs: addTTSDieSystemConfigs,
     addTileSystemConfigs: addTileSystemConfigs,
     addLandscapeSystemConfigs: addLandscapeSystemConfigs,
+    getCardSystemConfigs: getCardSystemConfigs,
 
     ttsCardsPerRow: ttsCardsPerRow,
   };

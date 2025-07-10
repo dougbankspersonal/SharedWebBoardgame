@@ -120,9 +120,11 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (debugLog) {
     // Get individual parameters
     var isTTS = stringToBoolean(params.get("isTTS"));
     var skipCardBacks = stringToBoolean(params.get("skipCardBacks"));
+    var singleCardInstance = stringToBoolean(params.get("singleCardInstance"));
     return {
       isTTS: isTTS,
       skipCardBacks: skipCardBacks,
+      singleCardInstance: singleCardInstance,
     };
   }
 
