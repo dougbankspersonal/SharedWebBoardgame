@@ -226,6 +226,20 @@ define([
     return sc;
   }
 
+  function getSmallCardSystemConfigs() {
+    var queryParams = genericUtils.getCommonQueryParams();
+
+    var sc;
+    if (queryParams.isTTS) {
+      sc = addTTSSmallCardSystemConfigs();
+    } else {
+      sc = addSmallCardSizingSystemConfigs();
+      sc.skipCardBacks = queryParams.skipCardBacks;
+    }
+    sc.singleCardInstance = queryParams.singleCardInstance;
+    return sc;
+  }
+
   // This returned object becomes the defined value of this module
   return {
     setSystemConfigs: setSystemConfigs,
@@ -238,6 +252,7 @@ define([
     addTileSystemConfigs: addTileSystemConfigs,
     addLandscapeSystemConfigs: addLandscapeSystemConfigs,
     getCardSystemConfigs: getCardSystemConfigs,
+    getSmallCardSystemConfigs: getSmallCardSystemConfigs,
 
     ttsCardsPerRow: ttsCardsPerRow,
   };
