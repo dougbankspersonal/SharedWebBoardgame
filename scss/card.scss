@@ -17,6 +17,17 @@
       flex-direction: row-reverse;
     }
   }
+
+  .page_of_items_contents.tts {
+    .row_of_cards {
+      justify-content: left;
+      gap: 0px;
+    }
+  }
+
+  .row_of_cards.row_of_cards_back {
+    flex-direction: row-reverse;
+  }
 }
 
 .card {

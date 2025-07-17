@@ -14,6 +14,13 @@
 .page_of_items.page_of_cards .page_of_items_contents .row_of_cards.row_of_cards_back {
   flex-direction: row-reverse;
 }
+.page_of_items.page_of_cards .page_of_items_contents.tts .row_of_cards {
+  justify-content: left;
+  gap: 0px;
+}
+.page_of_items.page_of_cards .row_of_cards.row_of_cards_back {
+  flex-direction: row-reverse;
+}
 
 .card {
   margin: 0px;
