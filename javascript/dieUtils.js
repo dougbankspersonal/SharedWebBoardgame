@@ -14,6 +14,14 @@ define([
   htmlUtils,
   systemConfigs
 ) {
+  const DieType_D6 = "d6";
+  const DieType_D8 = "d8";
+
+  const DieTypes = {
+    d6: DieType_D6,
+    d8: DieType_D8,
+  };
+
   function addDieFace(parent, options) {
     var options = options ? options : {};
     var text = options.text;
@@ -43,22 +51,40 @@ define([
   }
 
   var wrapperIdCount = 0;
-  function createDieTemplate(parent, addNthFaceCallback) {
+  function createDieTemplate(
+    parent,
+    wrapperClasses,
+    dieType,
+    addNthFaceCallback
+  ) {
     var wrapperId = "dieWrapper" + wrapperIdCount;
     wrapperIdCount++;
-    var wrapper = htmlUtils.addDiv(parent, ["wrapper"], wrapperId);
+    wrapperClasses.push(dieType);
+    wrapperClasses.push("die_wrapper");
+    var wrapper = htmlUtils.addDiv(parent, wrapperClasses, wrapperId);
 
-    for (var i = 0; i < 3; i++) {
-      addDieFace(wrapper);
+    if (dieType == DieType_D6) {
+      // Three rows of 3 each, first ignored.
+      for (var i = 0; i < 3; i++) {
+        addDieFace(wrapper);
+      }
+      for (var i = 0; i < 6; i++) {
+        addNthFaceCallback(wrapper, i);
+      }
     }
-    for (var i = 0; i < 6; i++) {
-      addNthFaceCallback(wrapper, i);
+    if (dieType == DieType_D8) {
+      // Four rows of 4 each.
+      for (var i = 0; i < 8; i++) {
+        addNthFaceCallback(wrapper, i);
+      }
     }
+
     return wrapper;
   }
 
   return {
     createDieTemplate: createDieTemplate,
     addDieFace: addDieFace,
+    DieTypes: DieTypes,
   };
 });

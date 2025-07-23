@@ -80,7 +80,7 @@ define([
     genericUtils.sanityCheckTable(configs, validSystemConfigKeys);
   }
 
-  function addCardSizingSystemConfigs(
+  function addCardSystemConfigs(
     opt_cardWidthPx,
     opt_cardHeightPx,
     opt_cardsPerRow,
@@ -123,8 +123,8 @@ define([
     return sc;
   }
 
-  function addSmallCardSizingSystemConfigs(opt_scInput) {
-    return addCardSizingSystemConfigs(
+  function addSmallCardSystemConfigs(opt_scInput) {
+    return addCardSystemConfigs(
       genericMeasurements.smallCardWidthPx,
       genericMeasurements.smallCardHeightPx,
       genericMeasurements.smallCardsPerRow,
@@ -148,7 +148,7 @@ define([
     opt_scInput
   ) {
     var cardsPerRow = opt_cardsPerRow ? opt_cardsPerRow : ttsCardsPerRow;
-    var sc = addCardSizingSystemConfigs(
+    var sc = addCardSystemConfigs(
       opt_cardWidth,
       opt_cardHeight,
       cardsPerRow,
@@ -169,7 +169,7 @@ define([
     return sc;
   }
 
-  function addSmallCardTTSCardSystemConfigs(opt_scInput) {
+  function addTTSSmallCardSystemConfigs(opt_scInput) {
     return addTTSCardSystemConfigs(
       genericMeasurements.smallCardWidthPx,
       genericMeasurements.smallCardHeightPx,
@@ -219,7 +219,7 @@ define([
     if (queryParams.isTTS) {
       sc = addTTSCardSystemConfigs();
     } else {
-      sc = addCardSizingSystemConfigs();
+      sc = addCardSystemConfigs();
       sc.skipCardBacks = queryParams.skipCardBacks;
     }
     sc.singleCardInstance = queryParams.singleCardInstance;
@@ -233,7 +233,7 @@ define([
     if (queryParams.isTTS) {
       sc = addTTSSmallCardSystemConfigs();
     } else {
-      sc = addSmallCardSizingSystemConfigs();
+      sc = addSmallCardSystemConfigs();
       sc.skipCardBacks = queryParams.skipCardBacks;
     }
     sc.singleCardInstance = queryParams.singleCardInstance;
@@ -244,10 +244,10 @@ define([
   return {
     setSystemConfigs: setSystemConfigs,
     getSystemConfigs: getSystemConfigs,
-    addCardSizingSystemConfigs: addCardSizingSystemConfigs,
-    addSmallCardSizingSystemConfigs: addSmallCardSizingSystemConfigs,
+    addCardSystemConfigs: addCardSystemConfigs,
+    addSmallCardSystemConfigs: addSmallCardSystemConfigs,
     addTTSCardSystemConfigs: addTTSCardSystemConfigs,
-    addSmallCardTTSCardSystemConfigs: addSmallCardTTSCardSystemConfigs,
+    addTTSSmallCardSystemConfigs: addTTSSmallCardSystemConfigs,
     addTTSDieSystemConfigs: addTTSDieSystemConfigs,
     addTileSystemConfigs: addTileSystemConfigs,
     addLandscapeSystemConfigs: addLandscapeSystemConfigs,
