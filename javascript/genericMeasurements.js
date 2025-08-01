@@ -44,6 +44,8 @@ define(["dojo/domReady!"], function () {
   var adjustedPageHeight = printedPagePortraitHeightPx - 2 * pagePadding;
   var standardPageGap = 1;
 
+  var cardFrontBorderWidthPx = 10;
+
   var cardColumnsPerPage = getNumberThatFitAccountingForGap(
     adjustedPageWidth,
     standardCardWidthPx,
@@ -107,5 +109,6 @@ define(["dojo/domReady!"], function () {
     smallCardsPerRow: smallCardsPerRow,
     smallCardBackFontSize: smallCardBackFontSize,
     smallCardsPerPage: smallCardsPerPage,
+    cardFrontBorderWidthPx: cardFrontBorderWidthPx,
   };
 });

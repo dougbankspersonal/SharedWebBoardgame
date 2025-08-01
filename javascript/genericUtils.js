@@ -37,13 +37,17 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (debugLog) {
     };
   }
 
-  // Equal chance of being min, min + 1, max.
   // Note max is INCLUDED: range is [min, max]
   function getRandomIntInRange(min, max, getRandomZeroToOne) {
     return Math.floor(min + getRandomZeroToOne() * (1 + max - min));
   }
 
-  function getRandomArrayElements(array, numElements, getRandomZeroToOne) {
+  // This gives back elements at n uniuqe instances in the array.
+  function getRandomNonRepeatingArrayElements(
+    array,
+    numElements,
+    getRandomZeroToOne
+  ) {
     var shuffled = array.slice(0),
       i = array.length,
       min = i - numElements,
@@ -58,12 +62,24 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (debugLog) {
     return shuffled.slice(min);
   }
 
+  function getRandomMaybeRepeatingArrayElements(
+    array,
+    numElements,
+    getRandomZeroToOne
+  ) {
+    var result = [];
+    for (var i = 0; i < numElements; i++) {
+      result.push(getRandomArrayElement(array, getRandomZeroToOne));
+    }
+    return result;
+  }
+
   function getRandomArrayElement(array, getRandomZeroToOne) {
     debugLog.debugLog(
       "Random",
       "Doug: getRandomArrayElement: array = " + array
     );
-    return getRandomArrayElements(array, 1, getRandomZeroToOne)[0];
+    return getRandomNonRepeatingArrayElements(array, 1, getRandomZeroToOne)[0];
   }
 
   function getRandomArrayElementNotMatching(
@@ -128,6 +144,84 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (debugLog) {
     };
   }
 
+  // We given some array where each element is unique value.
+  // We are going to randomlys select an element from the array n times.
+  // The result is expressed as a histogram mapping array member to count.
+  function randomHistogramFromArray(count, array, getRandomZeroToOne) {
+    var histogram = {};
+    for (var i = 0; i < count; i++) {
+      var element = getRandomArrayElement(array, getRandomZeroToOne);
+      if (histogram[element]) {
+        histogram[element]++;
+      } else {
+        histogram[element] = 1;
+      }
+    }
+    return histogram;
+  }
+
+  // Given two js tables are they the same: both keys and contents, recursively.
+  function tablesMatch(table1, table2) {
+    if (Object.keys(table1).length !== Object.keys(table2).length) {
+      return false;
+    }
+    for (var key in table1) {
+      if (!table2.hasOwnProperty(key)) {
+        return false;
+      }
+      var value1 = table1[key];
+      var value2 = table2[key];
+      if (typeof value1 === "object" && typeof value2 === "object") {
+        if (!tablesMatch(value1, value2)) {
+          return false;
+        }
+      } else if (value1 !== value2) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  // Call randomHistogramFromArray on the given inputs: note that result.
+  // Do it again until the second result is different from the first.
+  // Return array of two histograms.
+  function generateNonMatchingHistograms(count, array, getRandomZeroToOne) {
+    var histograms;
+    debugLog.debugLog("CardConfigs", "Doug: generateNonMatchingHistograms");
+
+    var firstHistogram = randomHistogramFromArray(
+      count,
+      array,
+      getRandomZeroToOne
+    );
+    for (var z = 0; z < 1000; z++) {
+      var secondHistogram = randomHistogramFromArray(
+        count,
+        array,
+        getRandomZeroToOne
+      );
+      if (!tablesMatch(firstHistogram, secondHistogram)) {
+        histograms = [firstHistogram, secondHistogram];
+        debugLog.debugLog(
+          "CardConfigs",
+          "Doug: generateNonMatchingHistograms returning histograms = " +
+            JSON.stringify(histograms)
+        );
+        return histograms;
+      }
+    }
+    console.assert(false, "Early exit from generateNonMatchingHistograms");
+  }
+
+  function sumHistogram(opt_histogram) {
+    var histogram = opt_histogram ? opt_histogram : {};
+    var sum = 0;
+    for (var key in histogram) {
+      sum += histogram[key];
+    }
+    return sum;
+  }
+
   return {
     sanityCheckTable: sanityCheckTable,
     getIndexOfFirstInstanceInArray: getIndexOfFirstInstanceInArray,
@@ -137,9 +231,14 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (debugLog) {
     getRandomIntInRange: getRandomIntInRange,
     getRandomArrayElement: getRandomArrayElement,
     getRandomArrayElementNotMatching: getRandomArrayElementNotMatching,
-    getRandomArrayElements: getRandomArrayElements,
+    getRandomNonRepeatingArrayElements: getRandomNonRepeatingArrayElements,
+    getRandomMaybeRepeatingArrayElements: getRandomMaybeRepeatingArrayElements,
     growOptStringArray: growOptStringArray,
     stringToBoolean: stringToBoolean,
     getCommonQueryParams: getCommonQueryParams,
+    generateNonMatchingHistograms: generateNonMatchingHistograms,
+    tablesMatch: tablesMatch,
+    randomHistogramFromArray: randomHistogramFromArray,
+    sumHistogram: sumHistogram,
   };
 });
