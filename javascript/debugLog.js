@@ -2,8 +2,8 @@ define(["dojo/domReady!"], function () {
   var debugFlags = {
     Belts: "off",
     BoxHolderCards: "off",
-    Cards: "off",
-    CardConfigs: "on",
+    Cards: "on",
+    CardConfigs: "off",
     CardCount: "off",
     CardSize: "off",
     ConveyorTiles: "off",

@@ -65,23 +65,18 @@ define([
       "addCardBack backConfig = " + JSON.stringify(backConfig)
     );
 
+    var cardsPerRow = systemConfigs.getSystemConfigs().cardsPerRow;
+    debugLog.debugLog("Cards", "addCardBack cardsPerRow = " + cardsPerRow);
+    debugLog.debugLog("Cards", "addCardBack index = " + index);
+
     if (backConfig.callback) {
       console.assert(
         typeof backConfig.callback,
         "function",
-        "Expected opt_backCallback function"
+        "Expected backConfig.callback function"
       );
-    } else {
-      console.assert(
-        backConfig.hexColorString || backConfig.image,
-        "No hexColorString in backConfig"
-      );
-      console.assert(backConfig.title, "No title in backConfig");
+      return backConfig.callback(parent, index);
     }
-
-    var cardsPerRow = systemConfigs.getSystemConfigs().cardsPerRow;
-    debugLog.debugLog("Cards", "addCardBack cardsPerRow = " + cardsPerRow);
-    debugLog.debugLog("Cards", "addCardBack index = " + index);
 
     var sc = systemConfigs.getSystemConfigs();
     var classes = backConfig.classes ? backConfig.classes : [];
@@ -89,11 +84,6 @@ define([
     classes.push("back");
     var cardBackNode = htmlUtils.addCard(parent, classes, "back");
     setCardSize(cardBackNode);
-
-    if (backConfig.callback) {
-      backConfig.callback(parent, backConfig, index);
-      return parent;
-    }
 
     var innerNode = htmlUtils.addDiv(cardBackNode, ["inset"], "inset");
     if (backConfig.hexColorString) {
