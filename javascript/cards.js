@@ -85,7 +85,6 @@ define([
     var cardBackNode = htmlUtils.addCard(parent, classes, "back");
     setCardSize(cardBackNode);
 
-    var innerNode = htmlUtils.addDiv(cardBackNode, ["inset"], "inset");
     if (backConfig.hexColorString) {
       var otherColor = htmlUtils.blendHexColors(
         backConfig.hexColorString,
@@ -98,9 +97,9 @@ define([
           color2: backConfig.hexColorString,
         }
       );
-      domStyle.set(innerNode, "background", gradient);
-    } else {
-      domStyle.set(innerNode, {
+      domStyle.set(cardBackNode, "background", gradient);
+    } else if (backConfig.image) {
+      domStyle.set(cardBackNode, {
         "background-image": `url(${backConfig.image})`,
         "background-size": "cover",
         "background-repeat": "no-repeat",
@@ -108,18 +107,23 @@ define([
       });
     }
 
-    var titleNode = htmlUtils.addDiv(
-      innerNode,
-      ["title"],
-      "title",
-      backConfig.title
-    );
-    var style = {};
-    debugLog.debugLog("Cards", "Doug: addCardBack sc = " + JSON.stringify(sc));
-    style["font-size"] = sc.cardBackFontSize
-      ? `${sc.cardBackFontSize}px`
-      : `${genericMeasurements.cardBackFontSize}px`;
-    domStyle.set(titleNode, style);
+    if (backConfig.title) {
+      var titleNode = htmlUtils.addDiv(
+        cardBackNode,
+        ["title"],
+        "title",
+        backConfig.title
+      );
+      var style = {};
+      debugLog.debugLog(
+        "Cards",
+        "Doug: addCardBack sc = " + JSON.stringify(sc)
+      );
+      style["font-size"] = sc.cardBackFontSize
+        ? `${sc.cardBackFontSize}px`
+        : `${genericMeasurements.cardBackFontSize}px`;
+      domStyle.set(titleNode, style);
+    }
 
     return cardBackNode;
   }
