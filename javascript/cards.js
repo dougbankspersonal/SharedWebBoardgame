@@ -98,13 +98,6 @@ define([
         }
       );
       domStyle.set(cardBackNode, "background", gradient);
-    } else if (backConfig.image) {
-      domStyle.set(cardBackNode, {
-        "background-image": `url(${backConfig.image})`,
-        "background-size": "cover",
-        "background-repeat": "no-repeat",
-        "background-position": "center",
-      });
     }
 
     if (backConfig.title) {

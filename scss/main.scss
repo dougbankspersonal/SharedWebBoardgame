@@ -1,7 +1,10 @@
 body {
-  overflow-x: auto; /* Enables horizontal scrollbar only when content overflows */
-  width: max-content; /* Makes the body shrink-wrap around its content */
-  margin: 0; /* Optional: Removes default margin */
+  overflow-x: auto;
+  /* Enables horizontal scrollbar only when content overflows */
+  width: max-content;
+  /* Makes the body shrink-wrap around its content */
+  margin: 0;
+  /* Optional: Removes default margin */
 }
 
 .page_of_items {
@@ -15,8 +18,10 @@ body {
 
   .page_of_items_contents {
     display: flex;
-    flex-wrap: wrap; /* Allows items to wrap onto new rows */
+    flex-wrap: wrap;
+    /* Allows items to wrap onto new rows */
     justify-content: center;
+    position: relative;
   }
 
   .page_of_items_contents.demo_board {
@@ -33,7 +38,8 @@ body {
     right: 0px;
     font-size: 10px;
     padding: 10px;
-    color: #000; /* Change to desired color */
+    color: #000;
+    /* Change to desired color */
   }
 }
 

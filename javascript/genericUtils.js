@@ -84,12 +84,12 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (debugLog) {
 
   function getRandomArrayElementNotMatching(
     array,
-    skippedValue,
+    [skippedValues],
     getRandomZeroToOne
   ) {
     while (1) {
       var element = getRandomArrayElement(array, getRandomZeroToOne);
-      if (element != skippedValue) {
+      if (!skippedValues.includes(element)) {
         return element;
       }
     }
