@@ -80,25 +80,20 @@ define([
     genericUtils.sanityCheckTable(configs, validSystemConfigKeys);
   }
 
-  function addCardSystemConfigs(
-    opt_cardWidthPx,
-    opt_cardHeightPx,
-    opt_cardsPerRow,
-    opt_cardBackFontSize,
-    opt_scInput
-  ) {
-    var sc = opt_scInput ? opt_scInput : {};
-    var cardWidthPx = opt_cardWidthPx
-      ? opt_cardWidthPx
+  function addCardSystemConfigs(opt_inputSc, opt_configs) {
+    var inputSc = opt_inputSc ? opt_inputSc : {};
+    var configs = opt_configs ? opt_configs : {};
+    var cardWidthPx = configs.cardWidthPx
+      ? configs.cardWidthPx
       : genericMeasurements.standardCardWidthPx;
-    var cardHeightPx = opt_cardHeightPx
-      ? opt_cardHeightPx
+    var cardHeightPx = configs.cardHeightPx
+      ? configs.cardHeightPx
       : genericMeasurements.standardCardHeightPx;
     var cardsPerPage =
       Math.floor(genericMeasurements.adjustedPageWidth / cardWidthPx) *
       Math.floor(genericMeasurements.adjustedPageHeight / cardHeightPx);
-    var cardsPerRow = opt_cardsPerRow
-      ? opt_cardsPerRow
+    var cardsPerRow = configs.cardsPerRow
+      ? configs.cardsPerRow
       : Math.floor(genericMeasurements.adjustedPageWidth / cardWidthPx);
     debugLog.debugLog(
       "Cards",
@@ -112,89 +107,92 @@ define([
         genericMeasurements.adjustedPageHeight
     );
     debugLog.debugLog("Cards", "Doug: cardHeightPx = " + cardHeightPx);
-    sc.cardsPerPage = cardsPerPage;
-    sc.cardWidthPx = cardWidthPx;
-    sc.cardHeightPx = cardHeightPx;
-    sc.cardsPerRow = cardsPerRow;
-    sc.cardBackFontSize = opt_cardBackFontSize;
-    sc.gridGap = genericMeasurements.standardPageGap;
-    sc.isCards = true;
+    var outputSc = structuredClone(inputSc);
+    outputSc.cardsPerPage = cardsPerPage;
+    outputSc.cardWidthPx = cardWidthPx;
+    outputSc.cardHeightPx = cardHeightPx;
+    outputSc.cardsPerRow = cardsPerRow;
+    outputSc.cardBackFontSize = configs.cardBackFontSize;
+    outputSc.gridGap = genericMeasurements.standardPageGap;
+    outputSc.isCards = true;
 
-    return sc;
+    return outputSc;
   }
 
-  function addSmallCardSystemConfigs(opt_scInput) {
-    return addCardSystemConfigs(
-      genericMeasurements.smallCardWidthPx,
-      genericMeasurements.smallCardHeightPx,
-      genericMeasurements.smallCardsPerRow,
-      genericMeasurements.smallCardBackFontSize,
-      opt_scInput
-    );
+  function addSmallCardSystemConfigs(opt_inputSc) {
+    return addCardSystemConfigs(opt_inputSc, {
+      cardWidthPx: genericMeasurements.smallCardWidthPx,
+      cardHeightPx: genericMeasurements.smallCardHeightPx,
+      cardsPerRow: genericMeasurements.smallCardsPerRow,
+      cardBackFontSize: genericMeasurements.smallCardBackFontSize,
+    });
   }
 
-  function addLandscapeSystemConfigs(opt_scInput) {
-    var sc = opt_scInput ? opt_scInput : {};
-    sc.landscape = true;
-
-    return sc;
+  function addLandscapeSystemConfigs(opt_inputSc) {
+    var inputSc = opt_inputSc ? opt_inputSc : {};
+    var outputSc = structuredClone(inputSc);
+    outputSc.landscape = true;
+    return outputSc;
   }
 
-  function addTTSCardSystemConfigs(
-    opt_cardWidth,
-    opt_cardHeight,
-    opt_cardsPerRow,
-    opt_cardBackFontSize,
-    opt_scInput
-  ) {
-    var cardsPerRow = opt_cardsPerRow ? opt_cardsPerRow : ttsCardsPerRow;
-    var sc = addCardSystemConfigs(
-      opt_cardWidth,
-      opt_cardHeight,
-      cardsPerRow,
-      opt_cardBackFontSize,
-      opt_scInput
-    );
+  function addTTSCardSystemConfigs(opt_inputSc, opt_configs) {
+    var inputSc = opt_inputSc ? opt_inputSc : {};
+    var configs = opt_configs ? opt_configs : {};
+
+    var cardsPerRow = configs.cardsPerRow
+      ? configs.cardsPerRow
+      : ttsCardsPerRow;
+    configs.cardsPerRow = cardsPerRow;
+    var outputSc = addCardSystemConfigs(inputSc, configs);
     // Apply tweaks.
-    sc.pageless = true;
-    sc.explicitPageWidth = 10 * sc.cardWidthPx;
-    sc.skipCardBacks = true;
-    sc.minCardCount = 12;
-    sc.cardsPerPage = genericMeasurements.ttsCardsPerPage;
-    sc.extraClassesForPageOfItemsContents = ["tts"];
-    sc.gridGap = 0;
-    sc.isCards = true;
-    sc.addPageNumbers = false;
+    outputSc.pageless = true;
+    outputSc.explicitPageWidth = 10 * outputSc.cardWidthPx;
+    outputSc.skipCardBacks = true;
+    outputSc.minCardCount = 12;
+    outputSc.cardsPerPage = genericMeasurements.ttsCardsPerPage;
+    outputSc.extraClassesForPageOfItemsContents = ["tts"];
+    outputSc.gridGap = 0;
+    outputSc.isCards = true;
+    outputSc.addPageNumbers = false;
 
-    return sc;
+    return outputSc;
   }
 
-  function addTTSSmallCardSystemConfigs(opt_scInput) {
-    return addTTSCardSystemConfigs(
-      genericMeasurements.smallCardWidthPx,
-      genericMeasurements.smallCardHeightPx,
-      ttsCardsPerRow,
-      genericMeasurements.smallCardBackFontSize,
-      opt_scInput
-    );
+  function addTTPCardSystemConfigs(opt_inputSc) {
+    var inputSc = opt_inputSc ? opt_inputSc : {};
+    var outputSc = structuredClone(inputSc);
+    outputSc.cardsPerPage = genericMeasurements.ttpCardsPerPage;
+    return outputSc;
   }
 
-  function addTTSDieSystemConfigs(opt_scInput) {
-    var sc = opt_scInput ? opt_scInput : {};
-    sc.pageless = true;
-    sc.gridGap = 0;
-    sc.isCards = false;
-    return sc;
+  function addTTSSmallCardSystemConfigs(opt_inputSc) {
+    return addTTSCardSystemConfigs(opt_inputSc, {
+      cardWidthPx: genericMeasurements.smallCardWidthPx,
+      cardHeightPx: genericMeasurements.smallCardHeightPx,
+      cardsPerRow: ttsCardsPerRow,
+      cardBackFontSize: genericMeasurements.smallCardBackFontSize,
+    });
   }
 
-  function addTileSystemConfigs(opt_scInput) {
-    var sc = opt_scInput ? opt_scInput : {};
-    sc.isCards = false;
+  function addTTSDieSystemConfigs(opt_inputSc) {
+    var inputSc = opt_inputSc ? opt_inputSc : {};
+    var outputSc = structuredClone(inputSc);
+    outputSc.pageless = true;
+    outputSc.gridGap = 0;
+    outputSc.isCards = false;
+    return outputSc;
+  }
+
+  function addTileSystemConfigs(opt_inputSc) {
+    var inputSc = opt_inputSc ? opt_inputSc : {};
+    v;
+    var outputSc = structuredClone(inputSc);
+    outputSc.isCards = false;
     debugLog.debugLog(
       "SystemConfigs",
-      "Doug: addTileSystemConfigs: sc = " + JSON.stringify(sc)
+      "Doug: addTileSystemConfigs: outputSc = " + JSON.stringify(outputSc)
     );
-    return sc;
+    return outputSc;
   }
 
   function setSystemConfigs(opt_sc) {
@@ -218,6 +216,9 @@ define([
     var sc;
     if (queryParams.isTTS) {
       sc = addTTSCardSystemConfigs();
+      if (queryParams.isTTP) {
+        sc = addTTPCardSystemConfigs(sc);
+      }
     } else {
       sc = addCardSystemConfigs();
       sc.skipCardBacks = queryParams.skipCardBacks;

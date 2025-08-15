@@ -3,7 +3,7 @@ define(["dojo/domReady!"], function () {
     Belts: "off",
     BoxHolderCards: "off",
     Cards: "off",
-    CardConfigs: "off",
+    CardConfigs: "on",
     CardCount: "off",
     CardSize: "off",
     ConveyorTiles: "off",

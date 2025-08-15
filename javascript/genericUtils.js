@@ -84,7 +84,7 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (debugLog) {
 
   function getRandomArrayElementNotMatching(
     array,
-    [skippedValues],
+    skippedValues,
     getRandomZeroToOne
   ) {
     while (1) {
@@ -135,10 +135,12 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (debugLog) {
     var params = new URLSearchParams(queryString);
     // Get individual parameters
     var isTTS = stringToBoolean(params.get("isTTS"));
+    var isTTP = stringToBoolean(params.get("isTTP"));
     var skipCardBacks = stringToBoolean(params.get("skipCardBacks"));
     var singleCardInstance = stringToBoolean(params.get("singleCardInstance"));
     return {
-      isTTS: isTTS,
+      isTTP: isTTP,
+      isTTS: isTTS || isTTP,
       skipCardBacks: skipCardBacks,
       singleCardInstance: singleCardInstance,
     };
@@ -222,6 +224,24 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (debugLog) {
     return sum;
   }
 
+  function copyAndShuffleArray(array, getRandomZeroToOne) {
+    debugLog.debugLog(
+      "Random",
+      "Doug: copyAndShuffleArray: array = " + JSON.stringify(array)
+    );
+    var shuffled = array.slice(0),
+      i = array.length,
+      temp,
+      index;
+    while (i--) {
+      index = Math.floor((i + 1) * getRandomZeroToOne());
+      temp = shuffled[index];
+      shuffled[index] = shuffled[i];
+      shuffled[i] = temp;
+    }
+    return shuffled;
+  }
+
   return {
     sanityCheckTable: sanityCheckTable,
     getIndexOfFirstInstanceInArray: getIndexOfFirstInstanceInArray,
@@ -240,5 +260,6 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (debugLog) {
     tablesMatch: tablesMatch,
     randomHistogramFromArray: randomHistogramFromArray,
     sumHistogram: sumHistogram,
+    copyAndShuffleArray: copyAndShuffleArray,
   };
 });
