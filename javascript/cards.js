@@ -60,67 +60,65 @@ define([
   }
 
   function addCardBack(parent, index, backConfig) {
-    if (backConfig.callback) {
-      console.assert(
-        typeof backConfig.callback,
-        "function",
-        "Expected opt_backCallback function"
-      );
-    } else {
-      console.assert(
-        backConfig.hexColorString,
-        "No hexColorString in backConfig"
-      );
-      console.assert(backConfig.title, "No title in backConfig");
-    }
+    debugLog.debugLog(
+      "Cards",
+      "addCardBack backConfig = " + JSON.stringify(backConfig)
+    );
 
     var cardsPerRow = systemConfigs.getSystemConfigs().cardsPerRow;
     debugLog.debugLog("Cards", "addCardBack cardsPerRow = " + cardsPerRow);
     debugLog.debugLog("Cards", "addCardBack index = " + index);
+
     if (backConfig.callback) {
-      var node = backConfig.callback(
-        parent,
-        backConfig.title,
-        backConfig.hexColorString,
-        index
+      console.assert(
+        typeof backConfig.callback,
+        "function",
+        "Expected backConfig.callback function"
       );
-      return node;
+      return backConfig.callback(parent, index);
     }
 
-    debugLog.debugLog(
-      "ParamCards",
-      "Doug: addCardBack: color = " + backConfig.hexColorString
-    );
-
     var sc = systemConfigs.getSystemConfigs();
-    var node = htmlUtils.addCard(parent, ["back"], "back");
+    var classes = backConfig.classes ? backConfig.classes : [];
+    classes = classes.slice();
+    classes.push("back");
+    var cardBackNode = htmlUtils.addCard(parent, classes, "back");
+    setCardSize(cardBackNode);
 
-    setCardSize(node);
+    if (backConfig.hexColorString) {
+      var otherColor = htmlUtils.blendHexColors(
+        backConfig.hexColorString,
+        "#ffffff"
+      );
+      var gradient = string.substitute(
+        "radial-gradient(${color1}, ${color2})",
+        {
+          color1: otherColor,
+          color2: backConfig.hexColorString,
+        }
+      );
+      domStyle.set(cardBackNode, "background", gradient);
+    }
 
-    var innerNode = htmlUtils.addDiv(node, ["inset"], "inset");
-    var otherColor = htmlUtils.blendHexColors(
-      backConfig.hexColorString,
-      "#ffffff"
-    );
-    var gradient = string.substitute("radial-gradient(${color1}, ${color2})", {
-      color1: otherColor,
-      color2: backConfig.hexColorString,
-    });
-    domStyle.set(innerNode, "background", gradient);
-    var titleNode = htmlUtils.addDiv(
-      innerNode,
-      ["title"],
-      "title",
-      backConfig.title
-    );
-    var style = {};
-    debugLog.debugLog("Cards", "Doug: addCardBack sc = " + JSON.stringify(sc));
-    style["font-size"] = sc.cardBackFontSize
-      ? `${sc.cardBackFontSize}px`
-      : `${genericMeasurements.cardBackFontSize}px`;
-    domStyle.set(titleNode, style);
+    if (backConfig.title) {
+      var titleNode = htmlUtils.addDiv(
+        cardBackNode,
+        ["title"],
+        "title",
+        backConfig.title
+      );
+      var style = {};
+      debugLog.debugLog(
+        "Cards",
+        "Doug: addCardBack sc = " + JSON.stringify(sc)
+      );
+      style["font-size"] = sc.cardBackFontSize
+        ? `${sc.cardBackFontSize}px`
+        : `${genericMeasurements.cardBackFontSize}px`;
+      domStyle.set(titleNode, style);
+    }
 
-    return node;
+    return cardBackNode;
   }
 
   function addCardFront(parent, classArray, id) {
@@ -300,11 +298,10 @@ define([
     return numCards;
   }
 
-  function getCardConfigFromIndex(cardConfigs, index) {
+  function getCardConfigAtIndex(cardConfigs, index) {
     debugLog.debugLog(
       "Cards",
-      "Doug: getCardConfigFromIndex: cardConfigs = " +
-        JSON.stringify(cardConfigs)
+      "Doug: getCardConfigAtIndex: cardConfigs = " + JSON.stringify(cardConfigs)
     );
     for (var i = 0; i < cardConfigs.length; i++) {
       var instanceCount = getInstanceCountFromConfig(cardConfigs, i);
@@ -333,7 +330,7 @@ define([
   }
 
   function addFormattedCardFront(parent, index, className, configs) {
-    var config = getCardConfigFromIndex(configs, index);
+    var config = getCardConfigAtIndex(configs, index);
 
     var idElements = [className, index.toString()];
     var id = idElements.join(".");
@@ -367,7 +364,7 @@ define([
 
   // This returned object becomes the defined value of this module
   return {
-    getCardConfigFromIndex: getCardConfigFromIndex,
+    getCardConfigAtIndex: getCardConfigAtIndex,
     getIndexWithinConfig: getIndexWithinConfig,
     addFormattedCardFront: addFormattedCardFront,
     getNumCardsFromConfigs: getNumCardsFromConfigs,

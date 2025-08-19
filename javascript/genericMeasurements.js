@@ -44,6 +44,8 @@ define(["dojo/domReady!"], function () {
   var adjustedPageHeight = printedPagePortraitHeightPx - 2 * pagePadding;
   var standardPageGap = 1;
 
+  var cardFrontBorderWidthPx = 10;
+
   var cardColumnsPerPage = getNumberThatFitAccountingForGap(
     adjustedPageWidth,
     standardCardWidthPx,
@@ -57,6 +59,8 @@ define(["dojo/domReady!"], function () {
   var cardsPerPage = cardColumnsPerPage * cardRowsPerPage;
 
   var ttsCardsPerPage = 70;
+  // FIXME(dbanks) is there a limit?
+  var ttpCardsPerPage = 1000;
 
   var dieWidthPx = 150;
   var dieHeightPx = dieWidthPx;
@@ -94,6 +98,7 @@ define(["dojo/domReady!"], function () {
     cardRowsPerPage: cardRowsPerPage,
     cardsPerPage: cardsPerPage,
     ttsCardsPerPage: ttsCardsPerPage,
+    ttpCardsPerPage: ttpCardsPerPage,
     standardPageGap: standardPageGap,
 
     dieWidthPx: dieWidthPx,
@@ -107,5 +112,6 @@ define(["dojo/domReady!"], function () {
     smallCardsPerRow: smallCardsPerRow,
     smallCardBackFontSize: smallCardBackFontSize,
     smallCardsPerPage: smallCardsPerPage,
+    cardFrontBorderWidthPx: cardFrontBorderWidthPx,
   };
 });
