@@ -3,7 +3,7 @@ define(["dojo/domReady!"], function () {
     Belts: "off",
     BoxHolderCards: "off",
     Cards: "off",
-    CardConfigs: "on",
+    CardConfigs: "off",
     CardCount: "off",
     CardSize: "off",
     ConveyorTiles: "off",
@@ -19,7 +19,7 @@ define(["dojo/domReady!"], function () {
     ScalingText: "off",
     ScoringTrack: "off",
     Special: "off",
-    SystemConfigs: "off",
+    SystemConfigs: "on",
     Truck: "off",
   };
 

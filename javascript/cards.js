@@ -22,12 +22,12 @@ define([
     var sc = systemConfigs.getSystemConfigs();
     debugLog.debugLog(
       "CardSize",
-      "Doug: setCardSize sc.cardHeightPx = ",
+      "setCardSize sc.cardHeightPx = ",
       sc.cardHeightPx
     );
     debugLog.debugLog(
       "CardSize",
-      "Doug: setCardSize sc.cardWidthPx = ",
+      "setCardSize sc.cardWidthPx = ",
       sc.cardWidthPx
     );
     var cardWidthPx = sc.cardWidthPx
@@ -108,10 +108,7 @@ define([
         backConfig.title
       );
       var style = {};
-      debugLog.debugLog(
-        "Cards",
-        "Doug: addCardBack sc = " + JSON.stringify(sc)
-      );
+      debugLog.debugLog("Cards", "addCardBack sc = " + JSON.stringify(sc));
       style["font-size"] = sc.cardBackFontSize
         ? `${sc.cardBackFontSize}px`
         : `${genericMeasurements.cardBackFontSize}px`;
@@ -177,8 +174,8 @@ define([
   function addCards(numCards, frontCallback, backConfig) {
     var sc = systemConfigs.getSystemConfigs();
 
-    debugLog.debugLog("Cards", "Doug: addCards: sc = " + JSON.stringify(sc));
-    debugLog.debugLog("Cards", "Doug: addCards: numCards = " + numCards);
+    debugLog.debugLog("Cards", "addCards: sc = " + JSON.stringify(sc));
+    debugLog.debugLog("Cards", "addCards: numCards = " + numCards);
     // Better be in cards mode.
     console.assert(sc.isCards, "Not in cards mode");
 
@@ -247,8 +244,7 @@ define([
   function getNumCardsFromConfigs(cardConfigs) {
     debugLog.debugLog(
       "CardCount",
-      "Doug: getNumCardsFromConfigs: cardConfigs = " +
-        JSON.stringify(cardConfigs)
+      "getNumCardsFromConfigs: cardConfigs = " + JSON.stringify(cardConfigs)
     );
     // If we are doing single-instance of each card config, rewrite the array.
     var sc = systemConfigs.getSystemConfigs();
@@ -258,7 +254,7 @@ define([
       }
       debugLog.debugLog(
         "CardCount",
-        "Doug: getNumCardsFromConfigs: singleCardInstance is true: cardConfigs = " +
+        "getNumCardsFromConfigs: singleCardInstance is true: cardConfigs = " +
           JSON.stringify(cardConfigs)
       );
     }
@@ -272,7 +268,7 @@ define([
 
     debugLog.debugLog(
       "CardCount",
-      "Doug: getNumCardsFromConfigs: initial numCards = " + numCards
+      "getNumCardsFromConfigs: initial numCards = " + numCards
     );
 
     // If we have some min, and this isn't enough, change count on first card to hit max.
@@ -282,18 +278,18 @@ define([
       numCards = sc.minCardCount;
       debugLog.debugLog(
         "CardCount",
-        "Doug: getNumCardsFromConfigs: sc.minCardCount = " + sc.minCardCount
+        "getNumCardsFromConfigs: sc.minCardCount = " + sc.minCardCount
       );
       debugLog.debugLog(
         "CardCount",
-        "Doug: getNumCardsFromConfigs: adjusted card configs: cardConfigs = " +
+        "getNumCardsFromConfigs: adjusted card configs: cardConfigs = " +
           JSON.stringify(cardConfigs)
       );
     }
 
     debugLog.debugLog(
       "CardCount",
-      "Doug: getNumCardsFromConfigs: final numCards = " + numCards
+      "getNumCardsFromConfigs: final numCards = " + numCards
     );
     return numCards;
   }
@@ -301,7 +297,7 @@ define([
   function getCardConfigAtIndex(cardConfigs, index) {
     debugLog.debugLog(
       "Cards",
-      "Doug: getCardConfigAtIndex: cardConfigs = " + JSON.stringify(cardConfigs)
+      "getCardConfigAtIndex: cardConfigs = " + JSON.stringify(cardConfigs)
     );
     for (var i = 0; i < cardConfigs.length; i++) {
       var instanceCount = getInstanceCountFromConfig(cardConfigs, i);
@@ -316,9 +312,9 @@ define([
   function getIndexWithinConfig(cardConfigs, index) {
     debugLog.debugLog(
       "Cards",
-      "Doug: getIndexWithinConfig: cardConfigs = " + JSON.stringify(cardConfigs)
+      "getIndexWithinConfig: cardConfigs = " + JSON.stringify(cardConfigs)
     );
-    debugLog.debugLog("Cards", "Doug: getIndexWithinConfig: index = " + index);
+    debugLog.debugLog("Cards", "getIndexWithinConfig: index = " + index);
     for (var i = 0; i < cardConfigs.length; i++) {
       var instanceCount = getInstanceCountFromConfig(cardConfigs, i);
       if (index < instanceCount) {

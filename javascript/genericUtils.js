@@ -75,10 +75,7 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (debugLog) {
   }
 
   function getRandomArrayElement(array, getRandomZeroToOne) {
-    debugLog.debugLog(
-      "Random",
-      "Doug: getRandomArrayElement: array = " + array
-    );
+    debugLog.debugLog("Random", "getRandomArrayElement: array = " + array);
     return getRandomNonRepeatingArrayElements(array, 1, getRandomZeroToOne)[0];
   }
 
@@ -189,7 +186,7 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (debugLog) {
   // Return array of two histograms.
   function generateNonMatchingHistograms(count, array, getRandomZeroToOne) {
     var histograms;
-    debugLog.debugLog("CardConfigs", "Doug: generateNonMatchingHistograms");
+    debugLog.debugLog("CardConfigs", "generateNonMatchingHistograms");
 
     var firstHistogram = randomHistogramFromArray(
       count,
@@ -206,7 +203,7 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (debugLog) {
         histograms = [firstHistogram, secondHistogram];
         debugLog.debugLog(
           "CardConfigs",
-          "Doug: generateNonMatchingHistograms returning histograms = " +
+          "generateNonMatchingHistograms returning histograms = " +
             JSON.stringify(histograms)
         );
         return histograms;
@@ -227,7 +224,7 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (debugLog) {
   function copyAndShuffleArray(array, getRandomZeroToOne) {
     debugLog.debugLog(
       "Random",
-      "Doug: copyAndShuffleArray: array = " + JSON.stringify(array)
+      "copyAndShuffleArray: array = " + JSON.stringify(array)
     );
     var shuffled = array.slice(0),
       i = array.length,

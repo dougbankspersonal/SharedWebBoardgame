@@ -77,6 +77,8 @@ define(["dojo/domReady!"], function () {
   var smallCardsPerColumn = Math.floor(adjustedPageHeight / smallCardHeightPx);
   var smallCardsPerPage = smallCardsPerRow * smallCardsPerColumn;
 
+  var ttsCardsPerRow = 10;
+
   return {
     getNumberThatFitAccountingForGap: getNumberThatFitAccountingForGap,
 
@@ -113,5 +115,6 @@ define(["dojo/domReady!"], function () {
     smallCardBackFontSize: smallCardBackFontSize,
     smallCardsPerPage: smallCardsPerPage,
     cardFrontBorderWidthPx: cardFrontBorderWidthPx,
+    ttsCardsPerRow: ttsCardsPerRow,
   };
 });
