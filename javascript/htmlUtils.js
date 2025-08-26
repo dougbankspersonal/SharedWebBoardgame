@@ -8,13 +8,15 @@ define([
   "dojo/dom-style",
   "dojo/domReady!",
 ], function (
-  debugLog,
+  debugLogModule,
   genericMeasurements,
   genericUtils,
   systemConfigs,
   domConstruct,
   domStyle
 ) {
+  var debugLog = debugLogModule.debugLog;
+
   var pageNumber = 0;
 
   function addDiv(parent, classArray, id, opt_innerHTML = "") {
@@ -109,21 +111,21 @@ define([
   }
 
   function getPageWidth() {
-    debugLog.debugLog("Layout", "getPageWidth 001");
+    debugLog("Layout", "getPageWidth 001");
     var sc = systemConfigs.getSystemConfigs();
     if (sc.explicitPageWidth) {
-      debugLog.debugLog(
+      debugLog(
         "Layout",
         "getPageWidth sc.explicitPageWidth = " + sc.explicitPageWidth
       );
       return sc.explicitPageWidth;
     }
     if (sc.pageless) {
-      debugLog.debugLog("Layout", "getPageWidth null");
+      debugLog("Layout", "getPageWidth null");
       return null;
     }
     if (sc.landscape) {
-      debugLog.debugLog(
+      debugLog(
         "Layout",
         "getPageWidth genericMeasurements.printedPageLandscapeWidthPx = " +
           genericMeasurements.printedPageLandscapeWidthPx
@@ -131,7 +133,7 @@ define([
       return genericMeasurements.printedPageLandscapeWidthPx;
     }
 
-    debugLog.debugLog(
+    debugLog(
       "Layout",
       "getPageWidth genericMeasurements.printedPagePortraitWidthPx = " +
         genericMeasurements.printedPagePortraitWidthPx
@@ -164,8 +166,8 @@ define([
     var pageOfItemsNode = addDiv(parent, classArray, pageId);
     var width = getPageWidth();
     var height = getPageHeight();
-    debugLog.debugLog("Refactor", "addPageOfItems: width = " + width);
-    debugLog.debugLog("Refactor", "addPageOfItems: height = " + height);
+    debugLog("Refactor", "addPageOfItems: width = " + width);
+    debugLog("Refactor", "addPageOfItems: height = " + height);
     if (width !== null) {
       domStyle.set(pageOfItemsNode, {
         width: width + "px",
@@ -212,17 +214,17 @@ define([
       "pageOfItemsContents"
     );
 
-    debugLog.debugLog("Layout", "addPageOfItems: sc.gridGap = " + sc.gridGap);
+    debugLog("Layout", "addPageOfItems: sc.gridGap = " + sc.gridGap);
     var gridGapIsPresent = sc.gridGap !== null && sc.gridGap !== undefined;
     var gridGap = gridGapIsPresent
       ? sc.gridGap
       : genericMeasurements.standardPageGap;
-    debugLog.debugLog("Layout", "addPageOfItems: gridGap = " + gridGap);
+    debugLog("Layout", "addPageOfItems: gridGap = " + gridGap);
     domStyle.set(pageOfItemsContentsNode, {
       gap: `${gridGap}px`,
     });
 
-    debugLog.debugLog(
+    debugLog(
       "Layout",
       "sc.pageOfItemsContentsPaddingPx = " + sc.pageOfItemsContentsPaddingPx
     );
@@ -252,10 +254,6 @@ define([
         "margin-right": "0px",
       });
     }
-    domStyle.set(node, {
-      "border-width": `${genericMeasurements.cardFrontBorderWidthPx}px`,
-      "border-style": "solid",
-    });
     return node;
   }
 

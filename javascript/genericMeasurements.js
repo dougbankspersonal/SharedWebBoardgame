@@ -29,6 +29,8 @@ define(["dojo/domReady!"], function () {
   var standardCardWidthPx = standardCardWidthInches * pixelsPerInch;
   var standardCardHeightPx = standardCardHeightInches * pixelsPerInch;
 
+  var triangleCardHeightPx = (standardCardWidthPx * Math.sqrt(3)) / 2;
+
   var standardBorderWidthPx = 2;
   var pageOfItemsMarginPx = 10;
   var pageOfItemsCardsMarginPx = 40;
@@ -91,6 +93,7 @@ define(["dojo/domReady!"], function () {
     printedPageLandscapeHeightPx: printedPageLandscapeHeightPx,
     standardCardWidthPx: standardCardWidthPx,
     standardCardHeightPx: standardCardHeightPx,
+    triangleCardHeightPx: triangleCardHeightPx,
     cardBackFontSize: cardBackFontSize,
     cardBorderWidthPx: cardBorderWidthPx,
 

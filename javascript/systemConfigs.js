@@ -7,7 +7,9 @@ define([
   "sharedJavascript/genericMeasurements",
   "sharedJavascript/genericUtils",
   "dojo/domReady!",
-], function (debugLog, genericMeasurements, genericUtils) {
+], function (debugLogModule, genericMeasurements, genericUtils) {
+  var debugLog = debugLogModule.debugLog;
+
   var _systemConfigs = {};
 
   var validSystemConfigKeys = {
@@ -111,7 +113,7 @@ define([
     outputSc.cardBackFontSize = overrides.cardBackFontSize;
     outputSc.gridGap = genericMeasurements.standardPageGap;
     outputSc.isCards = true;
-    debugLog.debugLog(
+    debugLog(
       "SystemConfigs",
       "addCardSystemConfigs outputSc = " + JSON.stringify(outputSc)
     );
@@ -155,7 +157,7 @@ define([
     var outputSc = addCardSystemConfigs(defaultSc, overrides);
 
     // Apply tweaks.
-    debugLog.debugLog(
+    debugLog(
       "SystemConfigs",
       "addTTSCardSystemConfigs: overrides = " + JSON.stringify(overrides)
     );
@@ -170,7 +172,7 @@ define([
     outputSc.extraClassesForPageOfItemsContents = ["tts"];
     outputSc.gridGap = 0;
     outputSc.addPageNumbers = false;
-    debugLog.debugLog(
+    debugLog(
       "SystemConfigs",
       "addTTSCardSystemConfigs outputSc = " + JSON.stringify(outputSc)
     );
@@ -232,7 +234,7 @@ define([
 
     var outputSc = structuredClone(defaultSc);
     outputSc.isCards = false;
-    debugLog.debugLog(
+    debugLog(
       "SystemConfigs",
       "addTileSystemConfigs: outputSc = " + JSON.stringify(outputSc)
     );
@@ -244,7 +246,7 @@ define([
     sanityCheckConfigs(sc);
     _systemConfigs = sc;
     // tts -> should avoid card backs.
-    debugLog.debugLog(
+    debugLog(
       "SystemConfigs",
       "_systemConfigs = " + JSON.stringify(_systemConfigs)
     );
@@ -259,8 +261,8 @@ define([
 
     var sc;
     if (queryParams.isTTS) {
-      debugLog.debugLog("SystemConfigs", "getCardSystemConfigs: isTTS = true");
-      debugLog.debugLog(
+      debugLog("SystemConfigs", "getCardSystemConfigs: isTTS = true");
+      debugLog(
         "SystemConfigs",
         "calling addTTSCardSystemConfigs with opt_overrides  = " +
           JSON.stringify(opt_overrides)
