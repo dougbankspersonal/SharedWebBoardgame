@@ -250,24 +250,41 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
   // Pick a random element from the array, paying attention to history:
   // 1. If most-picked is maxExcess ahead of least picked, then most-picked is ineligible.
   // 2. If anything was picked maxCount times, it is ineligible.
+  // 3. Potentially some callback to reject/approve.
   function getRandomFromArrayWithRails(
     arrayOfOptions,
     previousHistoryHistogram,
     maxExcess,
     maxCount,
     getRandomZeroToOne,
-    opt_forbiddenOptions
+    opt_validationCallback
   ) {
+    debugLog(
+      "genericUtils",
+      "getRandomFromArrayWithRails arrayOfOptions = ",
+      JSON.stringify(arrayOfOptions)
+    );
+    debugLog(
+      "genericUtils",
+      "getRandomFromArrayWithRails previousHistoryHistogram = ",
+      JSON.stringify(previousHistoryHistogram)
+    );
+    debugLog(
+      "genericUtils",
+      "getRandomFromArrayWithRails maxExcess = ",
+      JSON.stringify(maxExcess)
+    );
+    debugLog(
+      "genericUtils",
+      "getRandomFromArrayWithRails maxCount = ",
+      JSON.stringify(maxCount)
+    );
+
     var leastPickedOption = Math.min(
       ...Object.values(previousHistoryHistogram)
     );
-    var forbiddenOptions = opt_forbiddenOptions || [];
-    var forbiddenOptionsMap = {};
-    for (var i = 0; i < forbiddenOptions.length; i++) {
-      forbiddenOptionsMap[forbiddenOptions[i]] = true;
-    }
     var eligibleOptions = arrayOfOptions.filter(function (option) {
-      if (forbiddenOptionsMap[option]) {
+      if (opt_validationCallback && !opt_validationCallback[option]) {
         return false;
       }
       var optionHistory = previousHistoryHistogram[option] || 0;
@@ -276,9 +293,18 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
       }
       return optionHistory - leastPickedOption < maxExcess;
     });
+    debugLog(
+      "genericUtils",
+      "getRandomFromArrayWithRails eligibleOptions = ",
+      JSON.stringify(eligibleOptions)
+    );
 
     if (eligibleOptions.length === 0) {
       // If no items are eligible, fall back to the original array.
+      debugLog(
+        "genericUtils",
+        "getRandomFromArrayWithRails returning bad value"
+      );
       eligibleOptions = arrayOfOptions;
     }
 
@@ -289,6 +315,10 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
     // Update the results histogram.
     previousHistoryHistogram[pickedValue] =
       (previousHistoryHistogram[pickedValue] || 0) + 1;
+    debugLog(
+      "genericUtils",
+      "getRandomFromArrayWithRails returning good value"
+    );
     return pickedValue;
   }
 
