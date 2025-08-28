@@ -1,37 +1,18 @@
 define(["dojo/domReady!"], function () {
-  var debugFlags = {
-    Belts: "off",
-    BoxHolderCards: "off",
-    Cards: "off",
-    CardConfigs: "off",
-    CardCount: "off",
-    CardSize: "off",
-    ConveyorTiles: "off",
-    Dice: "off",
-    GameBoard: "off",
-    Highlight: "off",
-    Layout: "off",
-    Machines: "off",
-    Markers: "off",
-    ParamCards: "off",
-    PlayerCountLogic: "on",
-    Random: "off",
-    Refactor: "off",
-    ScalingText: "off",
-    ScoringTrack: "off",
-    Special: "off",
-    SystemConfigs: "off",
-    Truck: "off",
-  };
+  var gEnabledFlags = new Set([]);
 
-  function debugLog(flag, statement) {
-    if (debugFlags[flag] == "on") {
-      console.log(statement);
+  function debugLog(flag, ...args) {
+    if (gEnabledFlags.has(flag)) {
+      console.log(`[${flag}]`, ...args);
     }
+  }
+
+  function setEnabledFlags(flags) {
+    gEnabledFlags = new Set(flags);
   }
 
   return {
     debugLog: debugLog,
-    debugFlags: debugFlags,
+    setEnabledFlags: setEnabledFlags,
   };
 });

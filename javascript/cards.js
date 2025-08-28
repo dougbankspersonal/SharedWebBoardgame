@@ -12,24 +12,18 @@ define([
   string,
   dom,
   domStyle,
-  debugLog,
+  debugLogModule,
   genericMeasurements,
   genericUtils,
   htmlUtils,
   systemConfigs
 ) {
+  var debugLog = debugLogModule.debugLog;
+
   function setCardSize(node) {
     var sc = systemConfigs.getSystemConfigs();
-    debugLog.debugLog(
-      "CardSize",
-      "Doug: setCardSize sc.cardHeightPx = ",
-      sc.cardHeightPx
-    );
-    debugLog.debugLog(
-      "CardSize",
-      "Doug: setCardSize sc.cardWidthPx = ",
-      sc.cardWidthPx
-    );
+    debugLog("CardSize", "setCardSize sc.cardHeightPx = ", sc.cardHeightPx);
+    debugLog("CardSize", "setCardSize sc.cardWidthPx = ", sc.cardWidthPx);
     var cardWidthPx = sc.cardWidthPx
       ? sc.cardWidthPx
       : genericMeasurements.standardCardWidthPx;
@@ -60,14 +54,11 @@ define([
   }
 
   function addCardBack(parent, index, backConfig) {
-    debugLog.debugLog(
-      "Cards",
-      "addCardBack backConfig = " + JSON.stringify(backConfig)
-    );
+    debugLog("Cards", "addCardBack backConfig = " + JSON.stringify(backConfig));
 
     var cardsPerRow = systemConfigs.getSystemConfigs().cardsPerRow;
-    debugLog.debugLog("Cards", "addCardBack cardsPerRow = " + cardsPerRow);
-    debugLog.debugLog("Cards", "addCardBack index = " + index);
+    debugLog("Cards", "addCardBack cardsPerRow = " + cardsPerRow);
+    debugLog("Cards", "addCardBack index = " + index);
 
     if (backConfig.callback) {
       console.assert(
@@ -108,10 +99,7 @@ define([
         backConfig.title
       );
       var style = {};
-      debugLog.debugLog(
-        "Cards",
-        "Doug: addCardBack sc = " + JSON.stringify(sc)
-      );
+      debugLog("Cards", "addCardBack sc = " + JSON.stringify(sc));
       style["font-size"] = sc.cardBackFontSize
         ? `${sc.cardBackFontSize}px`
         : `${genericMeasurements.cardBackFontSize}px`;
@@ -131,11 +119,11 @@ define([
   }
 
   function maybeNewPage(parent, currentPage, index) {
-    debugLog.debugLog("Cards", "maybeNewPage index = " + index.toString());
+    debugLog("Cards", "maybeNewPage index = " + index.toString());
     var cardsPerPage = systemConfigs.getSystemConfigs().cardsPerPage;
     var needNew = index % cardsPerPage;
     if (needNew == 0) {
-      debugLog.debugLog(
+      debugLog(
         "Cards",
         "maybeNewPage adding new page for index = " + index.toString()
       );
@@ -148,7 +136,7 @@ define([
     var cardsPerRow = systemConfigs.getSystemConfigs().cardsPerRow;
     var needNew = index % cardsPerRow;
     if (needNew == 0) {
-      debugLog.debugLog(
+      debugLog(
         "Cards",
         "NewCardFu adding new row for index = " + index.toString()
       );
@@ -165,7 +153,7 @@ define([
     index,
     opt_isCardBack
   ) {
-    debugLog.debugLog("Cards", "addNthCard index = " + index.toString());
+    debugLog("Cards", "addNthCard index = " + index.toString());
     pageOfCards = maybeNewPage(bodyNode, pageOfCards, index);
     console.assert(pageOfCards, "pageOfCards is null");
     rowOfCards = maybeNewRow(pageOfCards, rowOfCards, index, opt_isCardBack);
@@ -177,8 +165,8 @@ define([
   function addCards(numCards, frontCallback, backConfig) {
     var sc = systemConfigs.getSystemConfigs();
 
-    debugLog.debugLog("Cards", "Doug: addCards: sc = " + JSON.stringify(sc));
-    debugLog.debugLog("Cards", "Doug: addCards: numCards = " + numCards);
+    debugLog("Cards", "addCards: sc = " + JSON.stringify(sc));
+    debugLog("Cards", "addCards: numCards = " + numCards);
     // Better be in cards mode.
     console.assert(sc.isCards, "Not in cards mode");
 
@@ -192,7 +180,7 @@ define([
 
     if (sc.separateBacks) {
       for (let index = 0; index < numCards; index++) {
-        debugLog.debugLog("Cards", "addCards 001 i = " + index.toString());
+        debugLog("Cards", "addCards 001 i = " + index.toString());
         [pageOfFronts, rowOfFronts, dummyCard] = addNthCard(
           bodyNode,
           pageOfFronts,
@@ -203,7 +191,7 @@ define([
       }
 
       if (!sc.skipCardBacks) {
-        debugLog.debugLog("Cards", "addCards 002 i = " + i.toString());
+        debugLog("Cards", "addCards 002 i = " + i.toString());
         [pageOfBacks, rowOfBacks, dummyCard] = addNthCard(
           bodyNode,
           pageOfBacks,
@@ -218,7 +206,7 @@ define([
       }
     } else {
       for (let index = 0; index < numCards; index++) {
-        debugLog.debugLog("Cards", "addCards 003 i = " + index.toString());
+        debugLog("Cards", "addCards 003 i = " + index.toString());
         [pageOfFronts, rowOfFronts, dummyCard] = addNthCard(
           bodyNode,
           pageOfFronts,
@@ -228,7 +216,7 @@ define([
         );
 
         if (!sc.skipCardBacks) {
-          debugLog.debugLog("Cards", "addCards 004 i = " + index.toString());
+          debugLog("Cards", "addCards 004 i = " + index.toString());
           [pageOfBacks, rowOfBacks, dummyCard] = addNthCard(
             bodyNode,
             pageOfBacks,
@@ -245,10 +233,9 @@ define([
   }
 
   function getNumCardsFromConfigs(cardConfigs) {
-    debugLog.debugLog(
+    debugLog(
       "CardCount",
-      "Doug: getNumCardsFromConfigs: cardConfigs = " +
-        JSON.stringify(cardConfigs)
+      "getNumCardsFromConfigs: cardConfigs = " + JSON.stringify(cardConfigs)
     );
     // If we are doing single-instance of each card config, rewrite the array.
     var sc = systemConfigs.getSystemConfigs();
@@ -256,9 +243,9 @@ define([
       for (var i = 0; i < cardConfigs.length; i++) {
         cardConfigs[i].count = 1;
       }
-      debugLog.debugLog(
+      debugLog(
         "CardCount",
-        "Doug: getNumCardsFromConfigs: singleCardInstance is true: cardConfigs = " +
+        "getNumCardsFromConfigs: singleCardInstance is true: cardConfigs = " +
           JSON.stringify(cardConfigs)
       );
     }
@@ -270,9 +257,9 @@ define([
       numCards = numCards + instanceCount;
     }
 
-    debugLog.debugLog(
+    debugLog(
       "CardCount",
-      "Doug: getNumCardsFromConfigs: initial numCards = " + numCards
+      "getNumCardsFromConfigs: initial numCards = " + numCards
     );
 
     // If we have some min, and this isn't enough, change count on first card to hit max.
@@ -280,28 +267,28 @@ define([
       var firstCount = cardConfigs[0].count ? cardConfigs[0].count : 1;
       cardConfigs[0].count = firstCount + sc.minCardCount - numCards;
       numCards = sc.minCardCount;
-      debugLog.debugLog(
+      debugLog(
         "CardCount",
-        "Doug: getNumCardsFromConfigs: sc.minCardCount = " + sc.minCardCount
+        "getNumCardsFromConfigs: sc.minCardCount = " + sc.minCardCount
       );
-      debugLog.debugLog(
+      debugLog(
         "CardCount",
-        "Doug: getNumCardsFromConfigs: adjusted card configs: cardConfigs = " +
+        "getNumCardsFromConfigs: adjusted card configs: cardConfigs = " +
           JSON.stringify(cardConfigs)
       );
     }
 
-    debugLog.debugLog(
+    debugLog(
       "CardCount",
-      "Doug: getNumCardsFromConfigs: final numCards = " + numCards
+      "getNumCardsFromConfigs: final numCards = " + numCards
     );
     return numCards;
   }
 
   function getCardConfigAtIndex(cardConfigs, index) {
-    debugLog.debugLog(
+    debugLog(
       "Cards",
-      "Doug: getCardConfigAtIndex: cardConfigs = " + JSON.stringify(cardConfigs)
+      "getCardConfigAtIndex: cardConfigs = " + JSON.stringify(cardConfigs)
     );
     for (var i = 0; i < cardConfigs.length; i++) {
       var instanceCount = getInstanceCountFromConfig(cardConfigs, i);
@@ -314,11 +301,11 @@ define([
   }
 
   function getIndexWithinConfig(cardConfigs, index) {
-    debugLog.debugLog(
+    debugLog(
       "Cards",
-      "Doug: getIndexWithinConfig: cardConfigs = " + JSON.stringify(cardConfigs)
+      "getIndexWithinConfig: cardConfigs = " + JSON.stringify(cardConfigs)
     );
-    debugLog.debugLog("Cards", "Doug: getIndexWithinConfig: index = " + index);
+    debugLog("Cards", "getIndexWithinConfig: index = " + index);
     for (var i = 0; i < cardConfigs.length; i++) {
       var instanceCount = getInstanceCountFromConfig(cardConfigs, i);
       if (index < instanceCount) {

@@ -29,6 +29,8 @@ define(["dojo/domReady!"], function () {
   var standardCardWidthPx = standardCardWidthInches * pixelsPerInch;
   var standardCardHeightPx = standardCardHeightInches * pixelsPerInch;
 
+  var triangleCardHeightPx = (standardCardWidthPx * Math.sqrt(3)) / 2;
+
   var standardBorderWidthPx = 2;
   var pageOfItemsMarginPx = 10;
   var pageOfItemsCardsMarginPx = 40;
@@ -77,6 +79,8 @@ define(["dojo/domReady!"], function () {
   var smallCardsPerColumn = Math.floor(adjustedPageHeight / smallCardHeightPx);
   var smallCardsPerPage = smallCardsPerRow * smallCardsPerColumn;
 
+  var ttsCardsPerRow = 10;
+
   return {
     getNumberThatFitAccountingForGap: getNumberThatFitAccountingForGap,
 
@@ -89,6 +93,7 @@ define(["dojo/domReady!"], function () {
     printedPageLandscapeHeightPx: printedPageLandscapeHeightPx,
     standardCardWidthPx: standardCardWidthPx,
     standardCardHeightPx: standardCardHeightPx,
+    triangleCardHeightPx: triangleCardHeightPx,
     cardBackFontSize: cardBackFontSize,
     cardBorderWidthPx: cardBorderWidthPx,
 
@@ -113,5 +118,6 @@ define(["dojo/domReady!"], function () {
     smallCardBackFontSize: smallCardBackFontSize,
     smallCardsPerPage: smallCardsPerPage,
     cardFrontBorderWidthPx: cardFrontBorderWidthPx,
+    ttsCardsPerRow: ttsCardsPerRow,
   };
 });

@@ -9,11 +9,13 @@ define([
 ], function (
   dom,
   domStyle,
-  debugLog,
+  debugLogModule,
   genericMeasurements,
   htmlUtils,
   systemConfigs
 ) {
+  var debugLog = debugLogModule.debugLog;
+
   const DieType_D6 = "d6";
   const DieType_D8 = "d8";
 

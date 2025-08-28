@@ -1,4 +1,7 @@
-define(["sharedJavascript/debugLog", "dojo/domReady!"], function (debugLog) {
+define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
+  debugLogModule
+) {
+  var debugLog = debugLogModule.debugLog;
   // validKeys maps keys to "true".
   // Passes if every key in table is in validKeys.
   // Does not check types.
@@ -75,10 +78,7 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (debugLog) {
   }
 
   function getRandomArrayElement(array, getRandomZeroToOne) {
-    debugLog.debugLog(
-      "Random",
-      "Doug: getRandomArrayElement: array = " + array
-    );
+    debugLog("Random", "getRandomArrayElement: array = " + array);
     return getRandomNonRepeatingArrayElements(array, 1, getRandomZeroToOne)[0];
   }
 
@@ -138,11 +138,19 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (debugLog) {
     var isTTP = stringToBoolean(params.get("isTTP"));
     var skipCardBacks = stringToBoolean(params.get("skipCardBacks"));
     var singleCardInstance = stringToBoolean(params.get("singleCardInstance"));
+    var debugLogFlagsString = params.get("debugLogFlags");
+    // Assume this is a comma separated string of strings.  Parse to an array of strings.
+    var debugLogFlagsArray = debugLogFlagsString
+      ? debugLogFlagsString.split(",")
+      : [];
+    // Just set it now:
+    debugLogModule.setEnabledFlags(debugLogFlagsArray);
     return {
       isTTP: isTTP,
       isTTS: isTTS || isTTP,
       skipCardBacks: skipCardBacks,
       singleCardInstance: singleCardInstance,
+      debugFlags: debugLogFlagsArray,
     };
   }
 
@@ -189,7 +197,7 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (debugLog) {
   // Return array of two histograms.
   function generateNonMatchingHistograms(count, array, getRandomZeroToOne) {
     var histograms;
-    debugLog.debugLog("CardConfigs", "Doug: generateNonMatchingHistograms");
+    debugLog("CardConfigs", "generateNonMatchingHistograms");
 
     var firstHistogram = randomHistogramFromArray(
       count,
@@ -204,9 +212,9 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (debugLog) {
       );
       if (!tablesMatch(firstHistogram, secondHistogram)) {
         histograms = [firstHistogram, secondHistogram];
-        debugLog.debugLog(
+        debugLog(
           "CardConfigs",
-          "Doug: generateNonMatchingHistograms returning histograms = " +
+          "generateNonMatchingHistograms returning histograms = " +
             JSON.stringify(histograms)
         );
         return histograms;
@@ -225,10 +233,7 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (debugLog) {
   }
 
   function copyAndShuffleArray(array, getRandomZeroToOne) {
-    debugLog.debugLog(
-      "Random",
-      "Doug: copyAndShuffleArray: array = " + JSON.stringify(array)
-    );
+    debugLog("Random", "copyAndShuffleArray: array = " + JSON.stringify(array));
     var shuffled = array.slice(0),
       i = array.length,
       temp,
@@ -240,6 +245,81 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (debugLog) {
       shuffled[i] = temp;
     }
     return shuffled;
+  }
+
+  // Pick a random element from the array, paying attention to history:
+  // 1. If most-picked is maxExcess ahead of least picked, then most-picked is ineligible.
+  // 2. If anything was picked maxCount times, it is ineligible.
+  // 3. Potentially some callback to reject/approve.
+  function getRandomFromArrayWithRails(
+    arrayOfOptions,
+    previousHistoryHistogram,
+    maxExcess,
+    maxCount,
+    getRandomZeroToOne,
+    opt_validationCallback
+  ) {
+    debugLog(
+      "genericUtils",
+      "getRandomFromArrayWithRails arrayOfOptions = ",
+      JSON.stringify(arrayOfOptions)
+    );
+    debugLog(
+      "genericUtils",
+      "getRandomFromArrayWithRails previousHistoryHistogram = ",
+      JSON.stringify(previousHistoryHistogram)
+    );
+    debugLog(
+      "genericUtils",
+      "getRandomFromArrayWithRails maxExcess = ",
+      JSON.stringify(maxExcess)
+    );
+    debugLog(
+      "genericUtils",
+      "getRandomFromArrayWithRails maxCount = ",
+      JSON.stringify(maxCount)
+    );
+
+    var leastPickedOption = Math.min(
+      ...Object.values(previousHistoryHistogram)
+    );
+    var eligibleOptions = arrayOfOptions.filter(function (option) {
+      if (opt_validationCallback && !opt_validationCallback[option]) {
+        return false;
+      }
+      var optionHistory = previousHistoryHistogram[option] || 0;
+      if (optionHistory >= maxCount) {
+        return false;
+      }
+      return optionHistory - leastPickedOption < maxExcess;
+    });
+    debugLog(
+      "genericUtils",
+      "getRandomFromArrayWithRails eligibleOptions = ",
+      JSON.stringify(eligibleOptions)
+    );
+
+    if (eligibleOptions.length === 0) {
+      // If no items are eligible, fall back to the original array.
+      debugLog(
+        "genericUtils",
+        "getRandomFromArrayWithRails returning bad value"
+      );
+      eligibleOptions = arrayOfOptions;
+    }
+
+    var pickedValue = getRandomArrayElement(
+      eligibleOptions,
+      getRandomZeroToOne
+    );
+    // Update the results histogram.
+    previousHistoryHistogram[pickedValue] =
+      (previousHistoryHistogram[pickedValue] || 0) + 1;
+    debugLog(
+      "genericUtils",
+      "getRandomFromArrayWithRails returning good value"
+    );
+    return pickedValue;
   }
 
   return {
@@ -261,5 +341,6 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (debugLog) {
     randomHistogramFromArray: randomHistogramFromArray,
     sumHistogram: sumHistogram,
     copyAndShuffleArray: copyAndShuffleArray,
+    getRandomFromArrayWithRails: getRandomFromArrayWithRails,
   };
 });
