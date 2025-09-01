@@ -1,5 +1,5 @@
 define(["dojo/domReady!"], function () {
-  var gEnabledFlags = new Set(["Cards"]);
+  var gEnabledFlags = new Set([]);
 
   function debugLog(flag, ...args) {
     if (gEnabledFlags.has(flag)) {
