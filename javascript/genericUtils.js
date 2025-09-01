@@ -260,22 +260,22 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
     opt_validationCallback
   ) {
     debugLog(
-      "genericUtils",
+      "getRandomFromArrayWithRails",
       "getRandomFromArrayWithRails arrayOfOptions = ",
       JSON.stringify(arrayOfOptions)
     );
     debugLog(
-      "genericUtils",
+      "getRandomFromArrayWithRails",
       "getRandomFromArrayWithRails previousHistoryHistogram = ",
       JSON.stringify(previousHistoryHistogram)
     );
     debugLog(
-      "genericUtils",
+      "getRandomFromArrayWithRails",
       "getRandomFromArrayWithRails maxExcess = ",
       JSON.stringify(maxExcess)
     );
     debugLog(
-      "genericUtils",
+      "getRandomFromArrayWithRails",
       "getRandomFromArrayWithRails maxCount = ",
       JSON.stringify(maxCount)
     );
@@ -294,7 +294,7 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
       return optionHistory - leastPickedOption < maxExcess;
     });
     debugLog(
-      "genericUtils",
+      "getRandomFromArrayWithRails",
       "getRandomFromArrayWithRails eligibleOptions = ",
       JSON.stringify(eligibleOptions)
     );
@@ -302,7 +302,7 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
     if (eligibleOptions.length === 0) {
       // If no items are eligible, fall back to the original array.
       debugLog(
-        "genericUtils",
+        "getRandomFromArrayWithRails",
         "getRandomFromArrayWithRails returning bad value"
       );
       eligibleOptions = arrayOfOptions;
@@ -316,7 +316,7 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
     previousHistoryHistogram[pickedValue] =
       (previousHistoryHistogram[pickedValue] || 0) + 1;
     debugLog(
-      "genericUtils",
+      "getRandomFromArrayWithRails",
       "getRandomFromArrayWithRails returning good value"
     );
     return pickedValue;
