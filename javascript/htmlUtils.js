@@ -38,7 +38,7 @@ define([
     console.assert(classArray != null, "classArray is null");
     console.assert(parent, "parent is null");
     if (!opt_image) {
-      classArray.unshift("pseudo_image");
+      classArray.unshift("pseudo-image");
     }
     var classes = classArray.join(" ");
     var props = {
