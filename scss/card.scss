@@ -1,14 +1,22 @@
 .page_of_items.page_of_cards {
+  display: flex;
+  flex-direction: column;
   align-items: center;
+  justify-content: flex-start;
 
   .page_of_items_contents {
+    padding-top: 10px;
+    display: flex;
     flex-direction: column;
-    ;
+    justify-content: flex-start;
+    align-items: center;
+    box-sizing: border-box;
+    height: 100%;
+    position: relative;
 
     .row_of_cards {
       display: flex;
       flex-direction: row;
-      align-items: center;
       justify-content: center;
       gap: 1px;
     }
