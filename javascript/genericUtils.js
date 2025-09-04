@@ -248,9 +248,10 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
   }
 
   // Pick a random element from the array, paying attention to history:
-  // 1. If most-picked is maxExcess ahead of least picked, then most-picked is ineligible.
+  // 1. If most-picked is maxExcess or more ahead of least picked, then most-picked is ineligible.
   // 2. If anything was picked maxCount times, it is ineligible.
   // 3. Potentially some callback to reject/approve.
+  // If nothing can be picked, return null.
   function getRandomFromArrayWithRails(
     arrayOfOptions,
     previousHistoryHistogram,
@@ -280,19 +281,58 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
       JSON.stringify(maxCount)
     );
 
+    debugLog(
+      "testRandom",
+      "  getRandomFromArrayWithRails: previousHistoryHistogram = ",
+      JSON.stringify(previousHistoryHistogram)
+    );
+
+    // Sanity check: should never have more than max in history.
+    for (var i = 0; i < arrayOfOptions.length; i++) {
+      var option = arrayOfOptions[i];
+      var historyCount = previousHistoryHistogram[option] || 0;
+      console.assert(
+        historyCount <= maxCount,
+        "historyCount = " + historyCount + ", maxCount = " + maxCount
+      );
+    }
+
     var leastPickedOption = Math.min(
       ...Object.values(previousHistoryHistogram)
     );
     var eligibleOptions = arrayOfOptions.filter(function (option) {
       if (opt_validationCallback && !opt_validationCallback[option]) {
+        debugLog(
+          "getRandomFromArrayWithRails",
+          "getRandomFromArrayWithRails eligibleOptions failed callback."
+        );
         return false;
       }
       var optionHistory = previousHistoryHistogram[option] || 0;
       if (optionHistory >= maxCount) {
+        debugLog(
+          "getRandomFromArrayWithRails",
+          "getRandomFromArrayWithRails eligibleOptions failed optionHistory: optionHistory = " +
+            JSON.stringify(optionHistory) +
+            ": maxCount = " +
+            JSON.stringify(maxCount)
+        );
         return false;
       }
-      return optionHistory - leastPickedOption < maxExcess;
+
+      var lessThanMaxExcess = optionHistory - leastPickedOption < maxExcess;
+      if (!lessThanMaxExcess) {
+        debugLog(
+          "getRandomFromArrayWithRails",
+          "getRandomFromArrayWithRails eligibleOptions failed lessThanMaxExcess: lessThanMaxExcess = " +
+            JSON.stringify(lessThanMaxExcess)
+        );
+        return false;
+      }
+
+      return true;
     });
+
     debugLog(
       "getRandomFromArrayWithRails",
       "getRandomFromArrayWithRails eligibleOptions = ",
@@ -300,24 +340,22 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
     );
 
     if (eligibleOptions.length === 0) {
-      // If no items are eligible, fall back to the original array.
-      debugLog(
-        "getRandomFromArrayWithRails",
-        "getRandomFromArrayWithRails returning bad value"
-      );
-      eligibleOptions = arrayOfOptions;
+      // No fallback: return null.
+      return null;
     }
 
     var pickedValue = getRandomArrayElement(
       eligibleOptions,
       getRandomZeroToOne
     );
+
     // Update the results histogram.
     previousHistoryHistogram[pickedValue] =
       (previousHistoryHistogram[pickedValue] || 0) + 1;
     debugLog(
       "getRandomFromArrayWithRails",
-      "getRandomFromArrayWithRails returning good value"
+      "getRandomFromArrayWithRails returning pickedValue = ",
+      pickedValue
     );
     return pickedValue;
   }
