@@ -65,6 +65,29 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
     return shuffled.slice(min);
   }
 
+  // Pick an element from the array.
+  // All elements have same chance.
+  function getRandomArrayElement(array, getRandomZeroToOne) {
+    debugLog("Random", "getRandomArrayElement: array = " + array);
+    return getRandomNonRepeatingArrayElements(array, 1, getRandomZeroToOne)[0];
+  }
+
+  // Pick an element from the array.
+  // Each element has a weight.  Weight = extra ticket in the raffle.
+  // So if I pass in [1, 2, 3] and [10, 1, 1], then 1 is 10x more likely to be picked than 2 or 3.
+  function getRandomArrayElementWeighted(array, weights, getRandomZeroToOne) {
+    debugLog("Random", "getRandomArrayElementWeighted: array = " + array);
+    var totalWeight = weights.reduce((a, b) => a + b, 0);
+    var randomValue = getRandomZeroToOne() * totalWeight;
+    for (var i = 0; i < array.length; i++) {
+      if (randomValue < weights[i]) {
+        return array[i];
+      }
+      randomValue -= weights[i];
+    }
+    return array[array.length - 1]; // Fallback
+  }
+
   function getRandomMaybeRepeatingArrayElements(
     array,
     numElements,
@@ -75,11 +98,6 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
       result.push(getRandomArrayElement(array, getRandomZeroToOne));
     }
     return result;
-  }
-
-  function getRandomArrayElement(array, getRandomZeroToOne) {
-    debugLog("Random", "getRandomArrayElement: array = " + array);
-    return getRandomNonRepeatingArrayElements(array, 1, getRandomZeroToOne)[0];
   }
 
   function getRandomArrayElementNotMatching(
@@ -247,120 +265,148 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
     return shuffled;
   }
 
-  // Pick a random element from the array, paying attention to history:
-  // 1. If most-picked is maxExcess or more ahead of least picked, then most-picked is ineligible.
-  // 2. If anything was picked maxCount times, it is ineligible.
-  // 3. Potentially some callback to reject/approve.
-  // If nothing can be picked, return null.
-  function getRandomFromArrayWithRails(
-    arrayOfOptions,
-    previousHistoryHistogram,
-    maxExcess,
-    maxCount,
-    getRandomZeroToOne,
-    opt_validationCallback
+  // Given:
+  // - array of possible values.
+  // - count of how many values we want.
+  // - a map from value type to number: in the result, each value can appear at most this many times.
+  // - a map from value type to number: how many times can each value appear ever, across multiple calls to this function.
+  // - a map from value type to number: how many times was this value selected in previous calls to the function.
+  // - zero to one randomizing function.
+  //
+  // Hand back an array of values randomly selected from the array, respecting the above requirements.
+  const gMaxDeltaAsFractionOfMax = 0.07;
+  function getRandomsFromArrayWithControls(
+    arrayOfValues,
+    requestedCount,
+    maxCountThisCallByValue,
+    maxCountEverByValue,
+    historicCountByValue,
+    getRandomZeroToOne
   ) {
     debugLog(
-      "getRandomFromArrayWithRails",
-      "getRandomFromArrayWithRails arrayOfOptions = ",
-      JSON.stringify(arrayOfOptions)
+      "getRandomsFromArrayWithControls",
+      "getRandomsFromArrayWithControls arrayOfValues = ",
+      JSON.stringify(arrayOfValues)
     );
     debugLog(
-      "getRandomFromArrayWithRails",
-      "getRandomFromArrayWithRails previousHistoryHistogram = ",
-      JSON.stringify(previousHistoryHistogram)
+      "getRandomsFromArrayWithControls",
+      "getRandomsFromArrayWithControls requestedCount = ",
+      JSON.stringify(requestedCount)
     );
     debugLog(
-      "getRandomFromArrayWithRails",
-      "getRandomFromArrayWithRails maxExcess = ",
-      JSON.stringify(maxExcess)
+      "getRandomsFromArrayWithControls",
+      "getRandomsFromArrayWithControls maxCountThisCallByValue = ",
+      JSON.stringify(maxCountThisCallByValue)
     );
     debugLog(
-      "getRandomFromArrayWithRails",
-      "getRandomFromArrayWithRails maxCount = ",
-      JSON.stringify(maxCount)
+      "getRandomsFromArrayWithControls",
+      "getRandomsFromArrayWithControls maxCountEverByValue = ",
+      JSON.stringify(maxCountEverByValue)
+    );
+    debugLog(
+      "getRandomsFromArrayWithControls",
+      "getRandomsFromArrayWithControls historicCountByValue = ",
+      JSON.stringify(historicCountByValue)
     );
 
-    debugLog(
-      "testRandom",
-      "  getRandomFromArrayWithRails: previousHistoryHistogram = ",
-      JSON.stringify(previousHistoryHistogram)
-    );
+    // Some of this mahy be inefficient overkill, don't care.
+    var retVal = [];
+    var usesThisCallByValue = {};
 
-    // Sanity check: should never have more than max in history.
-    for (var i = 0; i < arrayOfOptions.length; i++) {
-      var option = arrayOfOptions[i];
-      var historyCount = previousHistoryHistogram[option] || 0;
+    // Little helper function: this value that came in as part of arrayOfValues: should we consider it?
+    function isValidCandidate(candidateValue) {
+      // This is not eligibile if it's been used too much this call.
+      var usesThisCall = usesThisCallByValue[candidateValue] || 0;
+      if (usesThisCall >= maxCountThisCallByValue[candidateValue]) {
+        return false;
+      }
+
+      // Not eligible if at or over the max allowed for this value.
+      var maxCountEver = maxCountEverByValue[candidateValue] || 0;
+      var historicCount = historicCountByValue[candidateValue] || 0;
+      if (historicCount >= maxCountEver) {
+        return false;
+      }
+
+      // We don't want any one value to get too far ahead of the others.
+      var fractionConsumedByValue = {};
+      for (var i = 0; i < arrayOfValues.length; i++) {
+        var value = arrayOfValues[i];
+        var historicCount = historicCountByValue[value] || 0;
+        var maxCountEver = maxCountEverByValue[value] || 0;
+        fractionConsumedByValue[value] = historicCount / maxCountEver;
+      }
+
+      debugLog(
+        "getRandomsFromArrayWithControls",
+        "fractionConsumedByValue = ",
+        JSON.stringify(fractionConsumedByValue)
+      );
+
+      // This value should not be max fraction above next highest.
+      var thisFraction = fractionConsumedByValue[candidateValue] || 0;
+      for (var value in fractionConsumedByValue) {
+        if (value !== candidateValue) {
+          var otherFraction = fractionConsumedByValue[value] || 0;
+          if (thisFraction > otherFraction + gMaxDeltaAsFractionOfMax) {
+            return false;
+          }
+        }
+      }
+      return true;
+    }
+
+    for (var i = 0; i < requestedCount; i++) {
+      // Make a new copy of arrayOfValues, including only choices that are still valid.
+      var modifiedArrayOfValues = [];
+      for (var j = 0; j < arrayOfValues.length; j++) {
+        var candidateValue = arrayOfValues[j];
+        if (isValidCandidate(candidateValue)) {
+          modifiedArrayOfValues.push(candidateValue);
+        }
+      }
+
+      // If this is empty, we don't have any possible choices: freak out and return null.
+      if (modifiedArrayOfValues.length == 0) {
+        console.assert(false, "modifiedArrayOfValues is empty");
+        return null;
+      }
+
+      // Pick a random element from the modified array.
+      var selectedValue = getRandomArrayElement(
+        modifiedArrayOfValues,
+        getRandomZeroToOne
+      );
+      retVal.push(selectedValue);
+
+      // Updated our usage counts.
+      usesThisCallByValue[selectedValue] =
+        (usesThisCallByValue[selectedValue] || 0) + 1;
+      historicCountByValue[selectedValue] =
+        (historicCountByValue[selectedValue] || 0) + 1;
+    }
+
+    // Return the array of selected values.
+    return retVal;
+  }
+
+  // This should be a number with a sane value.
+  function assertIsNumber(value, varName) {
+    if (typeof value !== "number" || isNaN(value)) {
       console.assert(
-        historyCount <= maxCount,
-        "historyCount = " + historyCount + ", maxCount = " + maxCount
+        false,
+        'Expected "' +
+          varName +
+          '" to be a number, got : ' +
+          typeof value +
+          " with value = " +
+          value
       );
     }
-
-    var leastPickedOption = Math.min(
-      ...Object.values(previousHistoryHistogram)
-    );
-    var eligibleOptions = arrayOfOptions.filter(function (option) {
-      if (opt_validationCallback && !opt_validationCallback[option]) {
-        debugLog(
-          "getRandomFromArrayWithRails",
-          "getRandomFromArrayWithRails eligibleOptions failed callback."
-        );
-        return false;
-      }
-      var optionHistory = previousHistoryHistogram[option] || 0;
-      if (optionHistory >= maxCount) {
-        debugLog(
-          "getRandomFromArrayWithRails",
-          "getRandomFromArrayWithRails eligibleOptions failed optionHistory: optionHistory = " +
-            JSON.stringify(optionHistory) +
-            ": maxCount = " +
-            JSON.stringify(maxCount)
-        );
-        return false;
-      }
-
-      var lessThanMaxExcess = optionHistory - leastPickedOption < maxExcess;
-      if (!lessThanMaxExcess) {
-        debugLog(
-          "getRandomFromArrayWithRails",
-          "getRandomFromArrayWithRails eligibleOptions failed lessThanMaxExcess: lessThanMaxExcess = " +
-            JSON.stringify(lessThanMaxExcess)
-        );
-        return false;
-      }
-
-      return true;
-    });
-
-    debugLog(
-      "getRandomFromArrayWithRails",
-      "getRandomFromArrayWithRails eligibleOptions = ",
-      JSON.stringify(eligibleOptions)
-    );
-
-    if (eligibleOptions.length === 0) {
-      // No fallback: return null.
-      return null;
-    }
-
-    var pickedValue = getRandomArrayElement(
-      eligibleOptions,
-      getRandomZeroToOne
-    );
-
-    // Update the results histogram.
-    previousHistoryHistogram[pickedValue] =
-      (previousHistoryHistogram[pickedValue] || 0) + 1;
-    debugLog(
-      "getRandomFromArrayWithRails",
-      "getRandomFromArrayWithRails returning pickedValue = ",
-      pickedValue
-    );
-    return pickedValue;
   }
 
   return {
+    assertIsNumber: assertIsNumber,
     sanityCheckTable: sanityCheckTable,
     getIndexOfFirstInstanceInArray: getIndexOfFirstInstanceInArray,
     getRandomInt: getRandomInt,
@@ -379,6 +425,6 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
     randomHistogramFromArray: randomHistogramFromArray,
     sumHistogram: sumHistogram,
     copyAndShuffleArray: copyAndShuffleArray,
-    getRandomFromArrayWithRails: getRandomFromArrayWithRails,
+    getRandomsFromArrayWithControls: getRandomsFromArrayWithControls,
   };
 });

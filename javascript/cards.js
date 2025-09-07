@@ -237,6 +237,7 @@ define([
       "CardCount",
       "getNumCardsFromConfigs: cardConfigs = " + JSON.stringify(cardConfigs)
     );
+
     // If we are doing single-instance of each card config, rewrite the array.
     var sc = systemConfigs.getSystemConfigs();
     if (sc.singleCardInstance) {
