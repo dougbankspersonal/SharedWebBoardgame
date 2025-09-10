@@ -387,6 +387,33 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
     }
 
     // Return the array of selected values.
+
+    debugLog(
+      "getRandomsFromArrayWithControls",
+      "retVal = ",
+      JSON.stringify(retVal)
+    );
+
+    // Hackery, remove.
+    var matches = 0;
+    if (retVal.length == 3) {
+      for (var i = 0; i < retVal.length - 1; i++) {
+        for (var j = i + 1; j < retVal.length; j++) {
+          if (retVal[i] == retVal[j]) {
+            ++matches;
+          }
+        }
+      }
+    }
+    if (matches == 3) {
+      debugLog("getRandomsFromArrayWithControls", "TRIPLE MATCH");
+      debugLog("getRandomsFromArrayWithControls", "TRIPLE MATCH");
+      debugLog("getRandomsFromArrayWithControls", "TRIPLE MATCH");
+      debugLog("getRandomsFromArrayWithControls", "TRIPLE MATCH");
+      debugLog("getRandomsFromArrayWithControls", "TRIPLE MATCH");
+      debugLog("getRandomsFromArrayWithControls", "TRIPLE MATCH");
+    }
+
     return retVal;
   }
 
