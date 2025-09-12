@@ -432,6 +432,23 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
     }
   }
 
+  function generateRandomizedArray(array, getRandomZeroToOne) {
+    var shuffled = array.slice(0),
+      i = array.length,
+      temp,
+      index;
+
+    while (i > 0) {
+      index = Math.floor(getRandomZeroToOne() * i);
+      i -= 1;
+      temp = shuffled[i];
+      shuffled[i] = shuffled[index];
+      shuffled[index] = temp;
+    }
+
+    return shuffled;
+  }
+
   return {
     assertIsNumber: assertIsNumber,
     sanityCheckTable: sanityCheckTable,
@@ -453,5 +470,6 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
     sumHistogram: sumHistogram,
     copyAndShuffleArray: copyAndShuffleArray,
     getRandomsFromArrayWithControls: getRandomsFromArrayWithControls,
+    generateRandomizedArray: generateRandomizedArray,
   };
 });

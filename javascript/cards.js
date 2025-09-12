@@ -42,7 +42,9 @@ define([
       opt_classArray,
       "page_of_cards"
     );
-    return htmlUtils.addPageOfItems(parent, classes);
+    var [_pageOfItems, pageOfItemsContents] =
+      htmlUtils.addPageOfItemsAndContents(parent, classes);
+    return pageOfItemsContents;
   }
 
   function addRowOfCards(parent, opt_isCardBack) {

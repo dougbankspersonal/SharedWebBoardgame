@@ -7,7 +7,7 @@ body {
   /* Optional: Removes default margin */
 }
 
-.page_of_items {
+.page-of-items {
   page-break-after: always;
   text-align: center;
   overflow: hidden;
@@ -16,7 +16,7 @@ body {
   align-items: start;
   justify-content: center;
 
-  .page_of_items_contents {
+  .page-of-items-contents {
     display: flex;
     flex-wrap: wrap;
     /* Allows items to wrap onto new rows */
@@ -24,11 +24,11 @@ body {
     position: relative;
   }
 
-  .page_of_items_contents.demo_board {
+  .page-of-items-contents.demo_board {
     flex-direction: column;
   }
 
-  .page_of_items_contents.tts {
+  .page-of-items-contents.tts {
     justify-content: left;
   }
 

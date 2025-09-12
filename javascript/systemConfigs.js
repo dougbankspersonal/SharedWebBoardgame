@@ -61,7 +61,7 @@ define([
     // Can override page width.
     explicitPageWidth: true,
 
-    // Extra class to apply to page_of_items div.
+    // Extra class to apply to page-of-items div.
     extraClassesForPageOfItemsContents: true,
     explicitPageWidth: true,
 

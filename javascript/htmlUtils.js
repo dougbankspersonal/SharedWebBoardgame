@@ -153,21 +153,21 @@ define([
     return genericMeasurements.printedPagePortraitHeightPx;
   };
 
-  function addPageOfItems(parent, opt_classArray) {
+  function addPageOfItemsAndContents(parent, opt_pageOfItemsClassArray) {
     var sc = systemConfigs.getSystemConfigs();
     console.assert(parent, "parent is null");
-    var classArray = genericUtils.growOptStringArray(
-      opt_classArray,
-      "page_of_items"
+    var pageOfItemsClassArray = genericUtils.growOptStringArray(
+      opt_pageOfItemsClassArray,
+      "page-of-items"
     );
     var pageId = "pageOfItems_".concat(pageNumber.toString());
     pageNumber++;
 
-    var pageOfItemsNode = addDiv(parent, classArray, pageId);
+    var pageOfItemsNode = addDiv(parent, pageOfItemsClassArray, pageId);
     var width = getPageWidth();
     var height = getPageHeight();
-    debugLog("Refactor", "addPageOfItems: width = " + width);
-    debugLog("Refactor", "addPageOfItems: height = " + height);
+    debugLog("Refactor", "addPageOfItemsAndContents: width = " + width);
+    debugLog("Refactor", "addPageOfItemsAndContents: height = " + height);
     if (width !== null) {
       domStyle.set(pageOfItemsNode, {
         width: width + "px",
@@ -179,12 +179,6 @@ define([
       });
     }
 
-    /*
-    domStyle.set(pageOfItemsNode, {
-      margin: genericMeasurements.pageOfItemsMarginPx + "px",
-    });
-*/
-
     if (sc.addPageNumbers) {
       var pageNumberNode = addDiv(
         pageOfItemsNode,
@@ -194,7 +188,7 @@ define([
       );
     }
 
-    var childClassArray = ["page_of_items_contents"];
+    var childClassArray = ["page-of-items-contents"];
 
     if (sc.demoBoard) {
       childClassArray.push("demo_board");
@@ -214,12 +208,12 @@ define([
       "pageOfItemsContents"
     );
 
-    debugLog("Layout", "addPageOfItems: sc.gridGap = " + sc.gridGap);
+    debugLog("Layout", "addPageOfItemsAndContents: sc.gridGap = " + sc.gridGap);
     var gridGapIsPresent = sc.gridGap !== null && sc.gridGap !== undefined;
     var gridGap = gridGapIsPresent
       ? sc.gridGap
       : genericMeasurements.standardPageGap;
-    debugLog("Layout", "addPageOfItems: gridGap = " + gridGap);
+    debugLog("Layout", "addPageOfItemsAndContents: gridGap = " + gridGap);
     domStyle.set(pageOfItemsContentsNode, {
       gap: `${gridGap}px`,
     });
@@ -234,7 +228,7 @@ define([
       });
     }
 
-    return pageOfItemsContentsNode;
+    return [pageOfItemsNode, pageOfItemsContentsNode];
   }
 
   function addCard(parent, opt_classArray, opt_id) {
@@ -276,7 +270,7 @@ define([
     rgbStringToHex: rgbStringToHex,
     componentToHex: componentToHex,
     blendHexColors: blendHexColors,
-    addPageOfItems: addPageOfItems,
+    addPageOfItemsAndContents: addPageOfItemsAndContents,
     addCard: addCard,
     addQuasiRandomTilt: addQuasiRandomTilt,
   };

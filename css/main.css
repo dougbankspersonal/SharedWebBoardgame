@@ -7,7 +7,7 @@ body {
   /* Optional: Removes default margin */
 }
 
-.page_of_items {
+.page-of-items {
   page-break-after: always;
   text-align: center;
   overflow: hidden;
@@ -16,20 +16,20 @@ body {
   align-items: start;
   justify-content: center;
 }
-.page_of_items .page_of_items_contents {
+.page-of-items .page-of-items-contents {
   display: flex;
   flex-wrap: wrap;
   /* Allows items to wrap onto new rows */
   justify-content: center;
   position: relative;
 }
-.page_of_items .page_of_items_contents.demo_board {
+.page-of-items .page-of-items-contents.demo_board {
   flex-direction: column;
 }
-.page_of_items .page_of_items_contents.tts {
+.page-of-items .page-of-items-contents.tts {
   align-items: flex-start;
 }
-.page_of_items .page_number {
+.page-of-items .page_number {
   position: absolute;
   bottom: 0px;
   right: 0px;
