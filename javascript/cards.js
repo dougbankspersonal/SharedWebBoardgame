@@ -234,6 +234,10 @@ define([
     }
   }
 
+  function getInstanceCountFromConfig(cardConfigs, index) {
+    return cardConfigs[index].count ? cardConfigs[index].count : 1;
+  }
+
   function getNumCardsFromConfigs(cardConfigs) {
     debugLog(
       "CardCount",
@@ -346,10 +350,6 @@ define([
       );
       rulesTextNode.innerHTML = config.rulesText;
     }
-  }
-
-  function getInstanceCountFromConfig(cardConfigs, index) {
-    return cardConfigs[index].count ? cardConfigs[index].count : 1;
   }
 
   // This returned object becomes the defined value of this module
