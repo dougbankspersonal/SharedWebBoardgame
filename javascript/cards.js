@@ -1,3 +1,5 @@
+// Doug
+
 define([
   "dojo/string",
   "dojo/dom",
