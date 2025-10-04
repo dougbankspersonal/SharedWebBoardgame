@@ -68,7 +68,10 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
   // Pick an element from the array.
   // All elements have same chance.
   function getRandomArrayElement(array, getRandomZeroToOne) {
-    debugLog("Random", "getRandomArrayElement: array = " + array);
+    debugLog(
+      "getRandomArrayElement",
+      "getRandomArrayElement: array = " + array
+    );
     return getRandomNonRepeatingArrayElements(array, 1, getRandomZeroToOne)[0];
   }
 
@@ -76,7 +79,10 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
   // Each element has a weight.  Weight = extra ticket in the raffle.
   // So if I pass in [1, 2, 3] and [10, 1, 1], then 1 is 10x more likely to be picked than 2 or 3.
   function getRandomArrayElementWeighted(array, weights, getRandomZeroToOne) {
-    debugLog("Random", "getRandomArrayElementWeighted: array = " + array);
+    debugLog(
+      "getRandomArrayElementWeighted",
+      "getRandomArrayElementWeighted: array = " + array
+    );
     var totalWeight = weights.reduce((a, b) => a + b, 0);
     var randomValue = getRandomZeroToOne() * totalWeight;
     for (var i = 0; i < array.length; i++) {
@@ -86,6 +92,15 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
       randomValue -= weights[i];
     }
     return array[array.length - 1]; // Fallback
+  }
+
+  // Histogram maps key to int.
+  // Int is relative "weight" of that key.
+  // Return a key, randomly selected according to weights.
+  function getRandomKeyFromHistogram(histogram, getRandomZeroToOne) {
+    var keys = Object.keys(histogram);
+    var weights = keys.map((key) => histogram[key]);
+    return getRandomArrayElementWeighted(keys, weights, getRandomZeroToOne);
   }
 
   function getRandomMaybeRepeatingArrayElements(
@@ -251,7 +266,10 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
   }
 
   function copyAndShuffleArray(array, getRandomZeroToOne) {
-    debugLog("Random", "copyAndShuffleArray: array = " + JSON.stringify(array));
+    debugLog(
+      "copyAndShuffleArray",
+      "copyAndShuffleArray: array = " + JSON.stringify(array)
+    );
     var shuffled = array.slice(0),
       i = array.length,
       temp,
@@ -444,6 +462,8 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
     getRandomArrayElementNotMatching: getRandomArrayElementNotMatching,
     getRandomNonRepeatingArrayElements: getRandomNonRepeatingArrayElements,
     getRandomMaybeRepeatingArrayElements: getRandomMaybeRepeatingArrayElements,
+    getRandomArrayElementWeighted: getRandomArrayElementWeighted,
+    getRandomKeyFromHistogram: getRandomKeyFromHistogram,
     growOptStringArray: growOptStringArray,
     stringToBoolean: stringToBoolean,
     getCommonQueryParams: getCommonQueryParams,

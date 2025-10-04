@@ -27,7 +27,7 @@ body {
   flex-direction: column;
 }
 .page_of_items .page_of_items_contents.tts {
-  align-items: flex-start;
+  justify-content: left;
 }
 .page_of_items .page_number {
   position: absolute;
