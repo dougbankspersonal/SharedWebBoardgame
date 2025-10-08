@@ -1,10 +1,10 @@
-.page_of_items.page_of_cards {
+.page-of-items.page_of_cards {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
 }
-.page_of_items.page_of_cards .page_of_items_contents {
+.page-of-items.page_of_cards .page-of-items-contents {
   margin-top: 10px;
   display: flex;
   flex-direction: column;
@@ -14,21 +14,21 @@
   height: 100%;
   position: relative;
 }
-.page_of_items.page_of_cards .page_of_items_contents .row_of_cards {
+.page-of-items.page_of_cards .page-of-items-contents .row_of_cards {
   display: flex;
   flex-direction: row;
   justify-content: center;
   gap: 1px;
 }
-.page_of_items.page_of_cards .page_of_items_contents .row_of_cards.row_of_cards_back {
+.page-of-items.page_of_cards .page-of-items-contents .row_of_cards.row_of_cards_back {
   flex-direction: row-reverse;
 }
-.page_of_items.page_of_cards .page_of_items_contents.tts .row_of_cards {
+.page-of-items.page_of_cards .page-of-items-contents.tts .row_of_cards {
   justify-content: left;
   gap: 0px;
   width: 100%;
 }
-.page_of_items.page_of_cards .row_of_cards.row_of_cards_back {
+.page-of-items.page_of_cards .row_of_cards.row_of_cards_back {
   flex-direction: row-reverse;
 }
 

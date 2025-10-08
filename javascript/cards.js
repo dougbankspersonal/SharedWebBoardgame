@@ -44,7 +44,9 @@ define([
       opt_classArray,
       "page_of_cards"
     );
-    return htmlUtils.addPageOfItems(parent, classes);
+    var [_pageOfItems, pageOfItemsContents] =
+      htmlUtils.addPageOfItemsAndContents(parent, classes);
+    return pageOfItemsContents;
   }
 
   function addRowOfCards(parent, opt_isCardBack) {
@@ -241,6 +243,10 @@ define([
     }
   }
 
+  function getInstanceCountFromConfig(cardConfigs, index) {
+    return cardConfigs[index].count ? cardConfigs[index].count : 1;
+  }
+
   function getNumCardsFromConfigs(cardConfigs) {
     debugLog(
       "CardCount",
@@ -353,10 +359,6 @@ define([
       );
       rulesTextNode.innerHTML = config.rulesText;
     }
-  }
-
-  function getInstanceCountFromConfig(cardConfigs, index) {
-    return cardConfigs[index].count ? cardConfigs[index].count : 1;
   }
 
   // This returned object becomes the defined value of this module
