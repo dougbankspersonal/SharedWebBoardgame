@@ -76,6 +76,11 @@ define([
 
   function addSector(parentNode, sectorIndex, sectorDescriptor) {
     debugLog("addSector", "sectorIndex = ", JSON.stringify(sectorIndex));
+    debugLog(
+      "addSector",
+      "sectorDescriptor = ",
+      JSON.stringify(sectorDescriptor)
+    );
 
     var sectorNode = triangleCardUtils.addNthSector(
       parentNode,

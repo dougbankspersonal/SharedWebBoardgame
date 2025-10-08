@@ -72,9 +72,16 @@ define([
     }
 
     var sc = systemConfigs.getSystemConfigs();
+    debugLog(
+      "addCardBack",
+      "backConfig.classes = " + JSON.stringify(backConfig.classes)
+    );
     var classes = backConfig.classes ? backConfig.classes : [];
     classes = classes.slice();
     classes.push("back");
+
+    debugLog("addCardBack", "classes = " + JSON.stringify(classes));
+
     var cardBackNode = htmlUtils.addCard(parent, classes, "back");
     setCardSize(cardBackNode);
 
