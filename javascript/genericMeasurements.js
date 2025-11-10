@@ -29,7 +29,11 @@ define(["dojo/domReady!"], function () {
   var standardCardWidthPx = standardCardWidthInches * pixelsPerInch;
   var standardCardHeightPx = standardCardHeightInches * pixelsPerInch;
 
-  var triangleCardHeightPx = (standardCardWidthPx * Math.sqrt(3)) / 2;
+  var triangleCardImageHeightPx = (standardCardWidthPx * Math.sqrt(3)) / 2;
+  // We need to embed the card in a rect s.t. center of rect is centroid of card.
+  // Centroid of triangle is 2/3 from top, down.
+  // So I need a padding of extra 1/3 of height below the card.
+  var triangleCardTTSActualHeightPx = (triangleCardImageHeightPx * 4) / 3;
 
   var standardBorderWidthPx = 2;
   var pageOfItemsMarginPx = 10;
@@ -93,7 +97,8 @@ define(["dojo/domReady!"], function () {
     printedPageLandscapeHeightPx: printedPageLandscapeHeightPx,
     standardCardWidthPx: standardCardWidthPx,
     standardCardHeightPx: standardCardHeightPx,
-    triangleCardHeightPx: triangleCardHeightPx,
+    triangleCardImageHeightPx: triangleCardImageHeightPx,
+    triangleCardTTSActualHeightPx: triangleCardTTSActualHeightPx,
     cardBackFontSize: cardBackFontSize,
     cardBorderWidthPx: cardBorderWidthPx,
 

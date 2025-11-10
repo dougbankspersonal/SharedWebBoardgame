@@ -17,6 +17,7 @@ define([
   triangleCardUtils
 ) {
   var debugLog = debugLogModule.debugLog;
+
   //-----------------------------------
 
   // Constants
@@ -25,8 +26,9 @@ define([
   // Triangle height = base/2 * rad(3).
   // Row height is half that.
   // This seems to need fudging a bit: hence the +2.
-  const gTriangleHeightPx = genericMeasurements.triangleCardHeightPx;
-  const gRowHeightPx = gTriangleHeightPx / 2;
+  const gTriangleCardImageHeightPx =
+    genericMeasurements.triangleCardImageHeightPx;
+  const gRowHeightPx = gTriangleCardImageHeightPx / 2;
   const gSectorWidthPx = genericMeasurements.standardCardWidthPx / 2;
 
   //-----------------------------------
@@ -46,9 +48,9 @@ define([
     return rowNode;
   }
 
-  function addOverlays(parentNode, sectorDescriptor) {
+  function addSectorOverlays(parentNode, sectorDescriptor) {
     debugLog(
-      "addOverlays",
+      "addSectorOverlays",
       "sectorDescriptor = ",
       JSON.stringify(sectorDescriptor)
     );
@@ -87,7 +89,7 @@ define([
       sectorIndex,
       sectorDescriptor.classes,
       {
-        height: gTriangleHeightPx / 2 + "px",
+        height: gRowHeightPx + "px",
         width: gSectorWidthPx + "px",
       }
     );
@@ -120,7 +122,7 @@ define([
           sectorDescriptors[sectorIndex]
         );
         sectorNodes.push(sectorNode);
-        addOverlays(sectorNode, sectorDescriptors[sectorIndex]);
+        addSectorOverlays(sectorNode, sectorDescriptors[sectorIndex]);
         sectorIndex++;
       }
     }
@@ -138,6 +140,10 @@ define([
         "card-index",
         `${cardConfig.cardIndex}`
       );
+
+      domStyle.set(cardIndexNode, {
+        top: `${genericMeasurements.triangleCardImageHeightPx - 25}px`,
+      });
     }
 
     // If there's customSectorConfiguration function call that.
@@ -148,6 +154,18 @@ define([
     );
     if (cardConfig.customSectorConfiguration) {
       cardConfig.customSectorConfiguration(sectorNodes, cardConfig);
+    }
+
+    if (cardConfig.overlayClass) {
+      var overlayNode = htmlUtils.addImage(
+        cardFrontNode,
+        [cardConfig.overlayClass, "overlay"],
+        "overlay"
+      );
+      domStyle.set(overlayNode, {
+        width: genericMeasurements.standardCardWidthPx + "px",
+        height: gTriangleCardImageHeightPx + "px",
+      });
     }
 
     return cardFrontNode;
@@ -163,8 +181,19 @@ define([
       classes: classes,
     });
 
-    var cardBackIconNode = htmlUtils.addImage(
+    var wrapperNode = htmlUtils.addDiv(
       cardBackNode,
+      ["back-wrapper"],
+      "back-wrapper"
+    );
+
+    domStyle.set(wrapperNode, {
+      width: genericMeasurements.standardCardWidthPx + "px",
+      height: gTriangleCardImageHeightPx + "px",
+    });
+
+    var cardBackIconNode = htmlUtils.addImage(
+      wrapperNode,
       ["triangle-icon"],
       "triangle-icon"
     );
