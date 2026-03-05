@@ -1,5 +1,5 @@
 define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
-  debugLogModule
+  debugLogModule,
 ) {
   var debugLog = debugLogModule.debugLog;
   // validKeys maps keys to "true".
@@ -49,7 +49,7 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
   function getRandomNonRepeatingArrayElements(
     array,
     numElements,
-    getRandomZeroToOne
+    getRandomZeroToOne,
   ) {
     var shuffled = array.slice(0),
       i = array.length,
@@ -70,7 +70,7 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
   function getRandomArrayElement(array, getRandomZeroToOne) {
     debugLog(
       "getRandomArrayElement",
-      "getRandomArrayElement: array = " + array
+      "getRandomArrayElement: array = " + array,
     );
     return getRandomNonRepeatingArrayElements(array, 1, getRandomZeroToOne)[0];
   }
@@ -81,7 +81,7 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
   function getRandomArrayElementWeighted(array, weights, getRandomZeroToOne) {
     debugLog(
       "getRandomArrayElementWeighted",
-      "getRandomArrayElementWeighted: array = " + array
+      "getRandomArrayElementWeighted: array = " + array,
     );
     var totalWeight = weights.reduce((a, b) => a + b, 0);
     var randomValue = getRandomZeroToOne() * totalWeight;
@@ -106,7 +106,7 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
   function getRandomMaybeRepeatingArrayElements(
     array,
     numElements,
-    getRandomZeroToOne
+    getRandomZeroToOne,
   ) {
     var result = [];
     for (var i = 0; i < numElements; i++) {
@@ -118,7 +118,7 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
   function getRandomArrayElementNotMatching(
     array,
     skippedValues,
-    getRandomZeroToOne
+    getRandomZeroToOne,
   ) {
     while (1) {
       var element = getRandomArrayElement(array, getRandomZeroToOne);
@@ -143,7 +143,7 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
       : [];
     console.assert(
       typeof existingStringArray === "object",
-      "existingStringArray is not an object"
+      "existingStringArray is not an object",
     );
     if (isString(addedStringOrStrings)) {
       existingStringArray.push(addedStringOrStrings);
@@ -235,20 +235,20 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
     var firstHistogram = randomHistogramFromArray(
       count,
       array,
-      getRandomZeroToOne
+      getRandomZeroToOne,
     );
     for (var z = 0; z < 1000; z++) {
       var secondHistogram = randomHistogramFromArray(
         count,
         array,
-        getRandomZeroToOne
+        getRandomZeroToOne,
       );
       if (!tablesMatch(firstHistogram, secondHistogram)) {
         histograms = [firstHistogram, secondHistogram];
         debugLog(
           "CardConfigs",
           "generateNonMatchingHistograms returning histograms = " +
-            JSON.stringify(histograms)
+            JSON.stringify(histograms),
         );
         return histograms;
       }
@@ -268,7 +268,7 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
   function copyAndShuffleArray(array, getRandomZeroToOne) {
     debugLog(
       "copyAndShuffleArray",
-      "copyAndShuffleArray: array = " + JSON.stringify(array)
+      "copyAndShuffleArray: array = " + JSON.stringify(array),
     );
     var shuffled = array.slice(0),
       i = array.length,
@@ -299,32 +299,32 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
     maxCountThisCallByValue,
     maxCountEverByValue,
     historicCountByValue,
-    getRandomZeroToOne
+    getRandomZeroToOne,
   ) {
     debugLog(
       "getRandomsFromArrayWithControls",
       "getRandomsFromArrayWithControls arrayOfValues = ",
-      JSON.stringify(arrayOfValues)
+      JSON.stringify(arrayOfValues),
     );
     debugLog(
       "getRandomsFromArrayWithControls",
       "getRandomsFromArrayWithControls requestedCount = ",
-      JSON.stringify(requestedCount)
+      JSON.stringify(requestedCount),
     );
     debugLog(
       "getRandomsFromArrayWithControls",
       "getRandomsFromArrayWithControls maxCountThisCallByValue = ",
-      JSON.stringify(maxCountThisCallByValue)
+      JSON.stringify(maxCountThisCallByValue),
     );
     debugLog(
       "getRandomsFromArrayWithControls",
       "getRandomsFromArrayWithControls maxCountEverByValue = ",
-      JSON.stringify(maxCountEverByValue)
+      JSON.stringify(maxCountEverByValue),
     );
     debugLog(
       "getRandomsFromArrayWithControls",
       "getRandomsFromArrayWithControls historicCountByValue = ",
-      JSON.stringify(historicCountByValue)
+      JSON.stringify(historicCountByValue),
     );
 
     // Some of this mahy be inefficient overkill, don't care.
@@ -358,7 +358,7 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
       debugLog(
         "getRandomsFromArrayWithControls",
         "fractionConsumedByValue = ",
-        JSON.stringify(fractionConsumedByValue)
+        JSON.stringify(fractionConsumedByValue),
       );
 
       // This value should not be max fraction above next highest.
@@ -393,7 +393,7 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
       // Pick a random element from the modified array.
       var selectedValue = getRandomArrayElement(
         modifiedArrayOfValues,
-        getRandomZeroToOne
+        getRandomZeroToOne,
       );
       retVal.push(selectedValue);
 
@@ -409,7 +409,7 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
     debugLog(
       "getRandomsFromArrayWithControls",
       "retVal = ",
-      JSON.stringify(retVal)
+      JSON.stringify(retVal),
     );
 
     // Hackery, remove.
@@ -445,7 +445,7 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
           '" to be a number, got : ' +
           typeof value +
           " with value = " +
-          value
+          value,
       );
     }
   }

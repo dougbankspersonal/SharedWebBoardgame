@@ -18,7 +18,7 @@ define([
   genericMeasurements,
   genericUtils,
   htmlUtils,
-  systemConfigs
+  systemConfigs,
 ) {
   var debugLog = debugLogModule.debugLog;
 
@@ -42,7 +42,7 @@ define([
   function addPageOfCards(parent, opt_classArray) {
     var classes = genericUtils.growOptStringArray(
       opt_classArray,
-      "page_of_cards"
+      "page_of_cards",
     );
     var [_pageOfItems, pageOfItemsContents] =
       htmlUtils.addPageOfItemsAndContents(parent, classes);
@@ -68,7 +68,7 @@ define([
       console.assert(
         typeof backConfig.callback,
         "function",
-        "Expected backConfig.callback function"
+        "Expected backConfig.callback function",
       );
       return backConfig.callback(parent, index);
     }
@@ -76,7 +76,7 @@ define([
     var sc = systemConfigs.getSystemConfigs();
     debugLog(
       "addCardBack",
-      "backConfig.classes = " + JSON.stringify(backConfig.classes)
+      "backConfig.classes = " + JSON.stringify(backConfig.classes),
     );
     var classes = backConfig.classes ? backConfig.classes : [];
     classes = classes.slice();
@@ -90,14 +90,14 @@ define([
     if (backConfig.hexColorString) {
       var otherColor = htmlUtils.blendHexColors(
         backConfig.hexColorString,
-        "#ffffff"
+        "#ffffff",
       );
       var gradient = string.substitute(
         "radial-gradient(${color1}, ${color2})",
         {
           color1: otherColor,
           color2: backConfig.hexColorString,
-        }
+        },
       );
       domStyle.set(cardBackNode, "background", gradient);
     }
@@ -107,7 +107,7 @@ define([
         cardBackNode,
         ["title"],
         "title",
-        backConfig.title
+        backConfig.title,
       );
       var style = {};
       debugLog("Cards", "addCardBack sc = " + JSON.stringify(sc));
@@ -136,7 +136,7 @@ define([
     if (needNew == 0) {
       debugLog(
         "Cards",
-        "maybeNewPage adding new page for index = " + index.toString()
+        "maybeNewPage adding new page for index = " + index.toString(),
       );
       return addPageOfCards(parent);
     }
@@ -149,7 +149,7 @@ define([
     if (needNew == 0) {
       debugLog(
         "Cards",
-        "NewCardFu adding new row for index = " + index.toString()
+        "NewCardFu adding new row for index = " + index.toString(),
       );
       return addRowOfCards(parent, opt_isCardBack);
     }
@@ -162,7 +162,7 @@ define([
     rowOfCards,
     addNthCardCallback,
     index,
-    opt_isCardBack
+    opt_isCardBack,
   ) {
     debugLog("Cards", "addNthCard index = " + index.toString());
     pageOfCards = maybeNewPage(bodyNode, pageOfCards, index);
@@ -197,7 +197,7 @@ define([
           pageOfFronts,
           rowOfFronts,
           frontCallback,
-          index
+          index,
         );
       }
 
@@ -212,7 +212,7 @@ define([
             addCardBack(rowOfCards, i, backConfig);
           },
           i,
-          true
+          true,
         );
       }
     } else {
@@ -223,7 +223,7 @@ define([
           pageOfFronts,
           rowOfFronts,
           frontCallback,
-          index
+          index,
         );
 
         if (!sc.skipCardBacks) {
@@ -236,7 +236,7 @@ define([
               addCardBack(rowOfCards, index, backConfig);
             },
             index,
-            true
+            true,
           );
         }
       }
@@ -244,13 +244,13 @@ define([
   }
 
   function getInstanceCountFromConfig(cardConfigs, index) {
-    return cardConfigs[index].count ? cardConfigs[index].count : 1;
+    return cardConfigs[index].count ? cardConfigs[index].count : 0;
   }
 
   function getNumCardsFromConfigs(cardConfigs) {
     debugLog(
       "CardCount",
-      "getNumCardsFromConfigs: cardConfigs = " + JSON.stringify(cardConfigs)
+      "getNumCardsFromConfigs: cardConfigs = " + JSON.stringify(cardConfigs),
     );
 
     // If we are doing single-instance of each card config, rewrite the array.
@@ -262,7 +262,7 @@ define([
       debugLog(
         "CardCount",
         "getNumCardsFromConfigs: singleCardInstance is true: cardConfigs = " +
-          JSON.stringify(cardConfigs)
+          JSON.stringify(cardConfigs),
       );
     }
 
@@ -275,7 +275,7 @@ define([
 
     debugLog(
       "CardCount",
-      "getNumCardsFromConfigs: initial numCards = " + numCards
+      "getNumCardsFromConfigs: initial numCards = " + numCards,
     );
 
     // If we have some min, and this isn't enough, change count on first card to hit max.
@@ -285,26 +285,29 @@ define([
       numCards = sc.minCardCount;
       debugLog(
         "CardCount",
-        "getNumCardsFromConfigs: sc.minCardCount = " + sc.minCardCount
+        "getNumCardsFromConfigs: sc.minCardCount = " + sc.minCardCount,
       );
       debugLog(
         "CardCount",
         "getNumCardsFromConfigs: adjusted card configs: cardConfigs = " +
-          JSON.stringify(cardConfigs)
+          JSON.stringify(cardConfigs),
       );
     }
 
     debugLog(
       "CardCount",
-      "getNumCardsFromConfigs: final numCards = " + numCards
+      "getNumCardsFromConfigs: final numCards = " + numCards,
     );
     return numCards;
   }
 
+  // Card configs is ordered list of card descriptions (configs).
+  // Each config must have a count field.
+  // If the count field is missing or 0, we skip this config.
   function getCardConfigAtIndex(cardConfigs, index) {
     debugLog(
       "Cards",
-      "getCardConfigAtIndex: cardConfigs = " + JSON.stringify(cardConfigs)
+      "getCardConfigAtIndex: cardConfigs = " + JSON.stringify(cardConfigs),
     );
     for (var i = 0; i < cardConfigs.length; i++) {
       var instanceCount = getInstanceCountFromConfig(cardConfigs, i);
@@ -319,7 +322,7 @@ define([
   function getIndexWithinConfig(cardConfigs, index) {
     debugLog(
       "Cards",
-      "getIndexWithinConfig: cardConfigs = " + JSON.stringify(cardConfigs)
+      "getIndexWithinConfig: cardConfigs = " + JSON.stringify(cardConfigs),
     );
     debugLog("Cards", "getIndexWithinConfig: index = " + index);
     for (var i = 0; i < cardConfigs.length; i++) {
@@ -343,7 +346,7 @@ define([
     var wrapper = htmlUtils.addDiv(
       frontNode,
       ["formatted_wrapper"],
-      "formatted_wrapper"
+      "formatted_wrapper",
     );
     if (config.title) {
       htmlUtils.addDiv(wrapper, ["title"], "title", config.title);
@@ -355,7 +358,7 @@ define([
       var rulesTextNode = htmlUtils.addDiv(
         wrapper,
         ["rules_text"],
-        "rulesText"
+        "rulesText",
       );
       rulesTextNode.innerHTML = config.rulesText;
     }
