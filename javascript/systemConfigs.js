@@ -115,7 +115,7 @@ define([
     outputSc.isCards = true;
     debugLog(
       "SystemConfigs",
-      "addCardSystemConfigs outputSc = " + JSON.stringify(outputSc)
+      "addCardSystemConfigs outputSc = " + JSON.stringify(outputSc),
     );
 
     return outputSc;
@@ -159,7 +159,7 @@ define([
     // Apply tweaks.
     debugLog(
       "SystemConfigs",
-      "addTTSCardSystemConfigs: overrides = " + JSON.stringify(overrides)
+      "addTTSCardSystemConfigs: overrides = " + JSON.stringify(overrides),
     );
     outputSc.cardsPerRow = overrides.cardsPerRow
       ? overrides.cardsPerRow
@@ -174,7 +174,7 @@ define([
     outputSc.addPageNumbers = false;
     debugLog(
       "SystemConfigs",
-      "addTTSCardSystemConfigs outputSc = " + JSON.stringify(outputSc)
+      "addTTSCardSystemConfigs outputSc = " + JSON.stringify(outputSc),
     );
 
     return outputSc;
@@ -236,7 +236,7 @@ define([
     outputSc.isCards = false;
     debugLog(
       "SystemConfigs",
-      "addTileSystemConfigs: outputSc = " + JSON.stringify(outputSc)
+      "addTileSystemConfigs: outputSc = " + JSON.stringify(outputSc),
     );
     return outputSc;
   }
@@ -248,7 +248,7 @@ define([
     // tts -> should avoid card backs.
     debugLog(
       "SystemConfigs",
-      "_systemConfigs = " + JSON.stringify(_systemConfigs)
+      "_systemConfigs = " + JSON.stringify(_systemConfigs),
     );
   }
 
@@ -265,7 +265,7 @@ define([
       debugLog(
         "SystemConfigs",
         "calling addTTSCardSystemConfigs with opt_overrides  = " +
-          JSON.stringify(opt_overrides)
+          JSON.stringify(opt_overrides),
       );
 
       sc = addTTSCardSystemConfigs(null, opt_overrides);
