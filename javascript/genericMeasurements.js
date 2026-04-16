@@ -55,12 +55,12 @@ define(["dojo/domReady!"], function () {
   var cardColumnsPerPage = getNumberThatFitAccountingForGap(
     adjustedPageWidth,
     standardCardWidthPx,
-    standardPageGap
+    standardPageGap,
   );
   var cardRowsPerPage = getNumberThatFitAccountingForGap(
     adjustedPageHeight,
     standardCardHeightPx,
-    standardPageGap
+    standardPageGap,
   );
   var cardsPerPage = cardColumnsPerPage * cardRowsPerPage;
 

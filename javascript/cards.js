@@ -249,8 +249,8 @@ define([
 
   function getNumCardsFromConfigs(cardConfigs) {
     debugLog(
-      "CardCount",
-      "getNumCardsFromConfigs: cardConfigs = " + JSON.stringify(cardConfigs),
+      "getNumCardsFromConfigs",
+      "cardConfigs = " + JSON.stringify(cardConfigs),
     );
 
     // If we are doing single-instance of each card config, rewrite the array.

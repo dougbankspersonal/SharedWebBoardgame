@@ -155,9 +155,9 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
     }
   }
 
-  function stringToBoolean(str) {
+  function stringToBoolean(str, opt_defaultValue) {
     if (typeof str !== "string") {
-      return false;
+      return opt_defaultValue !== undefined ? opt_defaultValue : false;
     }
     return str === "true";
   }
@@ -168,7 +168,8 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
     var params = new URLSearchParams(queryString);
     // Get individual parameters
     var isTTS = stringToBoolean(params.get("isTTS"));
-    var isTTP = stringToBoolean(params.get("isTTP"));
+    // ttp defaults to true.
+    var isTTP = stringToBoolean(params.get("isTTP"), true);
     var skipCardBacks = stringToBoolean(params.get("skipCardBacks"));
     var singleCardInstance = stringToBoolean(params.get("singleCardInstance"));
     var debugLogFlagsString = params.get("debugLogFlags");
@@ -177,6 +178,8 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
       ? debugLogFlagsString.split(",")
       : [];
     // Just set it now:
+    console.log("debugLogFlagsArray = ", JSON.stringify(debugLogFlagsArray));
+
     debugLogModule.setEnabledFlags(debugLogFlagsArray);
     return {
       isTTP: isTTP,
