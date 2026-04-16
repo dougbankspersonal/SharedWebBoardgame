@@ -252,6 +252,10 @@ define([
       "getNumCardsFromConfigs",
       "cardConfigs = " + JSON.stringify(cardConfigs),
     );
+    debugLog(
+      "getNumCardsFromConfigs",
+      "cardConfigs.length = " + JSON.stringify(cardConfigs.length),
+    );
 
     // If we are doing single-instance of each card config, rewrite the array.
     var sc = systemConfigs.getSystemConfigs();
@@ -260,8 +264,8 @@ define([
         cardConfigs[i].count = 1;
       }
       debugLog(
-        "CardCount",
-        "getNumCardsFromConfigs: singleCardInstance is true: cardConfigs = " +
+        "getNumCardsFromConfigs",
+        "singleCardInstance is true: cardConfigs = " +
           JSON.stringify(cardConfigs),
       );
     }
@@ -273,10 +277,7 @@ define([
       numCards = numCards + instanceCount;
     }
 
-    debugLog(
-      "CardCount",
-      "getNumCardsFromConfigs: initial numCards = " + numCards,
-    );
+    debugLog("getNumCardsFromConfigs", "initial numCards = " + numCards);
 
     // If we have some min, and this isn't enough, change count on first card to hit max.
     if (sc.minCardCount && numCards < sc.minCardCount) {
@@ -284,20 +285,16 @@ define([
       cardConfigs[0].count = firstCount + sc.minCardCount - numCards;
       numCards = sc.minCardCount;
       debugLog(
-        "CardCount",
-        "getNumCardsFromConfigs: sc.minCardCount = " + sc.minCardCount,
+        "getNumCardsFromConfigs",
+        "sc.minCardCount = " + sc.minCardCount,
       );
       debugLog(
-        "CardCount",
-        "getNumCardsFromConfigs: adjusted card configs: cardConfigs = " +
-          JSON.stringify(cardConfigs),
+        "getNumCardsFromConfigs",
+        "adjusted card configs: cardConfigs = " + JSON.stringify(cardConfigs),
       );
     }
 
-    debugLog(
-      "CardCount",
-      "getNumCardsFromConfigs: final numCards = " + numCards,
-    );
+    debugLog("CardCount", "final numCards = " + numCards);
     return numCards;
   }
 
