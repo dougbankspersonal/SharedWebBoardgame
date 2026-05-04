@@ -278,22 +278,6 @@ define([
     }
 
     debugLog("getNumCardsFromConfigs", "initial numCards = " + numCards);
-
-    // If we have some min, and this isn't enough, change count on first card to hit max.
-    if (sc.minCardCount && numCards < sc.minCardCount) {
-      var firstCount = cardConfigs[0].count ? cardConfigs[0].count : 1;
-      cardConfigs[0].count = firstCount + sc.minCardCount - numCards;
-      numCards = sc.minCardCount;
-      debugLog(
-        "getNumCardsFromConfigs",
-        "sc.minCardCount = " + sc.minCardCount,
-      );
-      debugLog(
-        "getNumCardsFromConfigs",
-        "adjusted card configs: cardConfigs = " + JSON.stringify(cardConfigs),
-      );
-    }
-
     debugLog("CardCount", "final numCards = " + numCards);
     return numCards;
   }

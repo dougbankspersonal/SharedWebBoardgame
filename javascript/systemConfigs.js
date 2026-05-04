@@ -28,8 +28,6 @@ define([
     // Do all card fronts separate from backs: we are not gonna print double sided,
     // we print fronts and backs and then stick em together.
     separateBacks: true,
-    // TTS requires at least 12 cards.
-    minCardCount: true,
     // Sometimes we just want one of each type of card, no dups.
     singleCardInstance: true,
     // Do not render card backs.
@@ -167,7 +165,6 @@ define([
     outputSc.pageless = true;
     outputSc.explicitPageWidth = overrides.cardsPerRow * outputSc.cardWidthPx;
     outputSc.skipCardBacks = true;
-    outputSc.minCardCount = 12;
     outputSc.cardsPerPage = genericMeasurements.ttsCardsPerPage;
     outputSc.extraClassesForPageOfItemsContents = ["tts"];
     outputSc.gridGap = 0;
