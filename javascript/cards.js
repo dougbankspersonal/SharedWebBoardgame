@@ -173,11 +173,12 @@ define([
     return [pageOfCards, rowOfCards, card];
   }
 
-  function addCards(numCards, frontCallback, backConfig) {
+  function addCards(numCards, frontCallback, backConfigs) {
     var sc = systemConfigs.getSystemConfigs();
 
     debugLog("Cards", "addCards: sc = " + JSON.stringify(sc));
     debugLog("Cards", "addCards: numCards = " + numCards);
+
     // Better be in cards mode.
     console.assert(sc.isCards, "Not in cards mode");
 
@@ -189,57 +190,29 @@ define([
     var rowOfBacks;
     var dummyCard;
 
-    if (sc.separateBacks) {
-      for (let index = 0; index < numCards; index++) {
-        debugLog("Cards", "addCards 001 i = " + index.toString());
-        [pageOfFronts, rowOfFronts, dummyCard] = addNthCard(
-          bodyNode,
-          pageOfFronts,
-          rowOfFronts,
-          frontCallback,
-          index,
-        );
-      }
+    for (let index = 0; index < numCards; index++) {
+      debugLog("Cards", "addCards 001 i = " + index.toString());
+      [pageOfFronts, rowOfFronts, dummyCard] = addNthCard(
+        bodyNode,
+        pageOfFronts,
+        rowOfFronts,
+        frontCallback,
+        index,
+      );
+    }
 
-      if (!sc.skipCardBacks) {
-        debugLog("Cards", "addCards 002 i = " + i.toString());
-        [pageOfBacks, rowOfBacks, dummyCard] = addNthCard(
-          bodyNode,
-          pageOfBacks,
-          rowOfBacks,
-          function (rowOfCards, index) {
-            i.toString();
-            addCardBack(rowOfCards, i, backConfig);
-          },
-          i,
-          true,
-        );
-      }
-    } else {
-      for (let index = 0; index < numCards; index++) {
-        debugLog("Cards", "addCards 003 i = " + index.toString());
-        [pageOfFronts, rowOfFronts, dummyCard] = addNthCard(
-          bodyNode,
-          pageOfFronts,
-          rowOfFronts,
-          frontCallback,
-          index,
-        );
-
-        if (!sc.skipCardBacks) {
-          debugLog("Cards", "addCards 004 i = " + index.toString());
-          [pageOfBacks, rowOfBacks, dummyCard] = addNthCard(
-            bodyNode,
-            pageOfBacks,
-            rowOfBacks,
-            function (rowOfCards, index) {
-              addCardBack(rowOfCards, index, backConfig);
-            },
-            index,
-            true,
-          );
-        }
-      }
+    for (var i = 0; i < backConfigs.length; i++) {
+      var backConfig = backConfigs[i];
+      [pageOfFronts, rowOfFronts, dummyCard] = addNthCard(
+        bodyNode,
+        pageOfFronts,
+        rowOfFronts,
+        function (rowOfCards, index) {
+          addCardBack(rowOfCards, index, backConfig);
+        },
+        numCards + 1,
+        true,
+      );
     }
   }
 
@@ -248,6 +221,7 @@ define([
   }
 
   function getNumCardsFromConfigs(cardConfigs) {
+    console.assert(cardConfigs, "cardConfigs is null");
     debugLog(
       "getNumCardsFromConfigs",
       "cardConfigs = " + JSON.stringify(cardConfigs),
