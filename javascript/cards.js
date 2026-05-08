@@ -216,8 +216,17 @@ define([
     }
   }
 
+  // Look for a "count" field.
+  // If it's nil, it's assumed to be 1.
+  // If it's explicitly 0, it's 0.
+  // Else it's the given count.
   function getInstanceCountFromConfig(cardConfigs, index) {
-    return cardConfigs[index].count ? cardConfigs[index].count : 0;
+    var config = cardConfigs[index];
+    if (!config.hasOwnProperty("count")) {
+      return 1;
+    } else {
+      return config.count ? config.count : 0;
+    }
   }
 
   function getNumCardsFromConfigs(cardConfigs) {
@@ -300,8 +309,8 @@ define([
 
     var wrapper = htmlUtils.addDiv(
       frontNode,
-      ["formatted_wrapper"],
-      "formatted_wrapper",
+      ["formatted-wrapper"],
+      "formatted-wrapper",
     );
     if (config.title) {
       htmlUtils.addDiv(wrapper, ["title"], "title", config.title);

@@ -53,22 +53,22 @@
 }
 
 /* Generic formatted card */
-.card.front .formatted_wrapper {
+.card.front .formatted-wrapper {
   margin: 15px;
 }
 
-.card.front .formatted_wrapper .title {
+.card.front .formatted-wrapper .title {
   margin-top: 28px;
   margin-right: 10px;
   margin-left: 10px;
   font-size: 30px;
 }
 
-.card.front .formatted_wrapper .subscript {
+.card.front .formatted-wrapper .subscript {
   font-size: 60%;
 }
 
-.card.front .formatted_wrapper .subtitle {
+.card.front .formatted-wrapper .subtitle {
   margin-top: 20px;
   margin-right: 10px;
   margin-left: 10px;
@@ -76,7 +76,7 @@
   font-size: 14px;
 }
 
-.card.front .formatted_wrapper .rules_text {
+.card.front .formatted-wrapper .rules_text {
   margin-top: 20px;
   margin-right: 10px;
   margin-left: 10px;
