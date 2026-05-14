@@ -49,12 +49,37 @@ define([
     return pageOfItemsContents;
   }
 
-  function addRowOfCards(parent, opt_isCardBack) {
+  function addRowOfCards(parent) {
     var classes = ["row_of_cards"];
-    if (opt_isCardBack) {
-      classes.push("row_of_cards_back");
-    }
     return htmlUtils.addDiv(parent, classes, "rowOfCards");
+  }
+
+  function maybeAddCardBackColor(cardBackNode, backConfig) {
+    if (backConfig.hexColorString) {
+      var otherColor = htmlUtils.blendHexColors(
+        backConfig.hexColorString,
+        "#ffffff",
+      );
+      var gradient = string.substitute(
+        "radial-gradient(${color1}, ${color2})",
+        {
+          color1: otherColor,
+          color2: backConfig.hexColorString,
+        },
+      );
+      domStyle.set(cardBackNode, "background", gradient);
+    }
+  }
+
+  function maybeAddCardBackTitle(cardBackNode, backConfig) {
+    if (backConfig.title) {
+      var titleNode = htmlUtils.addDiv(
+        cardBackNode,
+        ["title"],
+        "title",
+        backConfig.title,
+      );
+    }
   }
 
   function addCardBack(parent, index, backConfig) {
@@ -87,35 +112,9 @@ define([
     var cardBackNode = htmlUtils.addCard(parent, classes, "back");
     setCardSize(cardBackNode);
 
-    if (backConfig.hexColorString) {
-      var otherColor = htmlUtils.blendHexColors(
-        backConfig.hexColorString,
-        "#ffffff",
-      );
-      var gradient = string.substitute(
-        "radial-gradient(${color1}, ${color2})",
-        {
-          color1: otherColor,
-          color2: backConfig.hexColorString,
-        },
-      );
-      domStyle.set(cardBackNode, "background", gradient);
-    }
+    maybeAddCardBackColor(cardBackNode, backConfig);
 
-    if (backConfig.title) {
-      var titleNode = htmlUtils.addDiv(
-        cardBackNode,
-        ["title"],
-        "title",
-        backConfig.title,
-      );
-      var style = {};
-      debugLog("Cards", "addCardBack sc = " + JSON.stringify(sc));
-      style["font-size"] = sc.cardBackFontSize
-        ? `${sc.cardBackFontSize}px`
-        : `${genericMeasurements.cardBackFontSize}px`;
-      domStyle.set(titleNode, style);
-    }
+    maybeAddCardBackTitle(cardBackNode, backConfig);
 
     return cardBackNode;
   }
@@ -143,7 +142,7 @@ define([
     return currentPage;
   }
 
-  function maybeNewRow(parent, currentRow, index, opt_isCardBack) {
+  function maybeNewRow(parent, currentRow, index) {
     var cardsPerRow = systemConfigs.getSystemConfigs().cardsPerRow;
     var needNew = index % cardsPerRow;
     if (needNew == 0) {
@@ -151,7 +150,7 @@ define([
         "Cards",
         "NewCardFu adding new row for index = " + index.toString(),
       );
-      return addRowOfCards(parent, opt_isCardBack);
+      return addRowOfCards(parent);
     }
     return currentRow;
   }
@@ -162,18 +161,21 @@ define([
     rowOfCards,
     addNthCardCallback,
     index,
-    opt_isCardBack,
   ) {
     debugLog("Cards", "addNthCard index = " + index.toString());
     pageOfCards = maybeNewPage(bodyNode, pageOfCards, index);
     console.assert(pageOfCards, "pageOfCards is null");
-    rowOfCards = maybeNewRow(pageOfCards, rowOfCards, index, opt_isCardBack);
+    rowOfCards = maybeNewRow(pageOfCards, rowOfCards, index);
     console.assert(rowOfCards, "rowOfCards is null");
     var card = addNthCardCallback(rowOfCards, index);
     return [pageOfCards, rowOfCards, card];
   }
 
   function addCards(numCards, frontCallback, backConfigs) {
+    console.assert(
+      Array.isArray(backConfigs),
+      "Expected an array for backConfigs",
+    );
     var sc = systemConfigs.getSystemConfigs();
 
     debugLog("Cards", "addCards: sc = " + JSON.stringify(sc));
@@ -210,8 +212,7 @@ define([
         function (rowOfCards, index) {
           addCardBack(rowOfCards, index, backConfig);
         },
-        numCards + 1,
-        true,
+        numCards + i,
       );
     }
   }
