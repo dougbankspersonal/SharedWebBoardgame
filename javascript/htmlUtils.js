@@ -13,7 +13,7 @@ define([
   genericUtils,
   systemConfigs,
   domConstruct,
-  domStyle
+  domStyle,
 ) {
   var debugLog = debugLogModule.debugLog;
 
@@ -29,7 +29,7 @@ define([
         className: classes,
         id: id,
       },
-      parent
+      parent,
     );
     return node;
   }
@@ -92,16 +92,17 @@ define([
     return hex.length == 1 ? "0" + hex : hex;
   }
 
-  function blendHexColors(color1, color2) {
+  function blendHexColors(color1, color2, opt_percentage) {
+    var percentage = opt_percentage !== undefined ? opt_percentage : 0.5;
     // Parse hexadecimal color strings into arrays of RGB values
     var rgb1 = hexToRgb(color1);
     var rgb2 = hexToRgb(color2);
 
     // Calculate the blended RGB values
     var blendedRgb = [
-      Math.round((rgb1[0] + rgb2[0]) / 2),
-      Math.round((rgb1[1] + rgb2[1]) / 2),
-      Math.round((rgb1[2] + rgb2[2]) / 2),
+      Math.round(rgb1[0] * (1 - percentage) + rgb2[0] * percentage),
+      Math.round(rgb1[1] * (1 - percentage) + rgb2[1] * percentage),
+      Math.round(rgb1[2] * (1 - percentage) + rgb2[2] * percentage),
     ];
 
     // Convert blended RGB values to hexadecimal format
@@ -116,7 +117,7 @@ define([
     if (sc.explicitPageWidth) {
       debugLog(
         "Layout",
-        "getPageWidth sc.explicitPageWidth = " + sc.explicitPageWidth
+        "getPageWidth sc.explicitPageWidth = " + sc.explicitPageWidth,
       );
       return sc.explicitPageWidth;
     }
@@ -128,7 +129,7 @@ define([
       debugLog(
         "Layout",
         "getPageWidth genericMeasurements.printedPageLandscapeWidthPx = " +
-          genericMeasurements.printedPageLandscapeWidthPx
+          genericMeasurements.printedPageLandscapeWidthPx,
       );
       return genericMeasurements.printedPageLandscapeWidthPx;
     }
@@ -136,7 +137,7 @@ define([
     debugLog(
       "Layout",
       "getPageWidth genericMeasurements.printedPagePortraitWidthPx = " +
-        genericMeasurements.printedPagePortraitWidthPx
+        genericMeasurements.printedPagePortraitWidthPx,
     );
     return genericMeasurements.printedPagePortraitWidthPx;
   }
@@ -158,7 +159,7 @@ define([
     console.assert(parent, "parent is null");
     var pageOfItemsClassArray = genericUtils.growOptStringArray(
       opt_pageOfItemsClassArray,
-      "page-of-items"
+      "page-of-items",
     );
     var pageId = "pageOfItems_".concat(pageNumber.toString());
     pageNumber++;
@@ -184,7 +185,7 @@ define([
         pageOfItemsNode,
         ["page_number"],
         "pageNumber",
-        pageNumber.toString()
+        pageNumber.toString(),
       );
     }
 
@@ -205,7 +206,7 @@ define([
     var pageOfItemsContentsNode = addDiv(
       pageOfItemsNode,
       childClassArray,
-      "pageOfItemsContents"
+      "pageOfItemsContents",
     );
 
     debugLog("Layout", "addPageOfItemsAndContents: sc.gridGap = " + sc.gridGap);
@@ -220,7 +221,7 @@ define([
 
     debugLog(
       "Layout",
-      "sc.pageOfItemsContentsPaddingPx = " + sc.pageOfItemsContentsPaddingPx
+      "sc.pageOfItemsContentsPaddingPx = " + sc.pageOfItemsContentsPaddingPx,
     );
     if (sc.pageOfItemsContentsPaddingPx > 0) {
       domStyle.set(pageOfItemsContentsNode, {
