@@ -74,14 +74,16 @@ define([
   }
 
   function maybeAddCardBackTitle(cardBackNode, backConfig) {
+    var titleNode;
     if (backConfig.title) {
-      var titleNode = htmlUtils.addDiv(
+      titleNode = htmlUtils.addDiv(
         cardBackNode,
         ["title"],
         "title",
         backConfig.title,
       );
     }
+    return titleNode;
   }
 
   function addCardBack(parent, index, backConfig) {
@@ -93,8 +95,7 @@ define([
 
     if (backConfig.callback) {
       console.assert(
-        typeof backConfig.callback,
-        "function",
+        typeof backConfig.callback === "function",
         "Expected backConfig.callback function",
       );
       return backConfig.callback(parent, index);
@@ -131,14 +132,13 @@ define([
   }
 
   function maybeNewPage(parent, currentPage, index) {
-    debugLog("Cards", "maybeNewPage index = " + index.toString());
+    debugLog("maybeNewPage", "maybeNewPage index = " + index.toString());
     var cardsPerPage = systemConfigs.getSystemConfigs().cardsPerPage;
+    debugLog("maybeNewPage", "cardsPerPage = " + cardsPerPage);
     var needNew = index % cardsPerPage;
+    debugLog("maybeNewPage", "needNew = " + needNew);
     if (needNew == 0) {
-      debugLog(
-        "Cards",
-        "maybeNewPage adding new page for index = " + index.toString(),
-      );
+      debugLog("maybeNewPage", "new page for index = " + index.toString());
       return addPageOfCards(parent);
     }
     return currentPage;
@@ -189,13 +189,11 @@ define([
     var bodyNode = dom.byId("body");
 
     var pageOfFronts;
-    var pageOfBacks;
     var rowOfFronts;
-    var rowOfBacks;
     var dummyCard;
 
     for (let index = 0; index < numCards; index++) {
-      debugLog("Cards", "addCards 001 i = " + index.toString());
+      debugLog("addCards", "addCards 001 i = " + index.toString());
       [pageOfFronts, rowOfFronts, dummyCard] = addNthCard(
         bodyNode,
         pageOfFronts,

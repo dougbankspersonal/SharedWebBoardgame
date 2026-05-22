@@ -26,7 +26,7 @@ body {
 .page-of-items .page-of-items-contents.demo_board {
   flex-direction: column;
 }
-.page-of-items .page-of-items-contents.tts {
+.page-of-items .page-of-items-contents.screentop {
   justify-content: left;
 }
 .page-of-items .page_number {
