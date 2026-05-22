@@ -72,14 +72,16 @@ define([
   }
 
   function maybeAddCardBackTitle(cardBackNode, backConfig) {
+    var titleNode;
     if (backConfig.title) {
-      var titleNode = htmlUtils.addDiv(
+      titleNode = htmlUtils.addDiv(
         cardBackNode,
         ["title"],
         "title",
         backConfig.title,
       );
     }
+    return titleNode;
   }
 
   function addCardBack(parent, index, backConfig) {
@@ -91,14 +93,12 @@ define([
 
     if (backConfig.callback) {
       console.assert(
-        typeof backConfig.callback,
-        "function",
+        typeof backConfig.callback === "function",
         "Expected backConfig.callback function",
       );
       return backConfig.callback(parent, index);
     }
 
-    var sc = systemConfigs.getSystemConfigs();
     debugLog(
       "addCardBack",
       "backConfig.classes = " + JSON.stringify(backConfig.classes),
