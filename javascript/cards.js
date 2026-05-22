@@ -44,8 +44,10 @@ define([
       opt_classArray,
       "page_of_cards",
     );
-    var [_pageOfItems, pageOfItemsContents] =
-      htmlUtils.addPageOfItemsAndContents(parent, classes);
+    var [_, pageOfItemsContents] = htmlUtils.addPageOfItemsAndContents(
+      parent,
+      classes,
+    );
     return pageOfItemsContents;
   }
 
@@ -98,11 +100,11 @@ define([
       return backConfig.callback(parent, index);
     }
 
-    var sc = systemConfigs.getSystemConfigs();
     debugLog(
       "addCardBack",
       "backConfig.classes = " + JSON.stringify(backConfig.classes),
     );
+
     var classes = backConfig.classes ? backConfig.classes : [];
     classes = classes.slice();
     classes.push("back");
