@@ -167,9 +167,8 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
     // Create a URLSearchParams object
     var params = new URLSearchParams(queryString);
     // Get individual parameters
-    var isTTS = stringToBoolean(params.get("isTTS"));
-    // ttp defaults to true.
-    var isTTP = stringToBoolean(params.get("isTTP"), true);
+    // screentop defaults to true.
+    var isScreentop = stringToBoolean(params.get("isScreentop"), true);
     var skipCardBacks = stringToBoolean(params.get("skipCardBacks"));
     var singleCardInstance = stringToBoolean(params.get("singleCardInstance"));
     var debugLogFlagsString = params.get("debugLogFlags");
@@ -182,8 +181,7 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
 
     debugLogModule.setEnabledFlags(debugLogFlagsArray);
     return {
-      isTTP: isTTP,
-      isTTS: isTTS || isTTP,
+      isScreentop: isScreentop,
       skipCardBacks: skipCardBacks,
       singleCardInstance: singleCardInstance,
       debugFlags: debugLogFlagsArray,

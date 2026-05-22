@@ -83,6 +83,14 @@ define([
   // Apply some values.
   // Use some standard value unless an override is passed in, then use that.
   function addCardSystemConfigs(opt_defaultSc, opt_overrides) {
+    debugLog(
+      "addCardSystemConfigs",
+      "opt_defaultSc = " + JSON.stringify(opt_defaultSc),
+    );
+    debugLog(
+      "addCardSystemConfigs",
+      "opt_overrides = " + JSON.stringify(opt_overrides),
+    );
     var defaultSc = opt_defaultSc ? opt_defaultSc : {};
     var overrides = opt_overrides ? opt_overrides : {};
 
@@ -112,7 +120,7 @@ define([
     outputSc.gridGap = genericMeasurements.standardPageGap;
     outputSc.isCards = true;
     debugLog(
-      "SystemConfigs",
+      "addCardSystemConfigs",
       "addCardSystemConfigs outputSc = " + JSON.stringify(outputSc),
     );
 
@@ -148,49 +156,43 @@ define([
     return outputSc;
   }
 
-  function addTTSCardSystemConfigs(opt_defaultSc, opt_overrides) {
+  function addScreentopCardSystemConfigs(opt_defaultSc, opt_overrides) {
     var defaultSc = opt_defaultSc ? opt_defaultSc : {};
     var overrides = opt_overrides ? opt_overrides : {};
 
     var outputSc = addCardSystemConfigs(defaultSc, overrides);
+    debugLog(
+      "addScreentopCardSystemConfigs",
+      "outputSc = " + JSON.stringify(outputSc),
+    );
 
     // Apply tweaks.
     debugLog(
-      "SystemConfigs",
-      "addTTSCardSystemConfigs: overrides = " + JSON.stringify(overrides),
+      "addScreentopCardSystemConfigs",
+      "overrides = " + JSON.stringify(overrides),
     );
     outputSc.cardsPerRow = overrides.cardsPerRow
       ? overrides.cardsPerRow
-      : genericMeasurements.ttsCardsPerRow;
+      : genericMeasurements.screentopCardsPerRow;
     outputSc.pageless = true;
     outputSc.explicitPageWidth = overrides.cardsPerRow * outputSc.cardWidthPx;
     outputSc.skipCardBacks = true;
-    outputSc.cardsPerPage = genericMeasurements.ttsCardsPerPage;
-    outputSc.extraClassesForPageOfItemsContents = ["tts"];
+    outputSc.extraClassesForPageOfItemsContents = ["screentop"];
     outputSc.gridGap = 0;
     outputSc.addPageNumbers = false;
     debugLog(
       "SystemConfigs",
-      "addTTSCardSystemConfigs outputSc = " + JSON.stringify(outputSc),
+      "addScreentopCardSystemConfigs outputSc = " + JSON.stringify(outputSc),
     );
-
-    return outputSc;
-  }
-
-  function addTTPCardSystemConfigs(opt_defaultSc, opt_overrides) {
-    var defaultSc = opt_defaultSc ? opt_defaultSc : {};
-    var overrides = opt_overrides ? opt_overrides : {};
-
-    var outputSc = structuredClone(defaultSc);
 
     outputSc.cardsPerPage =
       overrides.cardsPerPage !== undefined
         ? overrides.cardsPerPage
-        : genericMeasurements.ttpCardsPerPage;
+        : genericMeasurements.screentopCardsPerPage;
     return outputSc;
   }
 
-  function addTTSSmallCardSystemConfigs(opt_defaultSc, opt_overrides) {
+  function addScreentopSmallCardSystemConfigs(opt_defaultSc, opt_overrides) {
     var defaultSc = opt_defaultSc ? opt_defaultSc : {};
     var overrides = opt_overrides ? opt_overrides : {};
 
@@ -205,16 +207,16 @@ define([
     overrides.cardsPerRow =
       overrides.cardsPerRow !== undefined
         ? overrides.cardsPerRow
-        : genericMeasurementsttsCardsPerRow;
+        : genericMeasurements.screentopCardsPerRow;
     overrides.cardBackFontSize =
       overrides.cardBackFontSize !== undefined
         ? overrides.cardBackFontSize
         : genericMeasurements.smallCardBackFontSize;
 
-    return addTTSCardSystemConfigs(defaultSc, overrides);
+    return addScreentopCardSystemConfigs(defaultSc, overrides);
   }
 
-  function addTTSDieSystemConfigs(opt_defaultSc, opt_overrides) {
+  function addScreentopDieSystemConfigs(opt_defaultSc, opt_overrides) {
     var defaultSc = opt_defaultSc ? opt_defaultSc : {};
     var overrides = opt_overrides ? opt_overrides : {};
 
@@ -242,7 +244,6 @@ define([
     var sc = opt_sc ? opt_sc : {};
     sanityCheckConfigs(sc);
     _systemConfigs = sc;
-    // tts -> should avoid card backs.
     debugLog(
       "SystemConfigs",
       "_systemConfigs = " + JSON.stringify(_systemConfigs),
@@ -257,18 +258,15 @@ define([
     var queryParams = genericUtils.getCommonQueryParams();
 
     var sc;
-    if (queryParams.isTTS) {
-      debugLog("SystemConfigs", "getCardSystemConfigs: isTTS = true");
+    if (queryParams.isScreentop) {
+      debugLog("SystemConfigs", "getCardSystemConfigs: isScreentop = true");
       debugLog(
         "SystemConfigs",
-        "calling addTTSCardSystemConfigs with opt_overrides  = " +
+        "calling addScreentopCardSystemConfigs with opt_overrides  = " +
           JSON.stringify(opt_overrides),
       );
 
-      sc = addTTSCardSystemConfigs(null, opt_overrides);
-      if (queryParams.isTTP) {
-        sc = addTTPCardSystemConfigs(sc);
-      }
+      sc = addScreentopCardSystemConfigs(null, opt_overrides);
     } else {
       sc = addCardSystemConfigs(null, opt_overrides);
       sc.skipCardBacks = queryParams.skipCardBacks;
@@ -281,8 +279,8 @@ define([
     var queryParams = genericUtils.getCommonQueryParams();
 
     var sc;
-    if (queryParams.isTTS) {
-      sc = addTTSSmallCardSystemConfigs();
+    if (queryParams.isScreentop) {
+      sc = addScreentopSmallCardSystemConfigs();
     } else {
       sc = addSmallCardSystemConfigs();
       sc.skipCardBacks = queryParams.skipCardBacks;
@@ -297,9 +295,9 @@ define([
     getSystemConfigs: getSystemConfigs,
     addCardSystemConfigs: addCardSystemConfigs,
     addSmallCardSystemConfigs: addSmallCardSystemConfigs,
-    addTTSCardSystemConfigs: addTTSCardSystemConfigs,
-    addTTSSmallCardSystemConfigs: addTTSSmallCardSystemConfigs,
-    addTTSDieSystemConfigs: addTTSDieSystemConfigs,
+    addScreentopCardSystemConfigs: addScreentopCardSystemConfigs,
+    addScreentopSmallCardSystemConfigs: addScreentopSmallCardSystemConfigs,
+    addScreentopDieSystemConfigs: addScreentopDieSystemConfigs,
     addTileSystemConfigs: addTileSystemConfigs,
     addLandscapeSystemConfigs: addLandscapeSystemConfigs,
     getCardSystemConfigs: getCardSystemConfigs,

@@ -20,18 +20,10 @@
   justify-content: center;
   gap: 1px;
 }
-.page-of-items.page_of_cards
-  .page-of-items-contents
-  .row_of_cards.row_of_cards_back {
-  flex-direction: row-reverse;
-}
-.page-of-items.page_of_cards .page-of-items-contents.tts .row_of_cards {
+.page-of-items.page_of_cards .page-of-items-contents.screentop .row_of_cards {
   justify-content: left;
   gap: 0px;
   width: 100%;
-}
-.page-of-items.page_of_cards .row_of_cards.row_of_cards_back {
-  flex-direction: row-reverse;
 }
 
 .card {
