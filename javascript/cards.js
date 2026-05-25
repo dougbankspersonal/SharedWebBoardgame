@@ -87,19 +87,23 @@ define([
   }
 
   function addCardBack(parent, index, backConfig) {
-    debugLog("Cards", "addCardBack backConfig = " + JSON.stringify(backConfig));
+    debugLog("addCardBack", "backConfig = " + JSON.stringify(backConfig));
 
     var cardsPerRow = systemConfigs.getSystemConfigs().cardsPerRow;
-    debugLog("Cards", "addCardBack cardsPerRow = " + cardsPerRow);
-    debugLog("Cards", "addCardBack index = " + index);
+    debugLog("addCardBack", "cardsPerRow = " + cardsPerRow);
+    debugLog("addCardBack", "index = " + index);
 
     if (backConfig.callback) {
+      debugLog("addCardBack", "has callback");
       console.assert(
         typeof backConfig.callback === "function",
         "Expected backConfig.callback function",
       );
-      return backConfig.callback(parent, index);
+      var backNode = backConfig.callback(parent, index);
+      setCardSize(backNode);
+      return backNode;
     }
+    debugLog("addCardBack", "no callback");
 
     debugLog(
       "addCardBack",
@@ -203,13 +207,26 @@ define([
       );
     }
 
+    debugLog("addCards", "backConfigs = ", JSON.stringify(backConfigs));
+
     for (var i = 0; i < backConfigs.length; i++) {
       var backConfig = backConfigs[i];
+      debugLog(
+        "addCards",
+        "calling addNthCard for backConfig index = " + i.toString(),
+      );
       [pageOfFronts, rowOfFronts, dummyCard] = addNthCard(
         bodyNode,
         pageOfFronts,
         rowOfFronts,
         function (rowOfCards, index) {
+          debugLog(
+            "addCards",
+            "calling addCardBack for backConfig index = " +
+              i.toString() +
+              ", card index = " +
+              index.toString(),
+          );
           addCardBack(rowOfCards, index, backConfig);
         },
         numCards + i,

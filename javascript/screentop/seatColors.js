@@ -1,6 +1,6 @@
 // Given a piece type and a style, return a list of specific item names.
 // E.g. a "Top" in "[parameters.Boho]" style might be a "Peasant Blouse", "Tunic Top", or "Off-the-Shoulder Top".
-define(["javascript/parameters", "dojo/domReady!"], function (parameters) {
+define(["dojo/domReady!"], function () {
   var seatColors = [
     "#e6194b",
     "#3cb44b",
@@ -36,5 +36,7 @@ define(["javascript/parameters", "dojo/domReady!"], function (parameters) {
 
   return {
     seatColors: seatColors,
+    lightenedSeatColors: lightenedSeatColors,
+    darkenedSeatColors: darkenedSeatColors,
   };
 });
