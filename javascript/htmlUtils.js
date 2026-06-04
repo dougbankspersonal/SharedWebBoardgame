@@ -262,6 +262,22 @@ define([
     });
   }
 
+  function applyColorFamily(parent, colorFamily) {
+    if (!colorFamily) {
+      return;
+    }
+    domStyle.set(parent, {
+      "border-color": colorFamily.border,
+      color: colorFamily.font,
+      background:
+        "linear-gradient(to bottom, " +
+        colorFamily.gradient1 +
+        " 0%, " +
+        colorFamily.gradient2 +
+        " 100%)",
+    });
+  }
+
   return {
     addDiv: addDiv,
     addImage: addImage,
@@ -274,5 +290,6 @@ define([
     addPageOfItemsAndContents: addPageOfItemsAndContents,
     addCard: addCard,
     addQuasiRandomTilt: addQuasiRandomTilt,
+    applyColorFamily: applyColorFamily,
   };
 });
