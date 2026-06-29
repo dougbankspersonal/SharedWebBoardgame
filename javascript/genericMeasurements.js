@@ -33,7 +33,7 @@ define(["dojo/domReady!"], function () {
   // We need to embed the card in a rect s.t. center of rect is centroid of card.
   // Centroid of triangle is 2/3 from top, down.
   // So I need a padding of extra 1/3 of height below the card.
-  var triangleCardTTSActualHeightPx = (triangleCardImageHeightPx * 4) / 3;
+  var triangleCardScreentopActualHeightPx = (triangleCardImageHeightPx * 4) / 3;
 
   var standardBorderWidthPx = 2;
   var pageOfItemsMarginPx = 10;
@@ -55,18 +55,16 @@ define(["dojo/domReady!"], function () {
   var cardColumnsPerPage = getNumberThatFitAccountingForGap(
     adjustedPageWidth,
     standardCardWidthPx,
-    standardPageGap
+    standardPageGap,
   );
   var cardRowsPerPage = getNumberThatFitAccountingForGap(
     adjustedPageHeight,
     standardCardHeightPx,
-    standardPageGap
+    standardPageGap,
   );
   var cardsPerPage = cardColumnsPerPage * cardRowsPerPage;
 
-  var ttsCardsPerPage = 70;
-  // FIXME(dbanks) is there a limit?
-  var ttpCardsPerPage = 1000;
+  var screentopCardsPerPage = 1000;
 
   var dieWidthPx = 150;
   var dieHeightPx = dieWidthPx;
@@ -83,7 +81,7 @@ define(["dojo/domReady!"], function () {
   var smallCardsPerColumn = Math.floor(adjustedPageHeight / smallCardHeightPx);
   var smallCardsPerPage = smallCardsPerRow * smallCardsPerColumn;
 
-  var ttsCardsPerRow = 10;
+  var screentopCardsPerRow = 10;
 
   return {
     getNumberThatFitAccountingForGap: getNumberThatFitAccountingForGap,
@@ -98,7 +96,7 @@ define(["dojo/domReady!"], function () {
     standardCardWidthPx: standardCardWidthPx,
     standardCardHeightPx: standardCardHeightPx,
     triangleCardImageHeightPx: triangleCardImageHeightPx,
-    triangleCardTTSActualHeightPx: triangleCardTTSActualHeightPx,
+    triangleCardScreentopActualHeightPx: triangleCardScreentopActualHeightPx,
     cardBackFontSize: cardBackFontSize,
     cardBorderWidthPx: cardBorderWidthPx,
 
@@ -107,8 +105,7 @@ define(["dojo/domReady!"], function () {
     cardColumnsPerPage: cardColumnsPerPage,
     cardRowsPerPage: cardRowsPerPage,
     cardsPerPage: cardsPerPage,
-    ttsCardsPerPage: ttsCardsPerPage,
-    ttpCardsPerPage: ttpCardsPerPage,
+    screentopCardsPerPage: screentopCardsPerPage,
     standardPageGap: standardPageGap,
 
     dieWidthPx: dieWidthPx,
@@ -123,6 +120,6 @@ define(["dojo/domReady!"], function () {
     smallCardBackFontSize: smallCardBackFontSize,
     smallCardsPerPage: smallCardsPerPage,
     cardFrontBorderWidthPx: cardFrontBorderWidthPx,
-    ttsCardsPerRow: ttsCardsPerRow,
+    screentopCardsPerRow: screentopCardsPerRow,
   };
 });

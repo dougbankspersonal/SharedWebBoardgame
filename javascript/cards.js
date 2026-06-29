@@ -18,7 +18,7 @@ define([
   genericMeasurements,
   genericUtils,
   htmlUtils,
-  systemConfigs
+  systemConfigs,
 ) {
   var debugLog = debugLogModule.debugLog;
 
@@ -42,42 +42,74 @@ define([
   function addPageOfCards(parent, opt_classArray) {
     var classes = genericUtils.growOptStringArray(
       opt_classArray,
-      "page_of_cards"
+      "page_of_cards",
     );
-    var [_pageOfItems, pageOfItemsContents] =
-      htmlUtils.addPageOfItemsAndContents(parent, classes);
+    var [_, pageOfItemsContents] = htmlUtils.addPageOfItemsAndContents(
+      parent,
+      classes,
+    );
     return pageOfItemsContents;
   }
 
-  function addRowOfCards(parent, opt_isCardBack) {
+  function addRowOfCards(parent) {
     var classes = ["row_of_cards"];
-    if (opt_isCardBack) {
-      classes.push("row_of_cards_back");
-    }
     return htmlUtils.addDiv(parent, classes, "rowOfCards");
   }
 
+  function maybeAddCardBackColor(cardBackNode, backConfig) {
+    if (backConfig.hexColorString) {
+      var otherColor = htmlUtils.blendHexColors(
+        backConfig.hexColorString,
+        "#ffffff",
+      );
+      var gradient = string.substitute(
+        "radial-gradient(${color1}, ${color2})",
+        {
+          color1: otherColor,
+          color2: backConfig.hexColorString,
+        },
+      );
+      domStyle.set(cardBackNode, "background", gradient);
+    }
+  }
+
+  function maybeAddCardBackTitle(cardBackNode, backConfig) {
+    var titleNode;
+    if (backConfig.title) {
+      titleNode = htmlUtils.addDiv(
+        cardBackNode,
+        ["title"],
+        "title",
+        backConfig.title,
+      );
+    }
+    return titleNode;
+  }
+
   function addCardBack(parent, index, backConfig) {
-    debugLog("Cards", "addCardBack backConfig = " + JSON.stringify(backConfig));
+    debugLog("addCardBack", "backConfig = " + JSON.stringify(backConfig));
 
     var cardsPerRow = systemConfigs.getSystemConfigs().cardsPerRow;
-    debugLog("Cards", "addCardBack cardsPerRow = " + cardsPerRow);
-    debugLog("Cards", "addCardBack index = " + index);
+    debugLog("addCardBack", "cardsPerRow = " + cardsPerRow);
+    debugLog("addCardBack", "index = " + index);
 
     if (backConfig.callback) {
+      debugLog("addCardBack", "has callback");
       console.assert(
-        typeof backConfig.callback,
-        "function",
-        "Expected backConfig.callback function"
+        typeof backConfig.callback === "function",
+        "Expected backConfig.callback function",
       );
-      return backConfig.callback(parent, index);
+      var backNode = backConfig.callback(parent, index);
+      setCardSize(backNode);
+      return backNode;
     }
+    debugLog("addCardBack", "no callback");
 
-    var sc = systemConfigs.getSystemConfigs();
     debugLog(
       "addCardBack",
-      "backConfig.classes = " + JSON.stringify(backConfig.classes)
+      "backConfig.classes = " + JSON.stringify(backConfig.classes),
     );
+
     var classes = backConfig.classes ? backConfig.classes : [];
     classes = classes.slice();
     classes.push("back");
@@ -87,35 +119,9 @@ define([
     var cardBackNode = htmlUtils.addCard(parent, classes, "back");
     setCardSize(cardBackNode);
 
-    if (backConfig.hexColorString) {
-      var otherColor = htmlUtils.blendHexColors(
-        backConfig.hexColorString,
-        "#ffffff"
-      );
-      var gradient = string.substitute(
-        "radial-gradient(${color1}, ${color2})",
-        {
-          color1: otherColor,
-          color2: backConfig.hexColorString,
-        }
-      );
-      domStyle.set(cardBackNode, "background", gradient);
-    }
+    maybeAddCardBackColor(cardBackNode, backConfig);
 
-    if (backConfig.title) {
-      var titleNode = htmlUtils.addDiv(
-        cardBackNode,
-        ["title"],
-        "title",
-        backConfig.title
-      );
-      var style = {};
-      debugLog("Cards", "addCardBack sc = " + JSON.stringify(sc));
-      style["font-size"] = sc.cardBackFontSize
-        ? `${sc.cardBackFontSize}px`
-        : `${genericMeasurements.cardBackFontSize}px`;
-      domStyle.set(titleNode, style);
-    }
+    maybeAddCardBackTitle(cardBackNode, backConfig);
 
     return cardBackNode;
   }
@@ -130,28 +136,27 @@ define([
   }
 
   function maybeNewPage(parent, currentPage, index) {
-    debugLog("Cards", "maybeNewPage index = " + index.toString());
+    debugLog("maybeNewPage", "maybeNewPage index = " + index.toString());
     var cardsPerPage = systemConfigs.getSystemConfigs().cardsPerPage;
+    debugLog("maybeNewPage", "cardsPerPage = " + cardsPerPage);
     var needNew = index % cardsPerPage;
+    debugLog("maybeNewPage", "needNew = " + needNew);
     if (needNew == 0) {
-      debugLog(
-        "Cards",
-        "maybeNewPage adding new page for index = " + index.toString()
-      );
+      debugLog("maybeNewPage", "new page for index = " + index.toString());
       return addPageOfCards(parent);
     }
     return currentPage;
   }
 
-  function maybeNewRow(parent, currentRow, index, opt_isCardBack) {
+  function maybeNewRow(parent, currentRow, index) {
     var cardsPerRow = systemConfigs.getSystemConfigs().cardsPerRow;
     var needNew = index % cardsPerRow;
     if (needNew == 0) {
       debugLog(
         "Cards",
-        "NewCardFu adding new row for index = " + index.toString()
+        "NewCardFu adding new row for index = " + index.toString(),
       );
-      return addRowOfCards(parent, opt_isCardBack);
+      return addRowOfCards(parent);
     }
     return currentRow;
   }
@@ -162,95 +167,95 @@ define([
     rowOfCards,
     addNthCardCallback,
     index,
-    opt_isCardBack
   ) {
     debugLog("Cards", "addNthCard index = " + index.toString());
     pageOfCards = maybeNewPage(bodyNode, pageOfCards, index);
     console.assert(pageOfCards, "pageOfCards is null");
-    rowOfCards = maybeNewRow(pageOfCards, rowOfCards, index, opt_isCardBack);
+    rowOfCards = maybeNewRow(pageOfCards, rowOfCards, index);
     console.assert(rowOfCards, "rowOfCards is null");
     var card = addNthCardCallback(rowOfCards, index);
     return [pageOfCards, rowOfCards, card];
   }
 
-  function addCards(numCards, frontCallback, backConfig) {
+  function addCards(numCards, frontCallback, backConfigs) {
+    console.assert(
+      Array.isArray(backConfigs),
+      "Expected an array for backConfigs",
+    );
     var sc = systemConfigs.getSystemConfigs();
 
     debugLog("Cards", "addCards: sc = " + JSON.stringify(sc));
     debugLog("Cards", "addCards: numCards = " + numCards);
+
     // Better be in cards mode.
     console.assert(sc.isCards, "Not in cards mode");
 
     var bodyNode = dom.byId("body");
 
     var pageOfFronts;
-    var pageOfBacks;
     var rowOfFronts;
-    var rowOfBacks;
     var dummyCard;
 
-    if (sc.separateBacks) {
-      for (let index = 0; index < numCards; index++) {
-        debugLog("Cards", "addCards 001 i = " + index.toString());
-        [pageOfFronts, rowOfFronts, dummyCard] = addNthCard(
-          bodyNode,
-          pageOfFronts,
-          rowOfFronts,
-          frontCallback,
-          index
-        );
-      }
+    for (let index = 0; index < numCards; index++) {
+      debugLog("addCards", "addCards 001 i = " + index.toString());
+      [pageOfFronts, rowOfFronts, dummyCard] = addNthCard(
+        bodyNode,
+        pageOfFronts,
+        rowOfFronts,
+        frontCallback,
+        index,
+      );
+    }
 
-      if (!sc.skipCardBacks) {
-        debugLog("Cards", "addCards 002 i = " + i.toString());
-        [pageOfBacks, rowOfBacks, dummyCard] = addNthCard(
-          bodyNode,
-          pageOfBacks,
-          rowOfBacks,
-          function (rowOfCards, index) {
-            i.toString();
-            addCardBack(rowOfCards, i, backConfig);
-          },
-          i,
-          true
-        );
-      }
-    } else {
-      for (let index = 0; index < numCards; index++) {
-        debugLog("Cards", "addCards 003 i = " + index.toString());
-        [pageOfFronts, rowOfFronts, dummyCard] = addNthCard(
-          bodyNode,
-          pageOfFronts,
-          rowOfFronts,
-          frontCallback,
-          index
-        );
+    debugLog("addCards", "backConfigs = ", JSON.stringify(backConfigs));
 
-        if (!sc.skipCardBacks) {
-          debugLog("Cards", "addCards 004 i = " + index.toString());
-          [pageOfBacks, rowOfBacks, dummyCard] = addNthCard(
-            bodyNode,
-            pageOfBacks,
-            rowOfBacks,
-            function (rowOfCards, index) {
-              addCardBack(rowOfCards, index, backConfig);
-            },
-            index,
-            true
+    for (var i = 0; i < backConfigs.length; i++) {
+      var backConfig = backConfigs[i];
+      debugLog(
+        "addCards",
+        "calling addNthCard for backConfig index = " + i.toString(),
+      );
+      [pageOfFronts, rowOfFronts, dummyCard] = addNthCard(
+        bodyNode,
+        pageOfFronts,
+        rowOfFronts,
+        function (rowOfCards, index) {
+          debugLog(
+            "addCards",
+            "calling addCardBack for backConfig index = " +
+              i.toString() +
+              ", card index = " +
+              index.toString(),
           );
-        }
-      }
+          addCardBack(rowOfCards, index, backConfig);
+        },
+        numCards + i,
+      );
     }
   }
 
+  // Look for a "count" field.
+  // If it's nil, it's assumed to be 1.
+  // If it's explicitly 0, it's 0.
+  // Else it's the given count.
   function getInstanceCountFromConfig(cardConfigs, index) {
-    return cardConfigs[index].count ? cardConfigs[index].count : 1;
+    var config = cardConfigs[index];
+    if (!config.hasOwnProperty("count")) {
+      return 1;
+    } else {
+      return config.count ? config.count : 0;
+    }
   }
 
   function getNumCardsFromConfigs(cardConfigs) {
+    console.assert(cardConfigs, "cardConfigs is null");
     debugLog(
-      "CardCount",
-      "getNumCardsFromConfigs: cardConfigs = " + JSON.stringify(cardConfigs)
+      "getNumCardsFromConfigs",
+      "cardConfigs = " + JSON.stringify(cardConfigs),
+    );
+    debugLog(
+      "getNumCardsFromConfigs",
+      "cardConfigs.length = " + JSON.stringify(cardConfigs.length),
     );
 
     // If we are doing single-instance of each card config, rewrite the array.
@@ -260,9 +265,9 @@ define([
         cardConfigs[i].count = 1;
       }
       debugLog(
-        "CardCount",
-        "getNumCardsFromConfigs: singleCardInstance is true: cardConfigs = " +
-          JSON.stringify(cardConfigs)
+        "getNumCardsFromConfigs",
+        "singleCardInstance is true: cardConfigs = " +
+          JSON.stringify(cardConfigs),
       );
     }
 
@@ -273,38 +278,18 @@ define([
       numCards = numCards + instanceCount;
     }
 
-    debugLog(
-      "CardCount",
-      "getNumCardsFromConfigs: initial numCards = " + numCards
-    );
-
-    // If we have some min, and this isn't enough, change count on first card to hit max.
-    if (sc.minCardCount && numCards < sc.minCardCount) {
-      var firstCount = cardConfigs[0].count ? cardConfigs[0].count : 1;
-      cardConfigs[0].count = firstCount + sc.minCardCount - numCards;
-      numCards = sc.minCardCount;
-      debugLog(
-        "CardCount",
-        "getNumCardsFromConfigs: sc.minCardCount = " + sc.minCardCount
-      );
-      debugLog(
-        "CardCount",
-        "getNumCardsFromConfigs: adjusted card configs: cardConfigs = " +
-          JSON.stringify(cardConfigs)
-      );
-    }
-
-    debugLog(
-      "CardCount",
-      "getNumCardsFromConfigs: final numCards = " + numCards
-    );
+    debugLog("getNumCardsFromConfigs", "initial numCards = " + numCards);
+    debugLog("CardCount", "final numCards = " + numCards);
     return numCards;
   }
 
+  // Card configs is ordered list of card descriptions (configs).
+  // Each config must have a count field.
+  // If the count field is missing or 0, we skip this config.
   function getCardConfigAtIndex(cardConfigs, index) {
     debugLog(
       "Cards",
-      "getCardConfigAtIndex: cardConfigs = " + JSON.stringify(cardConfigs)
+      "getCardConfigAtIndex: cardConfigs = " + JSON.stringify(cardConfigs),
     );
     for (var i = 0; i < cardConfigs.length; i++) {
       var instanceCount = getInstanceCountFromConfig(cardConfigs, i);
@@ -319,7 +304,7 @@ define([
   function getIndexWithinConfig(cardConfigs, index) {
     debugLog(
       "Cards",
-      "getIndexWithinConfig: cardConfigs = " + JSON.stringify(cardConfigs)
+      "getIndexWithinConfig: cardConfigs = " + JSON.stringify(cardConfigs),
     );
     debugLog("Cards", "getIndexWithinConfig: index = " + index);
     for (var i = 0; i < cardConfigs.length; i++) {
@@ -342,8 +327,8 @@ define([
 
     var wrapper = htmlUtils.addDiv(
       frontNode,
-      ["formatted_wrapper"],
-      "formatted_wrapper"
+      ["formatted-wrapper"],
+      "formatted-wrapper",
     );
     if (config.title) {
       htmlUtils.addDiv(wrapper, ["title"], "title", config.title);
@@ -355,7 +340,7 @@ define([
       var rulesTextNode = htmlUtils.addDiv(
         wrapper,
         ["rules_text"],
-        "rulesText"
+        "rulesText",
       );
       rulesTextNode.innerHTML = config.rulesText;
     }
