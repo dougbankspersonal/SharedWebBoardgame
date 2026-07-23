@@ -61,7 +61,6 @@ define([
 
     // Extra class to apply to page-of-items div.
     extraClassesForPageOfItemsContents: true,
-    explicitPageWidth: true,
 
     gridGap: true,
 
@@ -110,7 +109,7 @@ define([
       ? overrides.cardsPerRow
       : Math.floor(genericMeasurements.adjustedPageWidth / cardWidthPx);
 
-    outputSc = structuredClone(defaultSc);
+    var outputSc = structuredClone(defaultSc);
 
     outputSc.cardsPerPage = cardsPerPage;
     outputSc.cardWidthPx = cardWidthPx;
@@ -221,9 +220,12 @@ define([
     var overrides = opt_overrides ? opt_overrides : {};
 
     var outputSc = structuredClone(defaultSc);
-    outputSc.pageless = true;
-    outputSc.gridGap = 0;
-    outputSc.isCards = false;
+    outputSc.pageless =
+      overrides.pageless !== undefined ? overrides.pageless : true;
+    outputSc.gridGap = overrides.gridGap !== undefined ? overrides.gridGap : 0;
+    outputSc.isCards =
+      overrides.isCards !== undefined ? overrides.isCards : false;
+
     return outputSc;
   }
 
@@ -232,7 +234,8 @@ define([
     var overrides = opt_overrides ? opt_overrides : {};
 
     var outputSc = structuredClone(defaultSc);
-    outputSc.isCards = false;
+    outputSc.isCards =
+      overrides.isCards !== undefined ? overrides.isCards : false;
     debugLog(
       "SystemConfigs",
       "addTileSystemConfigs: outputSc = " + JSON.stringify(outputSc),
