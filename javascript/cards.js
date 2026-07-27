@@ -44,8 +44,10 @@ define([
       opt_classArray,
       "page_of_cards",
     );
-    var [_pageOfItems, pageOfItemsContents] =
-      htmlUtils.addPageOfItemsAndContents(parent, classes);
+    var [_, pageOfItemsContents] = htmlUtils.addPageOfItemsAndContents(
+      parent,
+      classes,
+    );
     return pageOfItemsContents;
   }
 
@@ -85,24 +87,29 @@ define([
   }
 
   function addCardBack(parent, index, backConfig) {
-    debugLog("Cards", "addCardBack backConfig = " + JSON.stringify(backConfig));
+    debugLog("addCardBack", "backConfig = " + JSON.stringify(backConfig));
 
     var cardsPerRow = systemConfigs.getSystemConfigs().cardsPerRow;
-    debugLog("Cards", "addCardBack cardsPerRow = " + cardsPerRow);
-    debugLog("Cards", "addCardBack index = " + index);
+    debugLog("addCardBack", "cardsPerRow = " + cardsPerRow);
+    debugLog("addCardBack", "index = " + index);
 
     if (backConfig.callback) {
+      debugLog("addCardBack", "has callback");
       console.assert(
         typeof backConfig.callback === "function",
         "Expected backConfig.callback function",
       );
-      return backConfig.callback(parent, index);
+      var backNode = backConfig.callback(parent, index);
+      setCardSize(backNode);
+      return backNode;
     }
+    debugLog("addCardBack", "no callback");
 
     debugLog(
       "addCardBack",
       "backConfig.classes = " + JSON.stringify(backConfig.classes),
     );
+
     var classes = backConfig.classes ? backConfig.classes : [];
     classes = classes.slice();
     classes.push("back");
@@ -159,15 +166,17 @@ define([
     pageOfCards,
     rowOfCards,
     addNthCardCallback,
-    index,
+    cardCount,
+    configIndex,
   ) {
-    debugLog("Cards", "addNthCard index = " + index.toString());
-    pageOfCards = maybeNewPage(bodyNode, pageOfCards, index);
+    debugLog("Cards", "addNthCard cardCount = " + cardCount.toString());
+    debugLog("Cards", "addNthCard configIndex = " + configIndex.toString());
+    pageOfCards = maybeNewPage(bodyNode, pageOfCards, cardCount);
     console.assert(pageOfCards, "pageOfCards is null");
-    rowOfCards = maybeNewRow(pageOfCards, rowOfCards, index);
+    rowOfCards = maybeNewRow(pageOfCards, rowOfCards, cardCount);
     console.assert(rowOfCards, "rowOfCards is null");
-    var card = addNthCardCallback(rowOfCards, index);
-    return [pageOfCards, rowOfCards, card];
+    addNthCardCallback(rowOfCards, configIndex);
+    return [pageOfCards, rowOfCards];
   }
 
   function addCards(numCards, frontCallback, backConfigs) {
@@ -185,33 +194,50 @@ define([
 
     var bodyNode = dom.byId("body");
 
-    var pageOfFronts;
-    var rowOfFronts;
-    var dummyCard;
-
-    for (let index = 0; index < numCards; index++) {
-      debugLog("addCards", "addCards 001 i = " + index.toString());
-      [pageOfFronts, rowOfFronts, dummyCard] = addNthCard(
-        bodyNode,
-        pageOfFronts,
-        rowOfFronts,
-        frontCallback,
-        index,
-      );
-    }
+    var pageOfCards;
+    var rowOfCards;
+    var cardCount = 0;
 
     for (var i = 0; i < backConfigs.length; i++) {
       var backConfig = backConfigs[i];
-      [pageOfFronts, rowOfFronts, dummyCard] = addNthCard(
+      debugLog(
+        "addCards",
+        "calling addNthCard for backConfig index = " + i.toString(),
+      );
+      [pageOfCards, rowOfCards] = addNthCard(
         bodyNode,
-        pageOfFronts,
-        rowOfFronts,
+        pageOfCards,
+        rowOfCards,
         function (rowOfCards, index) {
+          debugLog(
+            "addCards",
+            "calling addCardBack for backConfig index = " +
+              i.toString() +
+              ", card index = " +
+              index.toString(),
+          );
           addCardBack(rowOfCards, index, backConfig);
+          cardCount++;
         },
-        numCards + i,
+        cardCount,
+        cardCount,
       );
     }
+
+    for (let index = 0; index < numCards; index++) {
+      debugLog("addCards", "addCards 001 i = " + index.toString());
+      [pageOfCards, rowOfCards] = addNthCard(
+        bodyNode,
+        pageOfCards,
+        rowOfCards,
+        frontCallback,
+        cardCount,
+        index,
+      );
+      cardCount++;
+    }
+
+    debugLog("addCards", "backConfigs = ", JSON.stringify(backConfigs));
   }
 
   // Look for a "count" field.

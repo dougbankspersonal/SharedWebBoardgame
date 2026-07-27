@@ -5,23 +5,27 @@ import fs from "fs";
 function usage() {
   console.log(`
 Usage:
-  node export.mjs <input.html> "<class list>" <output.png>
+  node export.mjs <input.html[?query]> "<class list>" <output.png>
 
 Example:
-  node export.mjs cards.html "hoa starter back card" out.png
+  node export.mjs cards.html?isTTS=true "hoa starter back card" out.png
 `);
 }
 
-const [, , inputFile, classList, outputFile] = process.argv;
+const [, , inputArg, classList, outputFile] = process.argv;
 
-if (!inputFile || !classList || !outputFile) {
+if (!inputArg || !classList || !outputFile) {
   usage();
   process.exit(1);
 }
 
+// --- NEW: split file path and query string ---
+const [inputFile, queryString] = inputArg.split("?");
+
 const inputPath = path.resolve(inputFile);
 const outputPath = path.resolve(outputFile);
 
+// --- filesystem check uses ONLY the file path ---
 if (!fs.existsSync(inputPath)) {
   console.error(`Input file not found: ${inputPath}`);
   process.exit(1);
@@ -41,7 +45,13 @@ const selector = `div.${classes.join(".")}`;
   const browser = await chromium.launch();
   const page = await browser.newPage();
 
-  await page.goto(`file://${inputPath}`);
+  // --- NEW: build file:// URL with optional query ---
+  let fileUrl = `file://${inputPath.replace(/\\/g, "/")}`;
+  if (queryString) {
+    fileUrl += `?${queryString}`;
+  }
+
+  await page.goto(fileUrl);
 
   await page.waitForSelector(selector, { timeout: 10000 });
 

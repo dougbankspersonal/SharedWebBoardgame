@@ -350,10 +350,10 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
       // We don't want any one value to get too far ahead of the others.
       var fractionConsumedByValue = {};
       for (var i = 0; i < arrayOfValues.length; i++) {
-        var value = arrayOfValues[i];
-        var historicCount = historicCountByValue[value] || 0;
-        var maxCountEver = maxCountEverByValue[value] || 0;
-        fractionConsumedByValue[value] = historicCount / maxCountEver;
+        var arrayValue = arrayOfValues[i];
+        var historicCount = historicCountByValue[arrayValue] || 0;
+        var maxCountEver = maxCountEverByValue[arrayValue] || 0;
+        fractionConsumedByValue[arrayValue] = historicCount / maxCountEver;
       }
 
       debugLog(
@@ -364,9 +364,9 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
 
       // This value should not be max fraction above next highest.
       var thisFraction = fractionConsumedByValue[candidateValue] || 0;
-      for (var value in fractionConsumedByValue) {
-        if (value !== candidateValue) {
-          var otherFraction = fractionConsumedByValue[value] || 0;
+      for (var fValue in fractionConsumedByValue) {
+        if (fValue !== candidateValue) {
+          var otherFraction = fractionConsumedByValue[fValue] || 0;
           if (thisFraction > otherFraction + gMaxDeltaAsFractionOfMax) {
             return false;
           }
