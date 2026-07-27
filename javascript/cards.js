@@ -24,8 +24,9 @@ define([
 
   function setCardSize(node) {
     var sc = systemConfigs.getSystemConfigs();
-    debugLog("CardSize", "setCardSize sc.cardHeightPx = ", sc.cardHeightPx);
-    debugLog("CardSize", "setCardSize sc.cardWidthPx = ", sc.cardWidthPx);
+    debugLog("setCardSize", "setCardSize node = ", JSON.stringify(node));
+    debugLog("setCardSize", "setCardSize sc.cardHeightPx = ", sc.cardHeightPx);
+    debugLog("setCardSize", "setCardSize sc.cardWidthPx = ", sc.cardWidthPx);
     var cardWidthPx = sc.cardWidthPx
       ? sc.cardWidthPx
       : genericMeasurements.standardCardWidthPx;
@@ -87,6 +88,8 @@ define([
   }
 
   function addCardBack(parent, index, backConfig) {
+    debugLog("addCardBack", "parent = " + JSON.stringify(parent));
+    debugLog("addCardBack", "index = " + JSON.stringify(index));
     debugLog("addCardBack", "backConfig = " + JSON.stringify(backConfig));
 
     var cardsPerRow = systemConfigs.getSystemConfigs().cardsPerRow;
@@ -100,6 +103,7 @@ define([
         "Expected backConfig.callback function",
       );
       var backNode = backConfig.callback(parent, index);
+      console.assert(backNode, "backNode is null");
       setCardSize(backNode);
       return backNode;
     }
@@ -163,20 +167,24 @@ define([
 
   function addNthCard(
     bodyNode,
-    pageOfCards,
-    rowOfCards,
+    pageOfCardsNode,
+    rowOfCardsNode,
     addNthCardCallback,
     cardCount,
     configIndex,
   ) {
-    debugLog("Cards", "addNthCard cardCount = " + cardCount.toString());
-    debugLog("Cards", "addNthCard configIndex = " + configIndex.toString());
-    pageOfCards = maybeNewPage(bodyNode, pageOfCards, cardCount);
-    console.assert(pageOfCards, "pageOfCards is null");
-    rowOfCards = maybeNewRow(pageOfCards, rowOfCards, cardCount);
-    console.assert(rowOfCards, "rowOfCards is null");
-    addNthCardCallback(rowOfCards, configIndex);
-    return [pageOfCards, rowOfCards];
+    debugLog("addNthCard", "addNthCard bodyNode = " + JSON.stringify(bodyNode));
+    debugLog("addNthCard", "addNthCard cardCount = " + cardCount.toString());
+    debugLog(
+      "addNthCard",
+      "addNthCard configIndex = " + configIndex.toString(),
+    );
+    pageOfCardsNode = maybeNewPage(bodyNode, pageOfCardsNode, cardCount);
+    console.assert(pageOfCardsNode, "pageOfCards is null");
+    rowOfCardsNode = maybeNewRow(pageOfCardsNode, rowOfCardsNode, cardCount);
+    console.assert(rowOfCardsNode, "rowOfCards is null");
+    addNthCardCallback(rowOfCardsNode, configIndex);
+    return [pageOfCardsNode, rowOfCardsNode];
   }
 
   function addCards(numCards, frontCallback, backConfigs) {
@@ -186,17 +194,20 @@ define([
     );
     var sc = systemConfigs.getSystemConfigs();
 
-    debugLog("Cards", "addCards: sc = " + JSON.stringify(sc));
-    debugLog("Cards", "addCards: numCards = " + numCards);
+    debugLog("addCards", "sc = " + JSON.stringify(sc));
+    debugLog("addCards", "numCards = " + numCards);
 
     // Better be in cards mode.
     console.assert(sc.isCards, "Not in cards mode");
 
     var bodyNode = dom.byId("body");
+    debugLog("addCards", "bodyNode = " + JSON.stringify(bodyNode));
 
     var pageOfCards;
     var rowOfCards;
     var cardCount = 0;
+
+    debugLog("addCards", "adding card backs");
 
     for (var i = 0; i < backConfigs.length; i++) {
       var backConfig = backConfigs[i];
@@ -224,6 +235,7 @@ define([
       );
     }
 
+    debugLog("addCards", "adding card fronts");
     for (let index = 0; index < numCards; index++) {
       debugLog("addCards", "addCards 001 i = " + index.toString());
       [pageOfCards, rowOfCards] = addNthCard(

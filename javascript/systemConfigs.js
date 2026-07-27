@@ -109,7 +109,6 @@ define([
       ? overrides.cardsPerRow
       : Math.floor(genericMeasurements.adjustedPageWidth / cardWidthPx);
 
-<<<<<<< HEAD
     debugLog("addCardSystemConfigs", "cardsPerRow = " + cardsPerRow);
     debugLog(
       "addCardSystemConfigs",
@@ -122,10 +121,7 @@ define([
         genericMeasurements.adjustedPageWidth,
     );
 
-    outputSc = structuredClone(defaultSc);
-=======
     var outputSc = structuredClone(defaultSc);
->>>>>>> 49ea9038b6df9bcc7cdcd71c422ef40c9ff18250
 
     outputSc.cardsPerPage = cardsPerPage;
     outputSc.cardWidthPx = cardWidthPx;
