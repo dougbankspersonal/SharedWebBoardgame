@@ -1,9 +1,26 @@
 .card.front.triangle {
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  position: relative;
   border: initial;
   border-width: initial;
   border-style: initial;
 
+  .overlay {
+    color: red;
+    background-image: url("../images/triangle-frame.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 20;
+  }
+
   .front-wrapper {
+    z-index: 0;
     background-position: 0px 0px;
     background-size: 100% auto;
 
@@ -38,6 +55,9 @@
       }
 
       .sector {
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
         display: flex;
         flex-direction: column;
         justify-content: center;
