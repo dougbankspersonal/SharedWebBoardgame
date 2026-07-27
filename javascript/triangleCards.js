@@ -1,5 +1,4 @@
 define([
-  "dojo/dom-class",
   "dojo/dom-style",
   "sharedJavascript/cards",
   "sharedJavascript/debugLog",
@@ -8,13 +7,12 @@ define([
   "sharedJavascript/triangleCardUtils",
   "dojo/domReady!",
 ], function (
-  domClass,
   domStyle,
   cards,
   debugLogModule,
   genericMeasurements,
   htmlUtils,
-  triangleCardUtils
+  triangleCardUtils,
 ) {
   var debugLog = debugLogModule.debugLog;
 
@@ -40,7 +38,7 @@ define([
     var rowNode = htmlUtils.addDiv(
       parentNode,
       ["sectors-row", "sectors-row-" + rowIndex],
-      "sectors-row-" + rowIndex
+      "sectors-row-" + rowIndex,
     );
     domStyle.set(rowNode, {
       height: gRowHeightPx + "px",
@@ -52,7 +50,7 @@ define([
     debugLog(
       "addSectorOverlays",
       "sectorDescriptor = ",
-      JSON.stringify(sectorDescriptor)
+      JSON.stringify(sectorDescriptor),
     );
 
     for (var overlayType in sectorDescriptor.overlaysByType) {
@@ -67,10 +65,10 @@ define([
         }
         var overlay = overlays[overlayIndex];
         var overlayOrientationClass = "orientation-" + overlayIndex;
-        var overlayNode = htmlUtils.addImage(
+        htmlUtils.addImage(
           parentNode,
           ["sector-overlay", overlayOrientationClass, overlay, overlayType],
-          "sector-overlay-" + overlayType + "-" + overlayIndex
+          "sector-overlay-" + overlayType + "-" + overlayIndex,
         );
       }
     }
@@ -81,7 +79,7 @@ define([
     debugLog(
       "addSector",
       "sectorDescriptor = ",
-      JSON.stringify(sectorDescriptor)
+      JSON.stringify(sectorDescriptor),
     );
 
     var sectorNode = triangleCardUtils.addNthSector(
@@ -91,7 +89,7 @@ define([
       {
         height: gRowHeightPx + "px",
         width: gSectorWidthPx + "px",
-      }
+      },
     );
 
     return sectorNode;
@@ -119,7 +117,7 @@ define([
         var sectorNode = addSector(
           rowNode,
           sectorIndex,
-          sectorDescriptors[sectorIndex]
+          sectorDescriptors[sectorIndex],
         );
         sectorNodes.push(sectorNode);
         addSectorOverlays(sectorNode, sectorDescriptors[sectorIndex]);
@@ -131,14 +129,14 @@ define([
     debugLog(
       "addCardFront",
       "cardConfig.cardIndex = ",
-      JSON.stringify(cardConfig.cardIndex)
+      JSON.stringify(cardConfig.cardIndex),
     );
     if (cardConfig.cardIndex) {
       var cardIndexNode = htmlUtils.addDiv(
         cardFrontNode,
         ["card-index"],
         "card-index",
-        `${cardConfig.cardIndex}`
+        `${cardConfig.cardIndex}`,
       );
 
       domStyle.set(cardIndexNode, {
@@ -150,7 +148,7 @@ define([
     debugLog(
       "addCardFront",
       "cardConfig.customSectorConfiguration = ",
-      JSON.stringify(cardConfig.customSectorConfiguration)
+      JSON.stringify(cardConfig.customSectorConfiguration),
     );
     if (cardConfig.customSectorConfiguration) {
       cardConfig.customSectorConfiguration(sectorNodes, cardConfig);
@@ -160,7 +158,7 @@ define([
       var overlayNode = htmlUtils.addImage(
         cardFrontNode,
         [cardConfig.overlayClass, "overlay"],
-        "overlay"
+        "overlay",
       );
       domStyle.set(overlayNode, {
         width: genericMeasurements.standardCardWidthPx + "px",
@@ -184,7 +182,7 @@ define([
     var wrapperNode = htmlUtils.addDiv(
       cardBackNode,
       ["back-wrapper"],
-      "back-wrapper"
+      "back-wrapper",
     );
 
     domStyle.set(wrapperNode, {
@@ -192,11 +190,7 @@ define([
       height: gTriangleCardImageHeightPx + "px",
     });
 
-    var cardBackIconNode = htmlUtils.addImage(
-      wrapperNode,
-      ["triangle-icon"],
-      "triangle-icon"
-    );
+    htmlUtils.addImage(wrapperNode, ["triangle-icon"], "triangle-icon");
 
     return cardBackNode;
   }
