@@ -8,8 +8,6 @@
   border-style: initial;
 }
 .card.front.triangle .overlay {
-  color: red;
-  background-image: url("../images/triangle-frame.png");
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
