@@ -8,15 +8,7 @@
   border-style: initial;
 }
 .card.front.triangle .overlay {
-  color: red;
-  background-image: url("../images/triangle-frame.png");
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 20;
+  background-image: url("../SharedWebBoardgame/images/triangle-frame.png");
 }
 .card.front.triangle .front-wrapper {
   z-index: 0;
