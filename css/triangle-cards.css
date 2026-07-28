@@ -8,9 +8,6 @@
   border-style: initial;
 }
 .card.front.triangle .overlay {
-<<<<<<< HEAD
-  background-image: url("../SharedWebBoardgame/images/triangle-frame.png");
-=======
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -18,7 +15,6 @@
   top: 0;
   left: 0;
   z-index: 20;
->>>>>>> 43229e008a9d0ee0debaeeb8c446af947cfcd884
 }
 .card.front.triangle .front-wrapper {
   z-index: 0;
@@ -27,6 +23,7 @@
 }
 .card.front.triangle .front-wrapper .sectors-row {
   position: relative;
+  display: block;
 }
 .card.front.triangle .front-wrapper .sectors-row .sector-index-1,
 .card.front.triangle .front-wrapper .sectors-row .sector-index-3 {
