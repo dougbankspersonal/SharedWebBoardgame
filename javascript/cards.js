@@ -97,7 +97,7 @@ define([
     debugLog("addCardBack", "index = " + index);
 
     if (backConfig.callback) {
-      debugLog("addCardBack", "has callback");
+      debugLog("addCardBack", "hitting callback for backConfig.callback");
       console.assert(
         typeof backConfig.callback === "function",
         "Expected backConfig.callback function",
@@ -157,7 +157,7 @@ define([
     var needNew = index % cardsPerRow;
     if (needNew == 0) {
       debugLog(
-        "Cards",
+        "maybeNewRow",
         "NewCardFu adding new row for index = " + index.toString(),
       );
       return addRowOfCards(parent);

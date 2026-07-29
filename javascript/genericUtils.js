@@ -204,6 +204,23 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
     return histogram;
   }
 
+  function arrayToCountHistogram(arrayOfElements) {
+    // Should be an array.
+    console.assert(
+      typeof arrayOfElements === "object" && Array.isArray(arrayOfElements),
+    );
+    var histogram = {};
+    for (var i = 0; i < arrayOfElements.length; i++) {
+      var element = arrayOfElements[i];
+      if (histogram[element]) {
+        histogram[element]++;
+      } else {
+        histogram[element] = 1;
+      }
+    }
+    return histogram;
+  }
+
   // Given two js tables are they the same: both keys and contents, recursively.
   function tablesMatch(table1, table2) {
     if (Object.keys(table1).length !== Object.keys(table2).length) {
@@ -468,6 +485,115 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
     return shuffled;
   }
 
+  function generarteAllPermutationsOfArray(array) {
+    // Let's do this recursively.
+    if (array.length <= 1) {
+      return [array];
+    }
+
+    // Pop off the first element.
+    var firstElement = array[0];
+    var restOfArray = array.slice(1);
+
+    // Permute the rest.
+    var permutationsOfRestOfArray =
+      generarteAllUniquePermutationsOfArray(restOfArray);
+
+    // Pop in the first element in all possible positions.
+    var retVal = [];
+    for (var j = 0; j < permutationsOfRestOfArray.length; j++) {
+      var perm = permutationsOfRestOfArray[j];
+      for (var i = 0; i <= perm.length; i++) {
+        var newPerm = perm.slice(0, i).concat([firstElement], perm.slice(i));
+        retVal.push(newPerm);
+      }
+    }
+
+    return retVal;
+  }
+
+  function arraysMatch(array1, array2) {
+    if (array1.length !== array2.length) {
+      return false;
+    }
+    for (var i = 0; i < array1.length; i++) {
+      // Values in array might be tables, so we need to check for that.  If they are tables, we need to check if they match.
+      if (typeof array1[i] != typeof array2[i]) {
+        return false;
+      }
+
+      if (typeof array1[i] === "object") {
+        if (!tablesMatch(array1[i], array2[i])) {
+          return false;
+        }
+      } else {
+        if (array1[i] !== array2[i]) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  // Assuming we're getting in an array of unique values.
+  // All possible arrays of given length filled with these elements.
+  function generateAllArrays(elementsArray, length) {
+    if (length <= 0) {
+      return [[]];
+    }
+
+    var allArrays = [];
+    var smallerArrays = generateAllArrays(elementsArray, length - 1);
+    for (var i = 0; i < smallerArrays.length; i++) {
+      for (var j = 0; j < elementsArray.length; j++) {
+        allArrays.push(smallerArrays[i].concat([elementsArray[j]]));
+      }
+    }
+    return allArrays;
+  }
+
+  // Input elements may repeat.
+  function generarteAllUniquePermutationsOfArray(array) {
+    // First get non-unique, then prune.
+    var nonUniquePermutations = generarteAllPermutationsOfArray(array);
+
+    var retVal = [];
+    for (var i = 0; i < nonUniquePermutations.length; i++) {
+      var perm1 = nonUniquePermutations[i];
+      var isUnique = true;
+      for (var j = i + 1; j < nonUniquePermutations.length; j++) {
+        var perm2 = nonUniquePermutations[j];
+        if (arraysMatch(perm1, perm2)) {
+          isUnique = false;
+          break;
+        }
+      }
+      if (isUnique) {
+        retVal.push(perm1);
+      }
+    }
+    return retVal;
+  }
+
+  // True iff arrayOfElements has at least one element that shows up n or more times.
+  function arrayHasAnElemententWithMoreThanNCopies(arrayOfElements, n) {
+    // arrayOfElements should be an array.
+    console.assert(
+      typeof arrayOfElements === "object" && Array.isArray(arrayOfElements),
+    );
+
+    // Count the number of occurrences of each element in the array
+    var elementHistogram = arrayToCountHistogram(arrayOfElements);
+
+    // Check if any element has more than n occurrences
+    for (var element in elementHistogram) {
+      if (elementHistogram[element] > n) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   return {
     assertIsNumber: assertIsNumber,
     sanityCheckTable: sanityCheckTable,
@@ -488,9 +614,16 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
     generateNonMatchingHistograms: generateNonMatchingHistograms,
     tablesMatch: tablesMatch,
     randomHistogramFromArray: randomHistogramFromArray,
+    arrayToCountHistogram: arrayToCountHistogram,
     sumHistogram: sumHistogram,
     copyAndShuffleArray: copyAndShuffleArray,
     getRandomsFromArrayWithControls: getRandomsFromArrayWithControls,
     generateRandomizedArray: generateRandomizedArray,
+    generarteAllUniquePermutationsOfArray:
+      generarteAllUniquePermutationsOfArray,
+    arraysMatch: arraysMatch,
+    generateAllArrays: generateAllArrays,
+    arrayHasAnElemententWithMoreThanNCopies:
+      arrayHasAnElemententWithMoreThanNCopies,
   };
 });
