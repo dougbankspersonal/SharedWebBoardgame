@@ -169,8 +169,13 @@ define([
     return cardFrontNode;
   }
 
-  function addCardBack(parent, cardConfigs, index) {
-    var cardConfig = cards.getCardConfigAtIndex(cardConfigs, index);
+  function addTriangleCardBack(parent, opt_cardConfigs, opt_index) {
+    var cardConfig;
+    if (opt_cardConfigs && opt_index !== undefined) {
+      cardConfig = cards.getCardConfigAtIndex(opt_cardConfigs, opt_index);
+    } else {
+      cardConfig = {};
+    }
 
     var classes = cardConfig.classes ? cardConfig.classes.slice() : [];
     classes.push("triangle");
@@ -198,6 +203,6 @@ define([
   // This returned object becomes the defined value of this module
   return {
     addCardFront: addCardFront,
-    addCardBack: addCardBack,
+    addTriangleCardBack: addTriangleCardBack,
   };
 });
