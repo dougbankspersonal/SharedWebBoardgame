@@ -23,6 +23,7 @@
 }
 .card.front.triangle .front-wrapper .sectors-row {
   position: relative;
+  display: block;
 }
 .card.front.triangle .front-wrapper .sectors-row .sector-index-1,
 .card.front.triangle .front-wrapper .sectors-row .sector-index-3 {
@@ -73,6 +74,15 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  position: relative;
+}
+.card.back.triangle .back-wrapper {
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  position: absolute;
+  top: 0px;
+  left: 0px;
 }
 .card.back.triangle .triangle-icon {
   height: 60%;
@@ -81,6 +91,18 @@
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
+}
+.card.back.triangle .deck-label {
+  position: absolute;
+  width: 100%;
+  height: 25px;
+  top: 66%;
+  left: 0px;
+  text-align: center;
+  font-size: 15px;
+  color: black;
+  font-family: Special Elite, monospace;
+  z-index: 10;
 }
 
 /*# sourceMappingURL=triangle-cards.css.map */

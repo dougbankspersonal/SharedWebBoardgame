@@ -10,7 +10,7 @@ define([
   cards,
   debugLogModule,
   htmlUtils,
-  triangleCardConstants
+  triangleCardConstants,
 ) {
   var debugLog = debugLogModule.debugLog;
 
@@ -22,6 +22,8 @@ define([
     ],*/
   };
 
+  const gSectorsInTriangle = 4;
+
   // Tracks all symbols added ever.
   var gSymbolToGlobalSymbolCount = {};
 
@@ -29,17 +31,17 @@ define([
     symbolNode,
     symbolIndexInSector,
     symbolsThisSector,
-    configs
+    configs,
   ) {
     debugLog(
       "configureSymbolNode",
       "symbolsThisSector = ",
-      JSON.stringify(symbolsThisSector)
+      JSON.stringify(symbolsThisSector),
     );
     debugLog(
       "configureSymbolNode",
       "symbolIndexInSector = ",
-      JSON.stringify(symbolIndexInSector)
+      JSON.stringify(symbolIndexInSector),
     );
     debugLog("configureSymbolNode", "configs = ", JSON.stringify(configs));
 
@@ -59,7 +61,7 @@ define([
     debugLog(
       "Positioning",
       "symbolIndexInSector = ",
-      JSON.stringify(symbolIndexInSector)
+      JSON.stringify(symbolIndexInSector),
     );
     debugLog("Positioning", "symbolXPixels = ", JSON.stringify(symbolXPixels));
     debugLog("Positioning", "symbolYPixels = ", JSON.stringify(symbolYPixels));
@@ -67,7 +69,7 @@ define([
     debugLog(
       "Positioning",
       "symbolRotationDeg = ",
-      JSON.stringify(symbolRotationDeg)
+      JSON.stringify(symbolRotationDeg),
     );
 
     domStyle.set(symbolNode, {
@@ -81,25 +83,25 @@ define([
     symbolNode,
     symbolIndex,
     numbersForSymbol,
-    symbolSizePx
+    symbolSizePx,
   ) {
     console.assert(symbolIndex < numbersForSymbol.length);
     debugLog(
       "addNumberForSymbol",
       "symbolIndex = ",
-      JSON.stringify(symbolIndex)
+      JSON.stringify(symbolIndex),
     );
     debugLog(
       "addNumberForSymbol",
       "numbersForSymbol = ",
-      JSON.stringify(numbersForSymbol)
+      JSON.stringify(numbersForSymbol),
     );
     var number = numbersForSymbol[symbolIndex];
     var numberNode = htmlUtils.addDiv(
       symbolNode,
       ["symbol-number"],
       "symbol-number",
-      number.toString()
+      number.toString(),
     );
     domStyle.set(numberNode, {
       "font-size": symbolSizePx * 0.6 + "px",
@@ -141,7 +143,7 @@ define([
     numSymbolsPreviouslyAdded, // How many symbols already added to this sector?
     totalSymbolsInThisSector, // How many total symbols will there be in this sector?
     numbersBySymbolType, // Map from symbol type to numbers to use to config the symbol.
-    configs
+    configs,
   ) {
     debugLog("addNSymbols", "sectorIndex = ", JSON.stringify(sectorIndex));
     debugLog("addNSymbols", "symbolType = ", JSON.stringify(symbolType));
@@ -149,17 +151,17 @@ define([
     debugLog(
       "addNSymbols",
       "numSymbolsPreviouslyAdded =",
-      numSymbolsPreviouslyAdded
+      numSymbolsPreviouslyAdded,
     );
     debugLog(
       "addNSymbols",
       "totalSymbolsInThisSector =",
-      totalSymbolsInThisSector
+      totalSymbolsInThisSector,
     );
     debugLog(
       "addNSymbols",
       "numbersBySymbolType = ",
-      JSON.stringify(numbersBySymbolType)
+      JSON.stringify(numbersBySymbolType),
     );
     debugLog("addNSymbols", "configs = ", JSON.stringify(configs));
 
@@ -180,14 +182,14 @@ define([
       var symbolNode = htmlUtils.addImage(
         sectorNode,
         cssClasses,
-        "symbol-image-" + symbolType + "-" + i
+        "symbol-image-" + symbolType + "-" + i,
       );
 
       configureSymbolNode(
         symbolNode,
         numSymbolsPreviouslyAdded + i,
         totalSymbolsInThisSector,
-        configs
+        configs,
       );
 
       // Numbers, sprite sheet: numbers are index into sprite sheet.
@@ -229,7 +231,7 @@ define([
     var sectorNode = htmlUtils.addDiv(
       parentNode,
       finalClasses,
-      "sector-index-" + sectorIndex
+      "sector-index-" + sectorIndex,
     );
 
     if (opt_styling) {
@@ -245,38 +247,72 @@ define([
       "in addCardFront i == " +
         index +
         " cardConfig = " +
-        JSON.stringify(cardConfig)
+        JSON.stringify(cardConfig),
     );
     var id = "triangle-" + index;
     var classes = cardConfig.classes ? cardConfig.classes.slice() : [];
     classes.push("triangle");
     var cardFrontNode = cards.addCardFront(parentNode, classes, id);
 
-    var classes = ["front-wrapper"];
+    var frontWrapperClasses = ["front-wrapper"];
     if (cardConfig.isStarterCard) {
-      classes.push("starter");
+      frontWrapperClasses.push("starter");
     }
     if (cardConfig.season) {
-      classes.push("season-" + cardConfig.season);
+      frontWrapperClasses.push("season-" + cardConfig.season);
     }
     var frontWrapperNode = htmlUtils.addDiv(
       cardFrontNode,
-      classes,
-      "front-wrapper"
+      frontWrapperClasses,
+      "front-wrapper",
     );
     return [cardFrontNode, frontWrapperNode];
   }
 
-  var seasonNames = [null, "Spring", "Summer", "Autumn", "Winter"];
-  function getSeasonName(season) {
-    console.assert(seasonNames[season] !== null, "Invalid season " + season);
-    return seasonNames[season];
+  function elementsRotationallyMatch(array1, array2) {
+    // Assert the type of each argument is "array"
+    console.assert(Array.isArray(array1), "array1 is not an array");
+    console.assert(Array.isArray(array2), "array2 is not an array");
+    // Should be 2 sets of sector types.
+    console.assert(
+      array1.length === array2.length,
+      "array1 and array2 are not the same length",
+    );
+    console.assert(
+      array1.length === gSectorsInTriangle,
+      "array1 is not the right length",
+    );
+
+    // Center (index 2) doesn't match: no.
+    if (array1[2] !== array2[2]) {
+      return false;
+    }
+
+    var cornerIndices = [0, 1, 3];
+    // They are same if corners match in any rotation.
+    for (var rotation = 0; rotation < 3; rotation++) {
+      var match = true;
+      for (var i = 0; i < cornerIndices.length; i++) {
+        var index1 = cornerIndices[i];
+        var index2 = cornerIndices[(i + rotation) % cornerIndices.length];
+        if (array1[index1] !== array2[index2]) {
+          match = false;
+          break;
+        }
+      }
+      if (match) {
+        return true;
+      }
+    }
+    return false;
   }
 
   // This returned object becomes the defined value of this module
   return {
+    sectorsInTriangle: gSectorsInTriangle,
+
     addNthSector: addNthSector,
     addCardFrontAndWrapper: addCardFrontAndWrapper,
-    getSeasonName: getSeasonName,
+    elementsRotationallyMatch: elementsRotationallyMatch,
   };
 });

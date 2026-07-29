@@ -105,23 +105,36 @@ define([
 
     var sectorDescriptors = cardConfig.sectorDescriptors;
 
+    // Should be the right number of these.
+    console.assert(
+      sectorDescriptors.length === triangleCardUtils.sectorsInTriangle,
+      "sectorDescriptors.length !== triangleCardUtils.sectorsInTriangle",
+    );
+
     // 2 rows.  Top has 1 sector, bottom 3.
     var columnCountByRow = [1, 3];
     var sectorNodes = [];
-    var sectorIndex = 0;
+    var positionalIndex = 0;
+
+    // We do a little twiddling so that the sector at index 0 is in the middle of bottom.
+    // So it's:
+    //    1
+    //    0
+    //  2   3
+
+    const positionalIndexToSectorIndex = [1, 2, 0, 3];
+
     for (var rowIndex = 0; rowIndex < 2; rowIndex++) {
       var rowNode = addRow(frontWrapperNode, rowIndex);
 
       var columnCount = columnCountByRow[rowIndex];
       for (var columnIndex = 0; columnIndex < columnCount; columnIndex++) {
-        var sectorNode = addSector(
-          rowNode,
-          sectorIndex,
-          sectorDescriptors[sectorIndex],
-        );
+        var sectorIndex = positionalIndexToSectorIndex[positionalIndex];
+        var sectorDescriptor = sectorDescriptors[sectorIndex];
+        var sectorNode = addSector(rowNode, positionalIndex, sectorDescriptor);
         sectorNodes.push(sectorNode);
-        addSectorOverlays(sectorNode, sectorDescriptors[sectorIndex]);
-        sectorIndex++;
+        addSectorOverlays(sectorNode, sectorDescriptor);
+        positionalIndex++;
       }
     }
 
@@ -169,18 +182,11 @@ define([
     return cardFrontNode;
   }
 
-  function addTriangleCardBack(parent, opt_cardConfigs, opt_index) {
-    var cardConfig;
-    if (opt_cardConfigs && opt_index !== undefined) {
-      cardConfig = cards.getCardConfigAtIndex(opt_cardConfigs, opt_index);
-    } else {
-      cardConfig = {};
-    }
-
-    var classes = cardConfig.classes ? cardConfig.classes.slice() : [];
+  function addTriangleCardBack(parent, cardIndex, opt_classes) {
+    var classes = opt_classes ? opt_classes.slice() : [];
     classes.push("triangle");
 
-    var cardBackNode = cards.addCardBack(parent, index, {
+    var cardBackNode = cards.addCardBack(parent, cardIndex, {
       classes: classes,
     });
 
@@ -194,8 +200,6 @@ define([
       width: genericMeasurements.standardCardWidthPx + "px",
       height: gTriangleCardImageHeightPx + "px",
     });
-
-    htmlUtils.addImage(wrapperNode, ["triangle-icon"], "triangle-icon");
 
     return cardBackNode;
   }
