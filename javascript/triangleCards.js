@@ -67,7 +67,13 @@ define([
         var overlayOrientationClass = "orientation-" + overlayIndex;
         htmlUtils.addImage(
           parentNode,
-          ["sector-overlay", overlayOrientationClass, overlay, overlayType],
+          [
+            "sector-overlay",
+            "single-sector-insert",
+            overlayOrientationClass,
+            overlay,
+            overlayType,
+          ],
           "sector-overlay-" + overlayType + "-" + overlayIndex,
         );
       }
@@ -182,7 +188,12 @@ define([
     return cardFrontNode;
   }
 
-  function addTriangleCardBack(parent, cardIndex, opt_classes) {
+  function addTriangleCardBack(
+    parent,
+    cardIndex,
+    opt_classes,
+    opt_wrapperCallback,
+  ) {
     var classes = opt_classes ? opt_classes.slice() : [];
     classes.push("triangle");
 
@@ -200,6 +211,10 @@ define([
       width: genericMeasurements.standardCardWidthPx + "px",
       height: gTriangleCardImageHeightPx + "px",
     });
+
+    if (opt_wrapperCallback) {
+      opt_wrapperCallback(wrapperNode);
+    }
 
     return cardBackNode;
   }
