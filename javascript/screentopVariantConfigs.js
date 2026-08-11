@@ -1,4 +1,8 @@
+//-------------------------------
+//
 // Dice
+//
+//-------------------------------
 export default function (variant, index) export default function(variant, index) {
   var gDieSides = 12;
   var adjustedIndex = index - 1;
@@ -8,7 +12,12 @@ export default function (variant, index) export default function(variant, index)
   };
 }
 
+
+//-------------------------------
+//
 // Tokens
+//
+//-------------------------------
 export default function (variant, index) {
   const gExtraLightenedSeatColors = [
     "#f5cdcd",
@@ -31,7 +40,11 @@ export default function (variant, index) {
   };
 }
 
+//-------------------------------
+//
 // Cards with n equal sized decks, card backs in front.
+//
+//-------------------------------
 export default function(variant, index) {
   var gNumDecks = 4;
   var gCardsPerDeck = 48;
@@ -45,7 +58,11 @@ export default function(variant, index) {
   };
 }
 
+//-------------------------------
+//
 // Seats
+//
+//-------------------------------
 export default function(seat, index) {
     var gSeatColors = [
     "#e6194b",
@@ -59,11 +76,14 @@ export default function(seat, index) {
   ];
   return {
     color: gSeatColors[index-1],
-
   };
 }
 
+//-------------------------------
+//
 // Card holders.
+//
+//-------------------------------
 export default function(variant, index) {
     var gLightenedSeatColors = [
     "#f28b8b",

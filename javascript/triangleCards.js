@@ -201,9 +201,10 @@ define([
       classes: classes,
     });
 
+    var wrapperClasses = ["back-wrapper", "player-" + cardIndex];
     var wrapperNode = htmlUtils.addDiv(
       cardBackNode,
-      ["back-wrapper"],
+      wrapperClasses,
       "back-wrapper",
     );
 
@@ -216,6 +217,10 @@ define([
       opt_wrapperCallback(wrapperNode);
     }
 
+    console.assert(
+      cardBackNode,
+      "addTriangleCardBack failed to create cardBackNode",
+    );
     return cardBackNode;
   }
 
