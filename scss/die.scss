@@ -1,3 +1,34 @@
+.dice {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  .die {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    .face {
+      width: 120px;
+      height: 120px;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      .image {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+
+}
+
+// Obsolete.
 .die_wrapper {
   display: grid;
   grid-auto-rows: auto;

@@ -256,6 +256,7 @@ define([
   }
 
   function setSystemConfigs(opt_sc) {
+    genericUtils.getCommonQueryParams();
     var sc = opt_sc ? opt_sc : {};
     sanityCheckConfigs(sc);
     _systemConfigs = sc;

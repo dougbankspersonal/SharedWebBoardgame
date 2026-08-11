@@ -1,3 +1,13 @@
+// Dice
+export default function (variant, index) export default function(variant, index) {
+  var gDieSides = 12;
+  var adjustedIndex = index - 1;
+  var assetIndex = adjustedIndex * gDieSides + 1;
+  return {
+    assetIndex: assetIndex,
+  };
+}
+
 // Tokens
 export default function (variant, index) {
   const gExtraLightenedSeatColors = [
@@ -21,10 +31,17 @@ export default function (variant, index) {
   };
 }
 
-// Cards
+// Cards with n equal sized decks, card backs in front.
 export default function(variant, index) {
+  var gNumDecks = 4;
+  var gCardsPerDeck = 48;
+
+  var adjustedIndex = index - 1;
+  var cardBackIndex = Math.floor(adjustedIndex / gCardsPerDeck) + 1;
+  var cardFrontIndex = adjustedIndex + gNumDecks + 1;
   return {
-    frontAssetIndex: index + 1,
+    frontAssetIndex: cardFrontIndex,
+    backAssetIndex: cardBackIndex,
   };
 }
 
@@ -60,5 +77,35 @@ export default function(variant, index) {
   ];
   return {
     baseFillColor: gLightenedSeatColors[index-1],
+  };
+}
+
+// Score counters
+export default function(variant, index) {
+
+  var gExtraLightenedSeatColors = [
+    "#f5cdcd",
+    "#d7f7d7",
+    "#f5f3ea",
+    "#d4dbf7",
+    "#f5dfd3",
+    "#e6cef1",
+    "#d7f7f7",
+    "#f5f5f5",
+  ];
+
+  var gExtraDarkenedSeatColors = [
+    "#58060d",
+    "#0e420e",
+    "#3f300d",
+    "#081020",
+    "#301d07",
+    "#2f063f",
+    "#0b4242",
+    "#666666",
+  ];
+  return {
+    fillColor: gExtraLightenedSeatColors[index-1],
+    strokeColor: gExtraDarkenedSeatColors[index-1],
   };
 }

@@ -57,7 +57,7 @@ define([
     return htmlUtils.addDiv(parent, classes, "rowOfCards");
   }
 
-  function maybeAddCardBackColor(cardBackNode, backConfig) {
+  function maybeAddCardBackColor(parent, backConfig) {
     if (backConfig.hexColorString) {
       var otherColor = htmlUtils.blendHexColors(
         backConfig.hexColorString,
@@ -70,21 +70,26 @@ define([
           color2: backConfig.hexColorString,
         },
       );
-      domStyle.set(cardBackNode, "background", gradient);
+      domStyle.set(parent, "background", gradient);
     }
   }
 
-  function maybeAddCardBackTitle(cardBackNode, backConfig) {
+  function maybeAddCardBackTitle(parent, backConfig) {
     var titleNode;
+    var classes = backConfig.titleClasses ? backConfig.titleClasses : [];
+    classes.push("title");
     if (backConfig.title) {
-      titleNode = htmlUtils.addDiv(
-        cardBackNode,
-        ["title"],
-        "title",
-        backConfig.title,
-      );
+      titleNode = htmlUtils.addDiv(parent, classes, "title", backConfig.title);
     }
     return titleNode;
+  }
+
+  function maybeAddCardBackImage(parent, backConfig) {
+    var imageNode;
+    if (backConfig.imageClasses) {
+      imageNode = htmlUtils.addImage(parent, backConfig.imageClasses, "image");
+    }
+    return imageNode;
   }
 
   function addCardBack(parent, index, backConfig) {
@@ -124,8 +129,8 @@ define([
     setCardSize(cardBackNode);
 
     maybeAddCardBackColor(cardBackNode, backConfig);
-
     maybeAddCardBackTitle(cardBackNode, backConfig);
+    maybeAddCardBackImage(cardBackNode, backConfig);
 
     return cardBackNode;
   }

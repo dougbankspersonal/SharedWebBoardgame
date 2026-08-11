@@ -176,6 +176,7 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
     var debugLogFlagsArray = debugLogFlagsString
       ? debugLogFlagsString.split(",")
       : [];
+
     // Just set it now:
     console.log("debugLogFlagsArray = ", JSON.stringify(debugLogFlagsArray));
 

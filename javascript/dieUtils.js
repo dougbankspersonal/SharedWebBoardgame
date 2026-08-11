@@ -1,19 +1,10 @@
 define([
-  "dojo/dom",
   "dojo/dom-style",
   "sharedJavascript/debugLog",
   "sharedJavascript/genericMeasurements",
   "sharedJavascript/htmlUtils",
-  "sharedJavascript/systemConfigs",
   "dojo/domReady!",
-], function (
-  dom,
-  domStyle,
-  debugLogModule,
-  genericMeasurements,
-  htmlUtils,
-  systemConfigs
-) {
+], function (domStyle, debugLogModule, genericMeasurements, htmlUtils) {
   var debugLog = debugLogModule.debugLog;
 
   const DieType_D6 = "d6";
@@ -24,7 +15,13 @@ define([
     d8: DieType_D8,
   };
 
-  function addDieFace(parent, options) {
+  //--------------------------------------------
+  //
+  // BEGIN: Obsolete.
+  //
+  //--------------------------------------------
+
+  function OBSOLETE_addDieFace(parent, options) {
     var options = options ? options : {};
     var text = options.text;
     var classes = ["die_face"];
@@ -45,7 +42,7 @@ define([
         dieFace,
         ["die_image"],
         "dieImage",
-        imageWithStyling.img
+        imageWithStyling.img,
       );
       domStyle.set(image, imageWithStyling.styling);
     }
@@ -53,11 +50,11 @@ define([
   }
 
   var wrapperIdCount = 0;
-  function createDieTemplate(
+  function OBSOLETE_createDieTemplate(
     parent,
     wrapperClasses,
     dieType,
-    addNthFaceCallback
+    addNthFaceCallback,
   ) {
     var wrapperId = "dieWrapper" + wrapperIdCount;
     wrapperIdCount++;
@@ -68,7 +65,7 @@ define([
     if (dieType == DieType_D6) {
       // Three rows of 3 each, first ignored.
       for (var i = 0; i < 3; i++) {
-        addDieFace(wrapper);
+        OBSOLETE_addDieFace(wrapper);
       }
       for (var i = 0; i < 6; i++) {
         addNthFaceCallback(wrapper, i);
@@ -83,10 +80,82 @@ define([
 
     return wrapper;
   }
+  //--------------------------------------------
+  //
+  // END: Obsolete.
+  //
+  //--------------------------------------------
+
+  function addDieFace(parent, faceConfigs, index) {
+    var faceConfig = faceConfigs[index];
+    var faceNode = htmlUtils.addDiv(
+      parent,
+      ["face"].concat(faceConfig.classes),
+      "dieFace-" + index.toString(),
+    );
+
+    if (faceConfig.callback) {
+      faceConfig.callback(faceNode, faceConfig, index);
+    } else {
+      if (faceConfig.imageClasses) {
+        var imageNode = htmlUtils.addImage(
+          faceNode,
+          ["image"].concat(faceConfig.imageClasses),
+          "dieImage-" + index.toString(),
+        );
+      }
+      if (faceConfig.text) {
+        var textClasses = ["text"].concat(faceConfig.textClasses || []);
+        var textNode = htmlUtils.addDiv(
+          faceNode,
+          textClasses,
+          "die-text-" + index.toString(),
+          faceConfig.text,
+        );
+      }
+    }
+    return faceNode;
+  }
+
+  // dieConfig should have:
+  // classes: add these classes to the die container.
+  // faces: array of face configs, each with:
+  //   classes: add these classes to the face container.
+  //   callback (optional): if present, hit callback.  Pass in face widget to fill in, face index, and face config.
+  //   imageClasses: add image with these classes.
+  //   text, textClasses: add text with these classes.
+  function addDieNode(parent, dieConfig) {
+    var dieNode = htmlUtils.addDiv(
+      parent,
+      ["die"].concat(dieConfig.classes),
+      "die",
+    );
+
+    debugLog("addDieNode", "dieConfig = " + JSON.stringify(dieConfig));
+
+    for (var i = 0; i < dieConfig.faces.length; i++) {
+      addDieFace(dieNode, dieConfig.faces, i);
+    }
+    return dieNode;
+  }
+
+  function addDiceNode(parent, diceConfigs) {
+    var diceNode = htmlUtils.addDiv(parent, ["dice"], "dice");
+    for (var i = 0; i < diceConfigs.length; i++) {
+      addDieNode(diceNode, diceConfigs[i]);
+    }
+    return diceNode;
+  }
 
   return {
-    createDieTemplate: createDieTemplate,
-    addDieFace: addDieFace,
     DieTypes: DieTypes,
+
+    // New.
+    addDieNode: addDieNode,
+    addDiceNode: addDiceNode,
+
+    // Obsolete: do not use.
+    createDieTemplate: OBSOLETE_createDieTemplate,
+    addDieFace: OBSOLETE_addDieFace,
   };
 });
