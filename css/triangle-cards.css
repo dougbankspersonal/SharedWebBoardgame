@@ -1,8 +1,27 @@
+.card.triangle {
+  padding: 2px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.card.triangle .overlay,
+.card.triangle .front-wrapper,
+.card.triangle .back-wrapper {
+  position: absolute;
+  top: 0px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
 .card.front.triangle {
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
-  position: relative;
   border: initial;
   border-width: initial;
   border-style: initial;
@@ -11,9 +30,6 @@
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
-  position: absolute;
-  top: 0;
-  left: 0;
   z-index: 20;
 }
 .card.front.triangle .front-wrapper {
@@ -22,6 +38,11 @@
   background-size: 100% auto;
 }
 .card.front.triangle .front-wrapper .sectors-row {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
   position: relative;
   display: block;
 }
@@ -34,6 +55,8 @@
   left: 25%;
 }
 .card.front.triangle .front-wrapper .sectors-row .sector-index-1 {
+  top: 0%;
+  left: 0%;
   rotate: 240deg;
 }
 .card.front.triangle .front-wrapper .sectors-row .sector-index-2 {

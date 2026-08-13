@@ -1,8 +1,28 @@
+.card.triangle {
+  padding: 2px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+
+  .overlay,
+  .front-wrapper,
+  .back-wrapper {
+    position: absolute;
+    top: 0px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+}
+
 .card.front.triangle {
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
-  position: relative;
 
   border: initial;
   border-width: initial;
@@ -12,9 +32,6 @@
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-    position: absolute;
-    top: 0;
-    left: 0;
     z-index: 20;
   }
 
@@ -24,6 +41,11 @@
     background-size: 100% auto;
 
     .sectors-row {
+      display: flex;
+      width: 100%;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
       position: relative;
       display: block;
 
@@ -39,6 +61,8 @@
 
       // Keep in mind for all this angle stuff: divs are rotated clockwise.
       .sector-index-1 {
+        top: 0%;
+        left: 0%;
         rotate: 240deg;
       }
 

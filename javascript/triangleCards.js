@@ -224,9 +224,53 @@ define([
     return cardBackNode;
   }
 
+  // Each player has a custom deck.
+  // Each deck has specific back.
+  // Back has a background image and an icon image.
+  function addPlayerSpecificTriangleCardBack(
+    parentNode,
+    cardIndex,
+    playerIndex,
+    cardClasses,
+  ) {
+    debugLog("addPlayerSpecificTriangleCardBack", "cardIndex = ", cardIndex);
+    debugLog(
+      "addPlayerSpecificTriangleCardBack",
+      "playerIndex = ",
+      playerIndex,
+    );
+    var finalCardClasses = cardClasses ? cardClasses.slice() : [];
+    finalCardClasses.push("player-" + playerIndex.toString());
+    var cardBackNode = addTriangleCardBack(
+      parentNode,
+      cardIndex,
+      finalCardClasses,
+      function (wrapperNode) {
+        // Insert the player's image.
+        var imageNode = htmlUtils.addImage(wrapperNode, [
+          "player",
+          "player-icon-" + playerIndex.toString(),
+          "single-sector-insert",
+        ]);
+        console.assert(
+          imageNode,
+          "addPlayerCardBack failed to create imageNode",
+        );
+        return imageNode;
+      },
+    );
+
+    console.assert(
+      cardBackNode,
+      "addPlayerCardBack failed to create cardBackNode",
+    );
+    return cardBackNode;
+  }
+
   // This returned object becomes the defined value of this module
   return {
     addCardFront: addCardFront,
     addTriangleCardBack: addTriangleCardBack,
+    addPlayerSpecificTriangleCardBack: addPlayerSpecificTriangleCardBack,
   };
 });

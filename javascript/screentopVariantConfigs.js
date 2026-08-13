@@ -100,6 +100,11 @@ export default function(variant, index) {
   };
 }
 
+//-------------------------------
+//
+// Score counters.
+//
+//-------------------------------
 // Score counters
 export default function(variant, index) {
 

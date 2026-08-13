@@ -3,222 +3,12 @@ define([
   "sharedJavascript/cards",
   "sharedJavascript/debugLog",
   "sharedJavascript/htmlUtils",
-  "sharedJavascript/triangleCardConstants",
+  "sharedJavascript/genericUtils",
   "dojo/domReady!",
-], function (
-  domStyle,
-  cards,
-  debugLogModule,
-  htmlUtils,
-  triangleCardConstants,
-) {
+], function (domStyle, cards, debugLogModule, htmlUtils, genericUtils) {
   var debugLog = debugLogModule.debugLog;
 
-  const gSymbolToSpriteSheetGridSize = {
-    //   [triangleCardConstants.symbolTypes.Relationships]: [4, 5],
-    /* [triangleCardConstants.symbolTypes.Purpose]: [
-      triangleCardConstants.purposeSpriteColumns,
-      triangleCardConstants.purposeSpriteRows,
-    ],*/
-  };
-
   const gSectorsInTriangle = 4;
-
-  // Tracks all symbols added ever.
-  var gSymbolToGlobalSymbolCount = {};
-
-  function configureSymbolNode(
-    symbolNode,
-    symbolIndexInSector,
-    symbolsThisSector,
-    configs,
-  ) {
-    debugLog(
-      "configureSymbolNode",
-      "symbolsThisSector = ",
-      JSON.stringify(symbolsThisSector),
-    );
-    debugLog(
-      "configureSymbolNode",
-      "symbolIndexInSector = ",
-      JSON.stringify(symbolIndexInSector),
-    );
-    debugLog("configureSymbolNode", "configs = ", JSON.stringify(configs));
-
-    var symbolXPixels =
-      configs.symbolXPxBySymbolCountAndIndex[symbolsThisSector][
-        symbolIndexInSector
-      ];
-    var symbolYPixels =
-      configs.symbolYPxBySymbolCountAndIndex[symbolsThisSector][
-        symbolIndexInSector
-      ];
-    var symbolSizePx = configs.symbolSizePxBySymbolCount[symbolsThisSector];
-    var symbolRotationDeg = configs.symbolRotationDeg
-      ? configs.symbolRotationDeg
-      : 0;
-
-    debugLog(
-      "Positioning",
-      "symbolIndexInSector = ",
-      JSON.stringify(symbolIndexInSector),
-    );
-    debugLog("Positioning", "symbolXPixels = ", JSON.stringify(symbolXPixels));
-    debugLog("Positioning", "symbolYPixels = ", JSON.stringify(symbolYPixels));
-    debugLog("Positioning", "symbolSizePx = ", JSON.stringify(symbolSizePx));
-    debugLog(
-      "Positioning",
-      "symbolRotationDeg = ",
-      JSON.stringify(symbolRotationDeg),
-    );
-
-    domStyle.set(symbolNode, {
-      width: symbolSizePx + "px",
-      height: symbolSizePx + "px",
-      transform: `translate(${symbolXPixels}px, ${symbolYPixels}px) rotate(${symbolRotationDeg}deg)`,
-    });
-  }
-
-  function addNumberForSymbol(
-    symbolNode,
-    symbolIndex,
-    numbersForSymbol,
-    symbolSizePx,
-  ) {
-    console.assert(symbolIndex < numbersForSymbol.length);
-    debugLog(
-      "addNumberForSymbol",
-      "symbolIndex = ",
-      JSON.stringify(symbolIndex),
-    );
-    debugLog(
-      "addNumberForSymbol",
-      "numbersForSymbol = ",
-      JSON.stringify(numbersForSymbol),
-    );
-    var number = numbersForSymbol[symbolIndex];
-    var numberNode = htmlUtils.addDiv(
-      symbolNode,
-      ["symbol-number"],
-      "symbol-number",
-      number.toString(),
-    );
-    domStyle.set(numberNode, {
-      "font-size": symbolSizePx * 0.6 + "px",
-    });
-    return numberNode;
-  }
-
-  function addSpriteSheetInfo(symbolNode, symbolType, indexIntoSpriteSheet) {
-    // Get the sprite info on this symbol type.
-    var spriteSheetGridSize = gSymbolToSpriteSheetGridSize[symbolType];
-    console.assert(spriteSheetGridSize, "spriteSheetGridSize is null");
-
-    var numColumns = spriteSheetGridSize[0];
-    var numRows = spriteSheetGridSize[1];
-
-    var thisColumn = indexIntoSpriteSheet % numColumns; // 0..columns-1
-    var thisRow = Math.floor(indexIntoSpriteSheet / numColumns) % numRows; // 0..rows-1
-
-    // I think of cells like
-    // [0, 0], [1, 0], [2, 0]
-    // [0, 1], [1, 1], [2, 1
-    // etc.
-    // For background position w percents, you are sliding the sheet around: to get to the second
-    // row slide up (negative) by 1 row height.
-    var xPercentPosition = (100 * thisColumn) / (numColumns - 1);
-    var yPercentPosition = (100 * thisRow) / (numRows - 1);
-
-    domStyle.set(symbolNode, {
-      "background-size": `${numColumns * 100}% ${numRows * 100}%`,
-      "background-position": `${xPercentPosition}% ${yPercentPosition}%`,
-    });
-  }
-
-  function addNSymbols(
-    sectorNode, // Node to add symbols too.
-    sectorIndex, // Which sector are we talking about.
-    symbolType, // Which symbol.
-    thisSymbolCount, // How many to add?
-    numSymbolsPreviouslyAdded, // How many symbols already added to this sector?
-    totalSymbolsInThisSector, // How many total symbols will there be in this sector?
-    numbersBySymbolType, // Map from symbol type to numbers to use to config the symbol.
-    configs,
-  ) {
-    debugLog("addNSymbols", "sectorIndex = ", JSON.stringify(sectorIndex));
-    debugLog("addNSymbols", "symbolType = ", JSON.stringify(symbolType));
-    debugLog("addNSymbols", "thisSymbolCount =", thisSymbolCount);
-    debugLog(
-      "addNSymbols",
-      "numSymbolsPreviouslyAdded =",
-      numSymbolsPreviouslyAdded,
-    );
-    debugLog(
-      "addNSymbols",
-      "totalSymbolsInThisSector =",
-      totalSymbolsInThisSector,
-    );
-    debugLog(
-      "addNSymbols",
-      "numbersBySymbolType = ",
-      JSON.stringify(numbersBySymbolType),
-    );
-    debugLog("addNSymbols", "configs = ", JSON.stringify(configs));
-
-    var numbersForSymbol = null;
-    if (numbersBySymbolType && numbersBySymbolType[symbolType]) {
-      numbersForSymbol = numbersBySymbolType[symbolType];
-    }
-
-    for (var i = 0; i < thisSymbolCount; i++) {
-      var usesSpriteSheet = gSymbolToSpriteSheetGridSize[symbolType] != null;
-      var cssClasses = ["symbol-image", symbolType];
-
-      if (usesSpriteSheet) {
-        cssClasses.push("uses-sprite-sheet");
-      }
-      var globalSymbolCount = gSymbolToGlobalSymbolCount[symbolType] || 0;
-
-      var symbolNode = htmlUtils.addImage(
-        sectorNode,
-        cssClasses,
-        "symbol-image-" + symbolType + "-" + i,
-      );
-
-      configureSymbolNode(
-        symbolNode,
-        numSymbolsPreviouslyAdded + i,
-        totalSymbolsInThisSector,
-        configs,
-      );
-
-      // Numbers, sprite sheet: numbers are index into sprite sheet.
-      // No numbers, sprite sheet: use global symbol count as index into sprite sheet.
-      // Numbers, no sprite sheet: write number over symbol.
-      // No number, no sprite sheet: nothing to do.
-      if (usesSpriteSheet) {
-        var indexIntoSpriteSheet;
-        if (numbersForSymbol) {
-          indexIntoSpriteSheet = numbersForSymbol[i];
-        } else {
-          indexIntoSpriteSheet = globalSymbolCount;
-        }
-        addSpriteSheetInfo(symbolNode, symbolType, indexIntoSpriteSheet);
-      } else {
-        if (numbersForSymbol) {
-          var symbolSizePx =
-            configs.symbolSizePxBySymbolCount[totalSymbolsInThisSector];
-          addNumberForSymbol(symbolNode, i, numbersForSymbol, symbolSizePx);
-        }
-      }
-
-      // Keep a global count.
-      if (!gSymbolToGlobalSymbolCount[symbolType]) {
-        gSymbolToGlobalSymbolCount[symbolType] = 0;
-      }
-      gSymbolToGlobalSymbolCount[symbolType]++;
-    }
-  }
 
   function addNthSector(parentNode, sectorIndex, classes, opt_styling) {
     debugLog("addNthSector", "parentNode = ", parentNode);
@@ -307,6 +97,108 @@ define([
     return false;
   }
 
+  // Is element rotationall unique in the remainder of this array.
+  function elementIsRotationallyUnique(elementAsArray, index, array) {
+    debugLog(
+      "elementIsRotationallyUnique",
+      "elementAsArray = ",
+      JSON.stringify(elementAsArray),
+    );
+    debugLog("elementIsRotationallyUnique", "index = ", index);
+    for (var i = index + 1; i < array.length; i++) {
+      var otherElemenetAsArray = array[i];
+      debugLog(
+        "elementIsRotationallyUnique",
+        "otherElemenetAsArray = ",
+        JSON.stringify(otherElemenetAsArray),
+      );
+      if (elementsRotationallyMatch(elementAsArray, otherElemenetAsArray)) {
+        debugLog(
+          "elementIsRotationallyUnique",
+          "elementAsArray is rotationally same as otherElemenetAsArray: returning false",
+        );
+        return false;
+      }
+      debugLog("elementIsRotationallyUnique", "no matches, returning true");
+    }
+    return true;
+  }
+
+  // Given an array of terrain types.
+  // Return a set of card descriptors: card has 4 sectors, each sector one of the terrain types.
+  // We want all possible permutations, mod some restraitns:
+  //
+  // 1. Terrain type cannot show up 3 or more times.
+  // 2. At least one terrain type must be duplicated.
+  // 3. Rotationally unique (clockwise a, b, c around d is same as clockwise b, c, a around d)
+  function getLegalUniqueCombos(terrainTypesArray) {
+    debugLog(
+      "getLegalUniqueCombos",
+      "terrainTypesArray = ",
+      JSON.stringify(terrainTypesArray),
+    );
+
+    // First get all possible combos.
+    var allCombos = genericUtils.generateAllArrays(
+      terrainTypesArray,
+      gSectorsInTriangle,
+    );
+
+    debugLog("getLegalUniqueCombos", "allCombos = ", JSON.stringify(allCombos));
+
+    // Throw out anything where one type shows up too much.
+    var filteredCombos1 = allCombos.filter((elementAsArray, _index, _array) => {
+      var hasTooManyCopies =
+        genericUtils.arrayHasAnElemententWithMoreThanNCopies(
+          elementAsArray,
+          gSectorsInTriangle - 2,
+        );
+      return !hasTooManyCopies;
+    });
+
+    debugLog(
+      "getLegalUniqueCombos",
+      "filteredCombos1 = ",
+      JSON.stringify(filteredCombos1),
+    );
+
+    // Throw out anything where there are 0 dups.
+    var filteredCombos2 = filteredCombos1.filter(
+      (elementAsArray, _index, _array) => {
+        var hasDups = genericUtils.arrayHasAnElemententWithMoreThanNCopies(
+          elementAsArray,
+          1,
+        );
+        debugLog(
+          "getLegalUniqueCombos",
+          "elementAsArray = ",
+          JSON.stringify(elementAsArray),
+        );
+        debugLog("getLegalUniqueCombos", "hasDups = ", hasDups);
+
+        return hasDups;
+      },
+    );
+
+    debugLog(
+      "getLegalUniqueCombos",
+      "filteredCombos2 = ",
+      JSON.stringify(filteredCombos2),
+    );
+
+    // Throw out rotationally similar combos.
+    var finalCombos = filteredCombos2.filter((elementAsArray, index, array) => {
+      return elementIsRotationallyUnique(elementAsArray, index, array);
+    });
+
+    debugLog(
+      "getLegalUniqueCombos",
+      "finalCombos = ",
+      JSON.stringify(finalCombos),
+    );
+    return finalCombos;
+  }
+
   // This returned object becomes the defined value of this module
   return {
     sectorsInTriangle: gSectorsInTriangle,
@@ -314,5 +206,6 @@ define([
     addNthSector: addNthSector,
     addCardFrontAndWrapper: addCardFrontAndWrapper,
     elementsRotationallyMatch: elementsRotationallyMatch,
+    getLegalUniqueCombos: getLegalUniqueCombos,
   };
 });
