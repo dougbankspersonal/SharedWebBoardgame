@@ -46,4 +46,18 @@ body {
   transform: translate(-50%, -50%);
 }
 
+.page-of-items {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+.page-of-items .row-of-items {
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  gap: 0px;
+  width: 100%;
+}
+
 /*# sourceMappingURL=main.css.map */

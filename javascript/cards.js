@@ -41,20 +41,10 @@ define([
   }
 
   function addPageOfCards(parent, opt_classArray) {
-    var classes = genericUtils.growOptStringArray(
-      opt_classArray,
-      "page_of_cards",
-    );
-    var [_, pageOfItemsContents] = htmlUtils.addPageOfItemsAndContents(
-      parent,
-      classes,
-    );
-    return pageOfItemsContents;
-  }
-
-  function addRowOfCards(parent) {
-    var classes = ["row_of_cards"];
-    return htmlUtils.addDiv(parent, classes, "rowOfCards");
+    var classes = opt_classArray || [];
+    classes.push("cards");
+    var pageOfItemsNode = htmlUtils.addPageOfItems(parent, classes);
+    return pageOfItemsNode;
   }
 
   function maybeAddCardBackColor(parent, backConfig) {
@@ -97,51 +87,51 @@ define([
     debugLog("addCardBack", "index = " + JSON.stringify(index));
     debugLog("addCardBack", "backConfig = " + JSON.stringify(backConfig));
 
-    var cardsPerRow = systemConfigs.getSystemConfigs().cardsPerRow;
-    debugLog("addCardBack", "cardsPerRow = " + cardsPerRow);
+    var itemsPerRow = systemConfigs.getSystemConfigs().itemsPerRow;
+    debugLog("addCardBack", "itemsPerRow = " + itemsPerRow);
     debugLog("addCardBack", "index = " + index);
 
+    var cardBackNode;
     if (backConfig.callback) {
       debugLog("addCardBack", "hitting callback for backConfig.callback");
       console.assert(
         typeof backConfig.callback === "function",
         "Expected backConfig.callback function",
       );
-      var backNode = backConfig.callback(parent, index);
-      console.assert(backNode, "backNode is null");
-      setCardSize(backNode);
-      return backNode;
+      cardBackNode = backConfig.callback(parent, index);
+      console.assert(cardBackNode, "backNode is null");
+    } else {
+      debugLog("addCardBack", "no callback");
+
+      debugLog(
+        "addCardBack",
+        "backConfig.classes = " + JSON.stringify(backConfig.classes),
+      );
+
+      var classes = backConfig.classes ? backConfig.classes : [];
+      classes = classes.slice();
+      classes.push("back");
+
+      debugLog("addCardBack", "classes = " + JSON.stringify(classes));
+
+      var cardBackNode = htmlUtils.addCard(parent, classes, "back");
+
+      maybeAddCardBackColor(cardBackNode, backConfig);
+      maybeAddCardBackTitle(cardBackNode, backConfig);
+      maybeAddCardBackImage(cardBackNode, backConfig);
     }
-    debugLog("addCardBack", "no callback");
 
-    debugLog(
-      "addCardBack",
-      "backConfig.classes = " + JSON.stringify(backConfig.classes),
-    );
-
-    var classes = backConfig.classes ? backConfig.classes : [];
-    classes = classes.slice();
-    classes.push("back");
-
-    debugLog("addCardBack", "classes = " + JSON.stringify(classes));
-
-    var cardBackNode = htmlUtils.addCard(parent, classes, "back");
     setCardSize(cardBackNode);
-
-    maybeAddCardBackColor(cardBackNode, backConfig);
-    maybeAddCardBackTitle(cardBackNode, backConfig);
-    maybeAddCardBackImage(cardBackNode, backConfig);
-
     return cardBackNode;
   }
 
   function addCardFront(parent, classArray, id) {
     console.assert(parent, "parent is null");
     classArray.push("front");
-    var node = htmlUtils.addCard(parent, classArray, id);
-    setCardSize(node);
+    var cardFrontNode = htmlUtils.addCard(parent, classArray, id);
+    setCardSize(cardFrontNode);
 
-    return node;
+    return cardFrontNode;
   }
 
   function maybeNewPage(parent, currentPage, index) {
@@ -155,19 +145,6 @@ define([
       return addPageOfCards(parent);
     }
     return currentPage;
-  }
-
-  function maybeNewRow(parent, currentRow, index) {
-    var cardsPerRow = systemConfigs.getSystemConfigs().cardsPerRow;
-    var needNew = index % cardsPerRow;
-    if (needNew == 0) {
-      debugLog(
-        "maybeNewRow",
-        "NewCardFu adding new row for index = " + index.toString(),
-      );
-      return addRowOfCards(parent);
-    }
-    return currentRow;
   }
 
   function addNthCard(
@@ -184,9 +161,14 @@ define([
       "addNthCard",
       "addNthCard configIndex = " + configIndex.toString(),
     );
+
     pageOfCardsNode = maybeNewPage(bodyNode, pageOfCardsNode, cardCount);
     console.assert(pageOfCardsNode, "pageOfCards is null");
-    rowOfCardsNode = maybeNewRow(pageOfCardsNode, rowOfCardsNode, cardCount);
+    rowOfCardsNode = htmlUtils.maybeAddNewRowOfItems(
+      pageOfCardsNode,
+      rowOfCardsNode,
+      cardCount,
+    );
     console.assert(rowOfCardsNode, "rowOfCards is null");
     addNthCardCallback(rowOfCardsNode, configIndex);
     return [pageOfCardsNode, rowOfCardsNode];

@@ -77,11 +77,11 @@ define(["dojo/domReady!"], function () {
   var smallCardHeightPx = 1.4 * smallCardWidthPx;
   var smallCardBackFontSize = 24;
   // Math is going bad here somehow, just be explicit.
-  var smallCardsPerRow = 4;
+  var smallitemsPerRow = 4;
   var smallCardsPerColumn = Math.floor(adjustedPageHeight / smallCardHeightPx);
-  var smallCardsPerPage = smallCardsPerRow * smallCardsPerColumn;
+  var smallCardsPerPage = smallitemsPerRow * smallCardsPerColumn;
 
-  var screentopCardsPerRow = 10;
+  var screentopitemsPerRow = 10;
 
   return {
     getNumberThatFitAccountingForGap: getNumberThatFitAccountingForGap,
@@ -116,10 +116,10 @@ define(["dojo/domReady!"], function () {
 
     smallCardWidthPx: smallCardWidthPx,
     smallCardHeightPx: smallCardHeightPx,
-    smallCardsPerRow: smallCardsPerRow,
+    smallitemsPerRow: smallitemsPerRow,
     smallCardBackFontSize: smallCardBackFontSize,
     smallCardsPerPage: smallCardsPerPage,
     cardFrontBorderWidthPx: cardFrontBorderWidthPx,
-    screentopCardsPerRow: screentopCardsPerRow,
+    screentopitemsPerRow: screentopitemsPerRow,
   };
 });

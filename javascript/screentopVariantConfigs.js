@@ -46,8 +46,8 @@ export default function (variant, index) {
 //
 //-------------------------------
 export default function(variant, index) {
-  var gNumDecks = 4;
-  var gCardsPerDeck = 48;
+  var gNumDecks = 3;
+  var gCardsPerDeck = 50;
 
   var adjustedIndex = index - 1;
   var cardBackIndex = Math.floor(adjustedIndex / gCardsPerDeck) + 1;
@@ -57,6 +57,12 @@ export default function(variant, index) {
     backAssetIndex: cardBackIndex,
   };
 }
+
+//-------------------------------
+//
+// Cards with n equal sized decks, card backs in front.
+//
+//-------------------------------
 
 //-------------------------------
 //

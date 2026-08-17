@@ -154,11 +154,11 @@ define([
     return genericMeasurements.printedPagePortraitHeightPx;
   };
 
-  function addPageOfItemsAndContents(parent, opt_pageOfItemsClassArray) {
+  function addPageOfItems(parent, opt_classes) {
     var sc = systemConfigs.getSystemConfigs();
     console.assert(parent, "parent is null");
     var pageOfItemsClassArray = genericUtils.growOptStringArray(
-      opt_pageOfItemsClassArray,
+      opt_classes,
       "page-of-items",
     );
     var pageId = "pageOfItems_".concat(pageNumber.toString());
@@ -167,8 +167,8 @@ define([
     var pageOfItemsNode = addDiv(parent, pageOfItemsClassArray, pageId);
     var width = getPageWidth();
     var height = getPageHeight();
-    debugLog("Refactor", "addPageOfItemsAndContents: width = " + width);
-    debugLog("Refactor", "addPageOfItemsAndContents: height = " + height);
+    debugLog("Refactor", "addPageOfItems: width = " + width);
+    debugLog("Refactor", "addPageOfItems: height = " + height);
     if (width !== null) {
       domStyle.set(pageOfItemsNode, {
         width: width + "px",
@@ -189,49 +189,20 @@ define([
       );
     }
 
-    var childClassArray = ["page-of-items-contents"];
-
-    if (sc.demoBoard) {
-      childClassArray.push("demo_board");
-    }
-
-    var extraClasses = sc.extraClassesForPageOfItemsContents;
-    if (extraClasses) {
-      for (var i = 0; i < extraClasses.length; i++) {
-        var extraClass = extraClasses[i];
-        childClassArray.push(extraClass);
-      }
-    }
-
-    var pageOfItemsContentsNode = addDiv(
-      pageOfItemsNode,
-      childClassArray,
-      "pageOfItemsContents",
-    );
-
-    debugLog("Layout", "addPageOfItemsAndContents: sc.gridGap = " + sc.gridGap);
+    debugLog("Layout", "addPageOfItems: sc.gridGap = " + sc.gridGap);
     var gridGapIsPresent = sc.gridGap !== null && sc.gridGap !== undefined;
     var gridGap = gridGapIsPresent
       ? sc.gridGap
       : genericMeasurements.standardPageGap;
-    debugLog("Layout", "addPageOfItemsAndContents: gridGap = " + gridGap);
-    domStyle.set(pageOfItemsContentsNode, {
+    debugLog("Layout", "addPageOfItems: gridGap = " + gridGap);
+    domStyle.set(pageOfItemsNode, {
       gap: `${gridGap}px`,
     });
 
-    debugLog(
-      "Layout",
-      "sc.pageOfItemsContentsPaddingPx = " + sc.pageOfItemsContentsPaddingPx,
-    );
-    if (sc.pageOfItemsContentsPaddingPx > 0) {
-      domStyle.set(pageOfItemsContentsNode, {
-        padding: `${sc.pageOfItemsContentsPaddingPx}px`,
-      });
-    }
-
-    return [pageOfItemsNode, pageOfItemsContentsNode];
+    return pageOfItemsNode;
   }
 
+  var gCardNumber = 0;
   function addCard(parent, opt_classArray, opt_id) {
     console.assert(parent, "parent is null");
     var classArray = genericUtils.growOptStringArray(opt_classArray, "card");
@@ -239,8 +210,8 @@ define([
     if (opt_id) {
       cardId = opt_id;
     } else {
-      cardId = "card.".concat(cardNumber.toString());
-      cardNumber++;
+      cardId = "card.".concat(gCardNumber.toString());
+      gCardNumber++;
     }
     var node = addDiv(parent, classArray, cardId);
     if (systemConfigs.cardsNoMargin) {
@@ -278,6 +249,24 @@ define([
     });
   }
 
+  function addRowOfItems(parent) {
+    var classes = ["row-of-items"];
+    return addDiv(parent, classes, "rowOfItems");
+  }
+
+  function maybeAddNewRowOfItems(parent, currentRow, index) {
+    var itemsPerRow = systemConfigs.getSystemConfigs().itemsPerRow;
+    var needNew = index % itemsPerRow;
+    if (needNew == 0) {
+      debugLog(
+        "maybeAddNewRowOfItems",
+        "adding new row for index = " + index.toString(),
+      );
+      return addRowOfItems(parent);
+    }
+    return currentRow;
+  }
+
   return {
     addDiv: addDiv,
     addImage: addImage,
@@ -287,9 +276,11 @@ define([
     rgbStringToHex: rgbStringToHex,
     componentToHex: componentToHex,
     blendHexColors: blendHexColors,
-    addPageOfItemsAndContents: addPageOfItemsAndContents,
+    addPageOfItems: addPageOfItems,
     addCard: addCard,
     addQuasiRandomTilt: addQuasiRandomTilt,
     applyColorFamily: applyColorFamily,
+    addRowOfItems: addRowOfItems,
+    maybeAddNewRowOfItems: maybeAddNewRowOfItems,
   };
 });

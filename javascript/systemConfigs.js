@@ -36,7 +36,7 @@ define([
     cardsNoMargin: true,
     // Should be able to figure out cards per row based on card width and page width but
     // somehow it's off and I'm too lazy to fix.
-    cardsPerRow: true,
+    itemsPerRow: true,
 
     //---------------------------
     //
@@ -59,15 +59,10 @@ define([
     // Can override page width.
     explicitPageWidth: true,
 
-    // Extra class to apply to page-of-items div.
-    extraClassesForPageOfItemsContents: true,
-
     gridGap: true,
 
     // Print landscape.
     landscape: true,
-
-    pageOfItemsContentsPaddingPx: true,
 
     // Add page numbers to bottom corner of page.
     addPageNumbers: true,
@@ -105,11 +100,11 @@ define([
       Math.floor(genericMeasurements.adjustedPageWidth / cardWidthPx) *
       Math.floor(genericMeasurements.adjustedPageHeight / cardHeightPx);
 
-    var cardsPerRow = overrides.cardsPerRow
-      ? overrides.cardsPerRow
+    var itemsPerRow = overrides.itemsPerRow
+      ? overrides.itemsPerRow
       : Math.floor(genericMeasurements.adjustedPageWidth / cardWidthPx);
 
-    debugLog("addCardSystemConfigs", "cardsPerRow = " + cardsPerRow);
+    debugLog("addCardSystemConfigs", "itemsPerRow = " + itemsPerRow);
     debugLog(
       "addCardSystemConfigs",
       "overrides = " + JSON.stringify(overrides),
@@ -126,7 +121,7 @@ define([
     outputSc.cardsPerPage = cardsPerPage;
     outputSc.cardWidthPx = cardWidthPx;
     outputSc.cardHeightPx = cardHeightPx;
-    outputSc.cardsPerRow = cardsPerRow;
+    outputSc.itemsPerRow = itemsPerRow;
     outputSc.cardBackFontSize = overrides.cardBackFontSize;
     outputSc.gridGap = genericMeasurements.standardPageGap;
     outputSc.isCards = true;
@@ -182,13 +177,12 @@ define([
       "addScreentopCardSystemConfigs",
       "overrides = " + JSON.stringify(overrides),
     );
-    outputSc.cardsPerRow = overrides.cardsPerRow
-      ? overrides.cardsPerRow
-      : genericMeasurements.screentopCardsPerRow;
+    outputSc.itemsPerRow = overrides.itemsPerRow
+      ? overrides.itemsPerRow
+      : genericMeasurements.screentopitemsPerRow;
     outputSc.pageless = true;
-    outputSc.explicitPageWidth = overrides.cardsPerRow * outputSc.cardWidthPx;
+    outputSc.explicitPageWidth = overrides.itemsPerRow * outputSc.cardWidthPx;
     outputSc.skipCardBacks = true;
-    outputSc.extraClassesForPageOfItemsContents = ["screentop"];
     outputSc.gridGap = 0;
     outputSc.addPageNumbers = false;
     debugLog(
@@ -215,10 +209,10 @@ define([
       overrides.cardHeightPx !== undefined
         ? overrides.cardHeightPx
         : genericMeasurements.smallCardHeightPx;
-    overrides.cardsPerRow =
-      overrides.cardsPerRow !== undefined
-        ? overrides.cardsPerRow
-        : genericMeasurements.screentopCardsPerRow;
+    overrides.itemsPerRow =
+      overrides.itemsPerRow !== undefined
+        ? overrides.itemsPerRow
+        : genericMeasurements.screentopitemsPerRow;
     overrides.cardBackFontSize =
       overrides.cardBackFontSize !== undefined
         ? overrides.cardBackFontSize
