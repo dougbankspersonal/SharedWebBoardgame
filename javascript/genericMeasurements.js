@@ -33,7 +33,7 @@ define(["dojo/domReady!"], function () {
   // We need to embed the card in a rect s.t. center of rect is centroid of card.
   // Centroid of triangle is 2/3 from top, down.
   // So I need a padding of extra 1/3 of height below the card.
-  var triangleCardScreentopActualHeightPx = (triangleCardImageHeightPx * 4) / 3;
+  var triangleCardScreentopActualHeightPx = triangleCardImageHeightPx; // (triangleCardImageHeightPx * 4) / 3;
 
   var standardBorderWidthPx = 2;
   var pageOfItemsMarginPx = 10;
