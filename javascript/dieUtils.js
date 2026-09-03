@@ -139,8 +139,10 @@ define([
     return dieNode;
   }
 
-  function addDiceNode(parent, diceConfigs) {
-    var diceNode = htmlUtils.addDiv(parent, ["dice"], "dice");
+  function addDiceNode(parent, diceConfigs, opt_classes) {
+    var classes = opt_classes ? opt_classes : [];
+    classes = classes.concat(["dice"]);
+    var diceNode = htmlUtils.addDiv(parent, classes, "dice");
     for (var i = 0; i < diceConfigs.length; i++) {
       addDieNode(diceNode, diceConfigs[i]);
     }

@@ -3,7 +3,7 @@
 // Dice
 //
 //-------------------------------
-export default function (variant, index) export default function(variant, index) {
+export default function(variant, index) {
   var gDieSides = 12;
   var adjustedIndex = index - 1;
   var assetIndex = adjustedIndex * gDieSides + 1;
@@ -87,22 +87,23 @@ export default function(seat, index) {
 
 //-------------------------------
 //
-// Card holders.
+// Card holders/containers
 //
 //-------------------------------
 export default function(variant, index) {
-    var gLightenedSeatColors = [
-    "#f28b8b",
-    "#7ed77e",
-    "#ffed8b",
-    "#7a8fe0",
-    "#f9b28b",
-    "#c48de0",
-    "#7ef0f0",
-    "#cccccc",
+
+  const gExtraLightenedSeatColors = [
+    "#f5cdcd",
+    "#d7f7d7",
+    "#f5f3ea",
+    "#d4dbf7",
+    "#f5dfd3",
+    "#e6cef1",
+    "#d7f7f7",
+    "#f5f5f5",
   ];
   return {
-    baseFillColor: gLightenedSeatColors[index-1],
+    baseFillColor: gExtraLightenedSeatColors[index-1],
   };
 }
 
