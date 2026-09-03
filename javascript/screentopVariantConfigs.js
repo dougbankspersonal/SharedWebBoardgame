@@ -3,6 +3,7 @@
 // Dice
 //
 //-------------------------------
+// One die.
 export default function (variant, index) export default function(variant, index) {
   var gDieSides = 12;
   var adjustedIndex = index - 1;
@@ -11,6 +12,7 @@ export default function (variant, index) export default function(variant, index)
     assetIndex: assetIndex,
   };
 }
+
 
 
 //-------------------------------

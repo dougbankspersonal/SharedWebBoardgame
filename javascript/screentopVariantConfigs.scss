@@ -1,0 +1,63 @@
+/**
+  const gExtraLightenedSeatColors = [
+    "#f5cdcd",
+    "#d7f7d7",
+    "#f5f3ea",
+    "#d4dbf7",
+    "#f5dfd3",
+    "#e6cef1",
+    "#d7f7f7",
+    "#f5f5f5",
+  ];
+  const gExtraDarkenedSeatColors = [
+    "#58060d",
+    "#0e420e",
+    "#3f300d",
+    "#081020",
+    "#301d07",
+    "#2f063f",
+    "#0b4242",
+    "#666666",
+  ];
+  */
+// light backgrounds, dark text.
+
+.foo.player-0 {
+  background-color: #f5cdcd;
+  color: #58060d;
+}
+
+.foo.player-1 {
+  background-color: #d7f7d7;
+  color: #0e420e;
+}
+
+.foo.player-2 {
+  background-color: #f5f3ea;
+  color: #3f300d;
+}
+
+.foo.player-3 {
+  background-color: #d4dbf7;
+  color: #081020;
+}
+
+.foo.player-4 {
+  background-color: #f5dfd3;
+  color: #301d07;
+}
+
+.foo.player-5 {
+  background-color: #e6cef1;
+  color: #2f063f;
+}
+
+.foo.player-6 {
+  background-color: #d7f7f7;
+  color: #0b4242;
+}
+
+.foo.player-7 {
+  background-color: #f5f5f5;
+  color: #666666;
+}
