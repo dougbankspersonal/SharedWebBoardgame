@@ -12,8 +12,6 @@ export default function(variant, index) {
   };
 }
 
-
-
 //-------------------------------
 //
 // Tokens
