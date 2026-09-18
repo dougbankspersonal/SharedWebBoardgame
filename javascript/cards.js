@@ -6,7 +6,6 @@ define([
   "dojo/dom-style",
   "sharedJavascript/debugLog",
   "sharedJavascript/genericMeasurements",
-  "sharedJavascript/genericUtils",
   "sharedJavascript/htmlUtils",
   "sharedJavascript/systemConfigs",
   "dojo/domReady!",
@@ -16,7 +15,6 @@ define([
   domStyle,
   debugLogModule,
   genericMeasurements,
-  genericUtils,
   htmlUtils,
   systemConfigs,
 ) {
@@ -38,13 +36,6 @@ define([
       width: `${cardWidthPx}px`,
       height: `${cardHeightPx}px`,
     });
-  }
-
-  function addPageOfCards(parent, opt_classArray) {
-    var classes = opt_classArray || [];
-    classes.push("cards");
-    var pageOfItemsNode = htmlUtils.addPageOfItems(parent, classes);
-    return pageOfItemsNode;
   }
 
   function maybeAddCardBackColor(parent, backConfig) {
@@ -134,109 +125,95 @@ define([
     return cardFrontNode;
   }
 
-  function maybeNewPage(parent, currentPage, index) {
-    debugLog("maybeNewPage", "maybeNewPage index = " + index.toString());
-    var cardsPerPage = systemConfigs.getSystemConfigs().cardsPerPage;
-    debugLog("maybeNewPage", "cardsPerPage = " + cardsPerPage);
-    var needNew = index % cardsPerPage;
-    debugLog("maybeNewPage", "needNew = " + needNew);
-    if (needNew == 0) {
-      debugLog("maybeNewPage", "new page for index = " + index.toString());
-      return addPageOfCards(parent);
-    }
-    return currentPage;
+  // Add the nth card to this parent node.
+  // parent: what to stuff the card in.
+  // callback: generates the card.
+  // index: tells the callback what card to generate.
+  function addNthCard(parentNode, addNthCardCallback, index) {
+    console.assert(parentNode, "parentNode   is null");
+    console.assert(addNthCardCallback, "addNthCardCallback is null");
+    var nthCardNode = addNthCardCallback(parentNode, index);
+    return nthCardNode;
   }
 
-  function addNthCard(
-    bodyNode,
-    pageOfCardsNode,
-    rowOfCardsNode,
-    addNthCardCallback,
-    cardCount,
-    configIndex,
+  // Hit the frontCallback to add a card.
+  // use callbacks to generate new page/row if needed.
+  // startIndex: index of first card we're adding.
+  // numberToDump: how many cards to add starting from startIndex.
+  function dumpCardFronts(
+    frontCallback,
+    addPageCallback,
+    addRowCallback,
+    startIndex,
+    numberToDump,
   ) {
-    debugLog("addNthCard", "addNthCard bodyNode = " + JSON.stringify(bodyNode));
-    debugLog("addNthCard", "addNthCard cardCount = " + cardCount.toString());
-    debugLog(
-      "addNthCard",
-      "addNthCard configIndex = " + configIndex.toString(),
-    );
+    for (var i = startIndex; i < startIndex + numberToDump; i++) {
+      debugLog(
+        "addCards",
+        "calling addNthCard for frontCard index = " + i.toString(),
+      );
+      var parentNode = htmlUtils.getCurrentPageOfItemsNextParentNode(
+        addPageCallback,
+        addRowCallback,
+      );
 
-    pageOfCardsNode = maybeNewPage(bodyNode, pageOfCardsNode, cardCount);
-    console.assert(pageOfCardsNode, "pageOfCards is null");
-    rowOfCardsNode = htmlUtils.maybeAddNewRowOfItems(
-      pageOfCardsNode,
-      rowOfCardsNode,
-      cardCount,
-    );
-    console.assert(rowOfCardsNode, "rowOfCards is null");
-    addNthCardCallback(rowOfCardsNode, configIndex);
-    return [pageOfCardsNode, rowOfCardsNode];
+      var cardFrontNode = addNthCard(parentNode, frontCallback, i);
+      htmlUtils.incrementCurrentTotalItemCount();
+    }
   }
 
-  function addCards(numCards, frontCallback, backConfigs) {
-    console.assert(
-      Array.isArray(backConfigs),
-      "Expected an array for backConfigs",
-    );
-    var sc = systemConfigs.getSystemConfigs();
-
-    debugLog("addCards", "sc = " + JSON.stringify(sc));
-    debugLog("addCards", "numCards = " + numCards);
-
-    // Better be in cards mode.
-    console.assert(sc.isCards, "Not in cards mode");
-
-    var bodyNode = dom.byId("body");
-    debugLog("addCards", "bodyNode = " + JSON.stringify(bodyNode));
-
-    var pageOfCards;
-    var rowOfCards;
-    var cardCount = 0;
-
-    debugLog("addCards", "adding card backs");
-
+  // Print one instance of each back config.
+  // Use callbacks to get proper page/row.
+  function dumpCardBacks(backConfigs, addPageCallback, addRowCallback) {
+    // Dump one of each back.
     for (var i = 0; i < backConfigs.length; i++) {
       var backConfig = backConfigs[i];
       debugLog(
         "addCards",
         "calling addNthCard for backConfig index = " + i.toString(),
       );
-      [pageOfCards, rowOfCards] = addNthCard(
-        bodyNode,
-        pageOfCards,
-        rowOfCards,
-        function (rowOfCards, index) {
-          debugLog(
-            "addCards",
-            "calling addCardBack for backConfig index = " +
-              i.toString() +
-              ", card index = " +
-              index.toString(),
-          );
-          addCardBack(rowOfCards, index, backConfig);
-          cardCount++;
-        },
-        cardCount,
-        cardCount,
+      var parentNode = htmlUtils.getCurrentPageOfItemsNextParentNode(
+        addPageCallback,
+        addRowCallback,
       );
-    }
 
-    debugLog("addCards", "adding card fronts");
-    for (let index = 0; index < numCards; index++) {
-      debugLog("addCards", "addCards 001 i = " + index.toString());
-      [pageOfCards, rowOfCards] = addNthCard(
-        bodyNode,
-        pageOfCards,
-        rowOfCards,
-        frontCallback,
-        cardCount,
-        index,
+      var cardBackNode = addCardBack(parentNode, i, backConfig);
+      htmlUtils.incrementCurrentTotalItemCount();
+    }
+  }
+
+  // We are going to add some card backs to a page.
+  // They are suppose to line up with card fronts on the other side
+  // of the page.
+  // We may have more than one card back to worry about.
+  // We assume the card backs are eveny distributed over fronts (e.g. if there's
+  // 40 card fronts and 10 backs, the nth 10 fronts go with the nth back).
+  function addPagedCardBacks(
+    backConfigs,
+    addPagedPageOfCards,
+    addRowOfCards,
+    numCardFronts,
+    cardsAddedSoFar,
+    cardsToAddThisPage,
+  ) {
+    var frontCardsPerBack = Math.floor(numCardFronts / backConfigs.length);
+    for (var i = 0; i < cardsToAddThisPage; i++) {
+      var correspondingFrontIndex = cardsAddedSoFar + i;
+      var backConfigIndex = Math.floor(
+        correspondingFrontIndex / frontCardsPerBack,
       );
-      cardCount++;
+      var backConfig = backConfigs[backConfigIndex];
+      var parentNode = htmlUtils.getCurrentPageOfItemsNextParentNode(
+        addPagedPageOfCards,
+        addRowOfCards,
+      );
+      var cardBackNode = addCardBack(
+        parentNode,
+        correspondingFrontIndex,
+        backConfig,
+      );
+      htmlUtils.incrementCurrentTotalItemCount();
     }
-
-    debugLog("addCards", "backConfigs = ", JSON.stringify(backConfigs));
   }
 
   // Look for a "count" field.
@@ -351,6 +328,106 @@ define([
     }
   }
 
+  // Assumption:
+  // We have some callback that knows what to do when given a "makeNthCard" plus some
+  // index.
+  // We know how many times we are going to call that.
+  // We also have some back configs:
+  // - In pageless mode, we print these first: one instance of each card back.
+  // - In paged mode, we evently divide fronts by backs, so that if there's n back configs,
+  //   the first 1/n fronts will be printed on a page so that they have back 0, next 1/n has
+  //   back 1, etc.
+  function addCards(numCardFronts, frontCallback, backConfigs) {
+    console.assert(
+      Array.isArray(backConfigs),
+      "Expected an array for backConfigs",
+    );
+    var sc = systemConfigs.getSystemConfigs();
+
+    debugLog("addCards", "sc = " + JSON.stringify(sc));
+    debugLog("addCards", "numCardFronts = " + numCardFronts);
+
+    // Better be in cards mode.
+    console.assert(sc.isCards, "Not in cards mode");
+
+    var bodyNode = dom.byId("body");
+    debugLog("addCards", "bodyNode = " + JSON.stringify(bodyNode));
+
+    debugLog("addCards", "adding card backs");
+
+    function addPageOfCards() {
+      return htmlUtils.addPageOfItems(bodyNode, ["cards"]);
+    }
+
+    function addPageOfCardBacks() {
+      return htmlUtils.addPageOfItems(bodyNode, ["cards", "back"]);
+    }
+
+    function addRowOfCards(pageNode) {
+      return htmlUtils.addRowOfItems(pageNode, ["cards"]);
+    }
+
+    // Pageless:
+    if (sc.pageless) {
+      // First dump all backs then dump all fronts.
+      dumpCardBacks(backConfigs, addPageOfCards, addRowOfCards);
+      dumpCardFronts(
+        frontCallback,
+        addPageOfCards,
+        addRowOfCards,
+        0,
+        numCardFronts,
+      );
+    } else {
+      // Do it in page sized handfuls.
+      // And just a sanity check: these guys should jive.
+      console.assert(
+        sc.itemsPerPage > 0,
+        "itemsPerPage should be greater than 0",
+      );
+      console.assert(
+        sc.itemsPerRow > 0,
+        "itemsPerRow should be greater than 0",
+      );
+      console.assert(
+        sc.itemsPerPage % sc.itemsPerRow === 0,
+        "itemsPerPage should be a multiple of itemsPerRow",
+      );
+
+      var numFrontPages = Math.ceil(numCardFronts / sc.itemsPerPage);
+      debugLog("addCards", "numFrontPages = " + numFrontPages);
+
+      for (var i = 0; i < numFrontPages; i++) {
+        var cardsAddedSoFar = i * sc.itemsPerPage;
+        var cardsToAddThisPage = Math.min(
+          sc.itemsPerPage,
+          numCardFronts - i * sc.itemsPerPage,
+        );
+        htmlUtils.initCurrentPageOfItems();
+        dumpCardFronts(
+          frontCallback,
+          addPageOfCards,
+          addRowOfCards,
+          cardsAddedSoFar,
+          cardsToAddThisPage,
+        );
+
+        // If we're adding backs, add a page of backs.
+        htmlUtils.initCurrentPageOfItems();
+        addPagedCardBacks(
+          backConfigs,
+          addPageOfCardBacks,
+          addRowOfCards,
+          numCardFronts,
+          cardsAddedSoFar,
+          cardsToAddThisPage,
+        );
+      }
+    }
+
+    debugLog("addCards", "backConfigs = ", JSON.stringify(backConfigs));
+  }
+
   // This returned object becomes the defined value of this module
   return {
     getCardConfigAtIndex: getCardConfigAtIndex,
@@ -359,8 +436,8 @@ define([
     getNumCardsFromConfigs: getNumCardsFromConfigs,
     getInstanceCountFromConfig: getInstanceCountFromConfig,
     addCardFront: addCardFront,
-    addCards: addCards,
     setCardSize: setCardSize,
     addCardBack: addCardBack,
+    addCards: addCards,
   };
 });

@@ -157,14 +157,14 @@ define([
   function addPageOfItems(parent, opt_classes) {
     var sc = systemConfigs.getSystemConfigs();
     console.assert(parent, "parent is null");
-    var pageOfItemsClassArray = genericUtils.growOptStringArray(
-      opt_classes,
-      "page-of-items",
-    );
+    var classes = opt_classes || [];
+    var pagingClass = sc.pageless ? "pageless" : "paged";
+    classes = classes.concat(["page-of-items", pagingClass]);
+
     var pageId = "pageOfItems_".concat(pageNumber.toString());
     pageNumber++;
 
-    var pageOfItemsNode = addDiv(parent, pageOfItemsClassArray, pageId);
+    var pageOfItemsNode = addDiv(parent, classes, pageId);
     var width = getPageWidth();
     var height = getPageHeight();
     debugLog("Refactor", "addPageOfItems: width = " + width);
@@ -249,8 +249,10 @@ define([
     });
   }
 
-  function addRowOfItems(parent) {
-    var classes = ["row-of-items"];
+  function addRowOfItems(parent, opt_classes) {
+    var classes = opt_classes || [];
+    classes = classes.slice();
+    classes.push("row-of-items");
     return addDiv(parent, classes, "rowOfItems");
   }
 
@@ -265,6 +267,66 @@ define([
       return addRowOfItems(parent);
     }
     return currentRow;
+  }
+
+  var gCurrentPageOfItemsNode = null;
+  var gCurrentRowsWrapperNode = null;
+  var gCurrentRowOfItemsNode = null;
+  var gCurrentTotalItemsCount = null;
+
+  function initCurrentPageOfItems() {
+    gCurrentPageOfItemsNode = null;
+    gCurrentRowsWrapperNode = null;
+    gCurrentRowOfItemsNode = null;
+    gCurrentTotalItemsCount = 0;
+  }
+
+  function getCurrentTotalItemCount() {
+    return gCurrentTotalItemsCount;
+  }
+
+  function incrementCurrentTotalItemCount() {
+    gCurrentTotalItemsCount++;
+  }
+
+  function getCurrentPageOfItemsNextParentNode(
+    addPageCallback,
+    addRowCallback,
+  ) {
+    var sc = systemConfigs.getSystemConfigs();
+
+    var needsNewPage = false;
+    if (!gCurrentPageOfItemsNode) {
+      needsNewPage = true;
+    } else {
+      if (!sc.pageless) {
+        // maybe make a new paeg if we overran.
+        var itemsPerPage = sc.itemsPerPage;
+        if (gCurrentTotalItemsCount % itemsPerPage == 0) {
+          needsNewPage = true;
+        }
+      }
+    }
+
+    if (needsNewPage) {
+      gCurrentPageOfItemsNode = addPageCallback();
+      gCurrentRowsWrapperNode = addDiv(
+        gCurrentPageOfItemsNode,
+        ["rows-wrapper"],
+        "rowsWrapper",
+      );
+      gCurrentRowOfItemsNode = null;
+    }
+
+    // Row.
+    if (
+      gCurrentRowOfItemsNode == null ||
+      gCurrentTotalItemsCount % sc.itemsPerRow == 0
+    ) {
+      gCurrentRowOfItemsNode = addRowCallback(gCurrentRowsWrapperNode);
+    }
+
+    return gCurrentRowOfItemsNode;
   }
 
   return {
@@ -282,5 +344,9 @@ define([
     applyColorFamily: applyColorFamily,
     addRowOfItems: addRowOfItems,
     maybeAddNewRowOfItems: maybeAddNewRowOfItems,
+    getCurrentPageOfItemsNextParentNode: getCurrentPageOfItemsNextParentNode,
+    getCurrentTotalItemCount: getCurrentTotalItemCount,
+    initCurrentPageOfItems: initCurrentPageOfItems,
+    incrementCurrentTotalItemCount: incrementCurrentTotalItemCount,
   };
 });
