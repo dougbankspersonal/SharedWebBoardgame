@@ -1,5 +1,6 @@
 define([
   "dojo/dom-style",
+  "dojo/dom-class",
   "sharedJavascript/cards",
   "sharedJavascript/debugLog",
   "sharedJavascript/genericMeasurements",
@@ -8,6 +9,7 @@ define([
   "dojo/domReady!",
 ], function (
   domStyle,
+  domClass,
   cards,
   debugLogModule,
   genericMeasurements,
@@ -201,7 +203,7 @@ define([
       classes: classes,
     });
 
-    var wrapperClasses = ["back-wrapper", "player-" + cardIndex];
+    var wrapperClasses = ["back-wrapper"];
     var wrapperNode = htmlUtils.addDiv(
       cardBackNode,
       wrapperClasses,
@@ -246,6 +248,10 @@ define([
       cardIndex,
       finalCardClasses,
       function (wrapperNode) {
+        // Wrapper node gets player class.
+        var playerClass = "player-" + playerIndex.toString();
+        domClass.add(wrapperNode, playerClass);
+
         // Insert the player's image.
         var imageNode = htmlUtils.addImage(wrapperNode, [
           "player",

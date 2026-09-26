@@ -13,30 +13,42 @@ body {
   overflow: hidden;
   position: relative;
   display: flex;
-  align-items: start;
-  justify-content: center;
-}
-.page-of-items .page-of-items-contents {
-  display: flex;
-  flex-wrap: wrap;
-  /* Allows items to wrap onto new rows */
-  justify-content: center;
-  position: relative;
-}
-.page-of-items .page-of-items-contents.demo_board {
   flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
 }
-.page-of-items .page-of-items-contents.screentop {
-  justify-content: left;
+.page-of-items .rows-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.page-of-items .rows-wrapper .row-of-items {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0;
+  width: 100%;
 }
 .page-of-items .page_number {
   position: absolute;
-  bottom: 0px;
-  right: 0px;
+  bottom: 0;
+  right: 0;
   font-size: 10px;
   padding: 10px;
   color: #000;
-  /* Change to desired color */
+}
+
+.page-of-items.paged {
+  align-items: center;
+}
+.page-of-items.paged .rows-wrapper .row-of-items {
+  justify-content: center;
+}
+
+.page-of-items.paged.back .rows-wrapper .row-of-items {
+  flex-direction: row-reverse;
 }
 
 .center_in_parent {
@@ -44,20 +56,6 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-}
-
-.page-of-items {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-}
-.page-of-items .row-of-items {
-  display: flex;
-  flex-direction: row;
-  justify-content: left;
-  gap: 0px;
-  width: 100%;
 }
 
 /*# sourceMappingURL=main.css.map */

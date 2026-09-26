@@ -62,9 +62,6 @@ define(["dojo/domReady!"], function () {
     standardCardHeightPx,
     standardPageGap,
   );
-  var cardsPerPage = cardColumnsPerPage * cardRowsPerPage;
-
-  var screentopCardsPerPage = 1000;
 
   var dieWidthPx = 150;
   var dieHeightPx = dieWidthPx;
@@ -77,9 +74,8 @@ define(["dojo/domReady!"], function () {
   var smallCardHeightPx = 1.4 * smallCardWidthPx;
   var smallCardBackFontSize = 24;
   // Math is going bad here somehow, just be explicit.
-  var smallitemsPerRow = 4;
+  var smallCardsPerRow = 4;
   var smallCardsPerColumn = Math.floor(adjustedPageHeight / smallCardHeightPx);
-  var smallCardsPerPage = smallitemsPerRow * smallCardsPerColumn;
 
   var screentopitemsPerRow = 10;
 
@@ -104,8 +100,6 @@ define(["dojo/domReady!"], function () {
     adjustedPageHeight: adjustedPageHeight,
     cardColumnsPerPage: cardColumnsPerPage,
     cardRowsPerPage: cardRowsPerPage,
-    cardsPerPage: cardsPerPage,
-    screentopCardsPerPage: screentopCardsPerPage,
     standardPageGap: standardPageGap,
 
     dieWidthPx: dieWidthPx,
@@ -116,9 +110,7 @@ define(["dojo/domReady!"], function () {
 
     smallCardWidthPx: smallCardWidthPx,
     smallCardHeightPx: smallCardHeightPx,
-    smallitemsPerRow: smallitemsPerRow,
     smallCardBackFontSize: smallCardBackFontSize,
-    smallCardsPerPage: smallCardsPerPage,
     cardFrontBorderWidthPx: cardFrontBorderWidthPx,
     screentopitemsPerRow: screentopitemsPerRow,
   };

@@ -19,8 +19,8 @@ define([
     //
     //---------------------------
     isCards: true,
-    // How many cards before we add a page break?
-    cardsPerPage: true,
+    // How many items before we add a page break?
+    itemsPerPage: true,
     // Alt size of cards.
     cardWidthPx: true,
     cardHeightPx: true,
@@ -72,7 +72,6 @@ define([
     genericUtils.sanityCheckTable(configs, validSystemConfigKeys);
   }
 
-  // This and all "Add" functions:
   // Take in optional default: this is what you start with.
   // Apply some values.
   // Use some standard value unless an override is passed in, then use that.
@@ -96,13 +95,13 @@ define([
       ? overrides.cardHeightPx
       : genericMeasurements.standardCardHeightPx;
 
-    var cardsPerPage =
+    var itemsPerPage =
       Math.floor(genericMeasurements.adjustedPageWidth / cardWidthPx) *
       Math.floor(genericMeasurements.adjustedPageHeight / cardHeightPx);
 
-    var itemsPerRow = overrides.itemsPerRow
-      ? overrides.itemsPerRow
-      : Math.floor(genericMeasurements.adjustedPageWidth / cardWidthPx);
+    var itemsPerRow = Math.floor(
+      genericMeasurements.adjustedPageWidth / cardWidthPx,
+    );
 
     debugLog("addCardSystemConfigs", "itemsPerRow = " + itemsPerRow);
     debugLog(
@@ -118,7 +117,7 @@ define([
 
     var outputSc = structuredClone(defaultSc);
 
-    outputSc.cardsPerPage = cardsPerPage;
+    outputSc.itemsPerPage = itemsPerPage;
     outputSc.cardWidthPx = cardWidthPx;
     outputSc.cardHeightPx = cardHeightPx;
     outputSc.itemsPerRow = itemsPerRow;
@@ -177,6 +176,7 @@ define([
       "addScreentopCardSystemConfigs",
       "overrides = " + JSON.stringify(overrides),
     );
+
     outputSc.itemsPerRow = overrides.itemsPerRow
       ? overrides.itemsPerRow
       : genericMeasurements.screentopitemsPerRow;
@@ -190,10 +190,11 @@ define([
       "addScreentopCardSystemConfigs outputSc = " + JSON.stringify(outputSc),
     );
 
-    outputSc.cardsPerPage =
-      overrides.cardsPerPage !== undefined
-        ? overrides.cardsPerPage
-        : genericMeasurements.screentopCardsPerPage;
+    outputSc.itemsPerPage =
+      overrides.itemsPerPage !== undefined
+        ? overrides.itemsPerPage
+        : outputSc.itemsPerPage;
+
     return outputSc;
   }
 
