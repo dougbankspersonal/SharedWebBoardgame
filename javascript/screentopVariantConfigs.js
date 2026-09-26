@@ -5,8 +5,8 @@
 //-------------------------------
 export default function(variant, index) {
   var gDieSides = 12;
-  var adjustedIndex = index - 1;
-  var assetIndex = adjustedIndex * gDieSides + 1;
+  var zBasedIndex = index - 1;
+  var assetIndex = zBasedIndex * gDieSides + 1;
   return {
     assetIndex: assetIndex,
   };
@@ -48,9 +48,9 @@ export default function(variant, index) {
   var gNumDecks = 3;
   var gCardsPerDeck = 50;
 
-  var adjustedIndex = index - 1;
-  var cardBackIndex = Math.floor(adjustedIndex / gCardsPerDeck) + 1;
-  var cardFrontIndex = adjustedIndex + gNumDecks + 1;
+  var zBasedIndex = index - 1;
+  var cardBackIndex = Math.floor(zBasedIndex / gCardsPerDeck) + 1;
+  var cardFrontIndex = zBasedIndex + gNumDecks + 1;
   return {
     frontAssetIndex: cardFrontIndex,
     backAssetIndex: cardBackIndex,
@@ -138,5 +138,26 @@ export default function(variant, index) {
   return {
     fillColor: gExtraLightenedSeatColors[index-1],
     strokeColor: gExtraDarkenedSeatColors[index-1],
+  };
+}
+
+// Tokens.
+// Sterts at some arbirary index.
+// n families of token.
+// Each token: first token is "token back".
+// Next tokensPerFamily are different fronts for the family.
+export default function(variant, index) {
+  var numTokenFrontsPerFamily = 3;
+  var numTokenImagesPerFamily = numTokenFrontsPerFamily + 1;
+  // 0-based index of back of first token family.
+  var firstBackZBasedIndex = 4;
+  // 0-based index of this token.
+  var zBasedTokenIndex = index-1-firstBackZBasedIndex;
+  var backAssetZBasedIndex = firstBackZBasedIndex + Math.floor((zBasedTokenIndex + 1) / numTokenImagesPerFamily);
+  var frontAssetZBasedIndex = backAssetZBasedIndex + 1 + zBasedTokenIndex % numTokenImagesPerFamily;
+
+  return {
+    frontAssetIndex: frontAssetZBasedIndex + 1,
+    backAssetIndex: backAssetZBasedIndex + 1,
   };
 }
