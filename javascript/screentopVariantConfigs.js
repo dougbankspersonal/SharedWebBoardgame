@@ -1,3 +1,24 @@
+//-------------------------
+// Grid of anchors
+//-------------------------
+export default function(anchor, index) {
+  var anchorsPerRow = 4;
+  var anchorsPerColumn = 3;
+  var initialX = -450
+  var initialY = -307
+  var xStep = 300;
+  var yStep = 400;
+
+  var adjustedIndex = index - 1;
+  var x = initialX + (adjustedIndex % anchorsPerRow) * xStep;
+  var y = initialY + Math.floor(adjustedIndex / anchorsPerRow) * yStep;
+
+  return {
+    x: x,
+    y: y
+  };
+}
+
 //-------------------------------
 //
 // Dice
@@ -45,8 +66,8 @@ export default function (variant, index) {
 //
 //-------------------------------
 export default function(variant, index) {
-  var gNumDecks = 3;
-  var gCardsPerDeck = 50;
+  var gNumDecks = 1;
+  var gCardsPerDeck = 54;
 
   var adjustedIndex = index - 1;
   var cardBackIndex = Math.floor(adjustedIndex / gCardsPerDeck) + 1;

@@ -143,6 +143,9 @@ define([
     var classes = opt_classes ? opt_classes : [];
     classes = classes.concat(["dice"]);
     var diceNode = htmlUtils.addDiv(parent, classes, "dice");
+
+    debugLog("addDiceNode", "diceConfigs = " + JSON.stringify(diceConfigs));
+
     for (var i = 0; i < diceConfigs.length; i++) {
       addDieNode(diceNode, diceConfigs[i]);
     }

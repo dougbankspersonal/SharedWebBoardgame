@@ -19,45 +19,58 @@
     "#0b4242",
     "#666666",
   ];
-  */
-// light backgrounds, dark text.
 
+    const gSeatColors = [
+    "#e6194b",
+    "#3cb44b",
+    "#ffe119",
+    "#4363d8",
+    "#f58231",
+    "#911eb4",
+    "#46f0f0",
+    "#aaaaaa",
+  ];
+
+  */
+
+
+// bright backgrounds, dark border
 .foo.player-0 {
-  background-color: #f5cdcd;
-  color: #58060d;
+  background-color: #e6194b;
+  border-color: #58060d;
 }
 
 .foo.player-1 {
-  background-color: #d7f7d7;
-  color: #0e420e;
+  background-color: #3cb44b;
+  border-color: #0e420e;
 }
 
 .foo.player-2 {
-  background-color: #f5f3ea;
-  color: #3f300d;
+  background-color: #ffe119;
+  border-color: #3f300d;
 }
 
 .foo.player-3 {
-  background-color: #d4dbf7;
-  color: #081020;
+  background-color: #4363d8;
+  border-color: #081020;
 }
 
 .foo.player-4 {
-  background-color: #f5dfd3;
-  color: #301d07;
+  background-color: #f58231;
+  border-color: #301d07;
 }
 
 .foo.player-5 {
-  background-color: #e6cef1;
-  color: #2f063f;
+  background-color: #911eb4;
+  border-color: #2f063f;
 }
 
 .foo.player-6 {
-  background-color: #d7f7f7;
-  color: #0b4242;
+  background-color: #46f0f0;
+  border-color: #0b4242;
 }
 
 .foo.player-7 {
-  background-color: #f5f5f5;
-  color: #666666;
+  background-color: #aaaaaa;
+  border-color: #666666;
 }
