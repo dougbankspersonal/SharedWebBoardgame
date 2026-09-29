@@ -163,22 +163,26 @@ export default function(variant, index) {
 }
 
 // Tokens.
-// Sterts at some arbirary index.
 // n families of token.
 // Each token: first token is "token back".
 // Next tokensPerFamily are different fronts for the family.
 export default function(variant, index) {
-  var numTokenFrontsPerFamily = 3;
-  var numTokenImagesPerFamily = numTokenFrontsPerFamily + 1;
+  var numTokensPerFamily = 3;
+  // Back counts as one.
+  var numTokenImagesPerFamily = numTokensPerFamily + 1;
   // 0-based index of back of first token family.
-  var firstBackZBasedIndex = 4;
+  var firstBackZBasedIndex = 0;
   // 0-based index of this token.
-  var zBasedTokenIndex = index-1-firstBackZBasedIndex;
-  var backAssetZBasedIndex = firstBackZBasedIndex + Math.floor((zBasedTokenIndex + 1) / numTokenImagesPerFamily);
-  var frontAssetZBasedIndex = backAssetZBasedIndex + 1 + zBasedTokenIndex % numTokenImagesPerFamily;
+  var zIndex = index-1;
+  // Which family are we dealing with?
+  var familyIndex = Math.floor(zIndex / numTokensPerFamily);
+  // backIndex: first item in this family.
+  var zBackIndex = familyIndex * numTokenImagesPerFamily;
+  // front Index: nth utem after floor index.
+  var zFrontIndex = zBackIndex + 1 + (zIndex % numTokensPerFamily);
 
   return {
-    frontAssetIndex: frontAssetZBasedIndex + 1,
-    backAssetIndex: backAssetZBasedIndex + 1,
+    frontAssetIndex: zFrontIndex + 1,
+    backAssetIndex: zBackIndex + 1,
   };
 }
