@@ -2,12 +2,11 @@
 // Grid of anchors
 //-------------------------
 export default function(anchor, index) {
-  var anchorsPerRow = 4;
-  var anchorsPerColumn = 3;
-  var initialX = -450
-  var initialY = -307
-  var xStep = 300;
-  var yStep = 400;
+  var anchorsPerRow = 3;
+  var initialX = -276;
+  var initialY = 39;
+  var xStep = 276;
+  var yStep = 396;
 
   var adjustedIndex = index - 1;
   var x = initialX + (adjustedIndex % anchorsPerRow) * xStep;
@@ -111,6 +110,16 @@ export default function(seat, index) {
 //
 //-------------------------------
 export default function(variant, index) {
+    var gSeatColors = [
+    "#e6194b",
+    "#3cb44b",
+    "#ffe119",
+    "#4363d8",
+    "#f58231",
+    "#911eb4",
+    "#46f0f0",
+    "#aaaaaa",
+  ];
 
   const gExtraLightenedSeatColors = [
     "#f5cdcd",
@@ -122,8 +131,10 @@ export default function(variant, index) {
     "#d7f7f7",
     "#f5f5f5",
   ];
+  var fillColor = gExtraLightenedSeatColors[index-1];
   return {
-    baseFillColor: gExtraLightenedSeatColors[index-1],
+    baseFillColor: fillColor,
+    coverFillColor: fillColor,
   };
 }
 
@@ -184,5 +195,19 @@ export default function(variant, index) {
   return {
     frontAssetIndex: zFrontIndex + 1,
     backAssetIndex: zBackIndex + 1,
+  };
+}
+
+// Objects owned by seat and admin.
+export default function(object, index) {
+  var indexAsString = index.toString();
+  return {
+    "tag": indexAsString,
+    "variant": "Variant " + indexAsString,
+    "seats": [
+      "Seat " + indexAsString,
+      "Admin"
+    ],
+    "viewPolicy": "ALLOW_SEATS",
   };
 }
