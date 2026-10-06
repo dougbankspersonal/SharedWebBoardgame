@@ -329,6 +329,30 @@ define([
     return gCurrentRowOfItemsNode;
   }
 
+  // A lot of cards/wisgets are pretty simple:
+  // Use this template if your div is just basic text w. image.
+  function applyBasicConfig(parent, config, opt_index) {
+    var index = opt_index !== undefined ? opt_index : 0;
+
+    debugLog("applyBasicConfig", "config = " + JSON.stringify(config));
+    if (config.imageClasses) {
+      var imageClasses = addImage(
+        parent,
+        ["image"].concat(config.imageClasses),
+        "dieImage-" + index.toString(),
+      );
+    }
+    if (config.text) {
+      var textClasses = ["text"].concat(config.textClasses || []);
+      var parent = addDiv(
+        parent,
+        textClasses,
+        "die-text-" + index.toString(),
+        config.text,
+      );
+    }
+  }
+
   return {
     addDiv: addDiv,
     addImage: addImage,
@@ -348,5 +372,7 @@ define([
     getCurrentTotalItemCount: getCurrentTotalItemCount,
     initCurrentPageOfItems: initCurrentPageOfItems,
     incrementCurrentTotalItemCount: incrementCurrentTotalItemCount,
+
+    applyBasicConfig: applyBasicConfig,
   };
 });
