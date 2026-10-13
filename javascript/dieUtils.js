@@ -73,9 +73,5 @@ define([
     // New.
     addDieNode: addDieNode,
     addDiceNode: addDiceNode,
-
-    // Obsolete: do not use.
-    createDieTemplate: OBSOLETE_createDieTemplate,
-    addDieFace: OBSOLETE_addDieFace,
   };
 });
