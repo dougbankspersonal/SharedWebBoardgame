@@ -2,14 +2,34 @@
 // Grid of anchors
 //-------------------------
 export default function(anchor, index) {
-  var anchorsPerRow = 3;
-  var initialX = -276;
-  var initialY = 39;
-  var xStep = 276;
-  var yStep = 396;
+  var anchorsPerRow = 5;
+  var initialX = 80;
+  var initialY = 28;
+  var xStep = 69;
+  var yStep = 0;
 
   var adjustedIndex = index - 1;
   var x = initialX + (adjustedIndex % anchorsPerRow) * xStep;
+  var y = initialY + Math.floor(adjustedIndex / anchorsPerRow) * yStep;
+
+  return {
+    x: x,
+    y: y
+  };
+}
+
+export default function(anchor, index) {
+  var anchorsPerRow = 10;
+  var initialX = -354;
+  var initialY = 74;
+  var xStepA = 65;
+  var xStepB = 75;
+  var everyOtherStep = xStepA + xStepB;
+  var yStep = 396;
+
+  var adjustedIndex = index - 1;
+  var step = adjustedIndex % 2 == 1 ? xStepA : xStepB;
+  var x = initialX + Math.floor(adjustedIndex / 2) * everyOtherStep + (adjustedIndex % 2) * step;
   var y = initialY + Math.floor(adjustedIndex / anchorsPerRow) * yStep;
 
   return {
