@@ -595,6 +595,33 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
     return false;
   }
 
+  // Given some random rgb color as a string, move it the given percent towards black.
+  // So if percent == 100, returns back.
+  // Percent == 0, returns the original color.
+  // Again, the color is a hex string like "#345465".
+  function darkenColor(colorString, percent) {
+    // Remove the '#' character if present
+    if (colorString.startsWith("#")) {
+      colorString = colorString.slice(1);
+    }
+
+    // Parse the hex color into RGB components
+    var r = parseInt(colorString.substring(0, 2), 16);
+    var g = parseInt(colorString.substring(2, 4), 16);
+    var b = parseInt(colorString.substring(4, 6), 16);
+
+    // Move each component towards black by the given percent
+    r = Math.floor(r * (1 - percent / 100));
+    g = Math.floor(g * (1 - percent / 100));
+    b = Math.floor(b * (1 - percent / 100));
+
+    // Convert back to hex and return the color string
+    var rr = r.toString(16).padStart(2, "0");
+    var gg = g.toString(16).padStart(2, "0");
+    var bb = b.toString(16).padStart(2, "0");
+    return "#" + rr + gg + bb;
+  }
+
   return {
     assertIsNumber: assertIsNumber,
     sanityCheckTable: sanityCheckTable,
@@ -626,5 +653,6 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
     generateAllArrays: generateAllArrays,
     arrayHasAnElemententWithMoreThanNCopies:
       arrayHasAnElemententWithMoreThanNCopies,
+    darkenColor: darkenColor,
   };
 });
