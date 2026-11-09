@@ -353,6 +353,15 @@ define([
     }
   }
 
+  function styleWithColor(parent, color) {
+    // card styling.
+    var borderColor = genericUtils.darkenColor(color, 50);
+    domStyle.set(parent, {
+      background: `radial-gradient(#ffffff 50%, ${color})`,
+      "border-color": borderColor,
+    });
+  }
+
   return {
     addDiv: addDiv,
     addImage: addImage,
@@ -372,7 +381,7 @@ define([
     getCurrentTotalItemCount: getCurrentTotalItemCount,
     initCurrentPageOfItems: initCurrentPageOfItems,
     incrementCurrentTotalItemCount: incrementCurrentTotalItemCount,
-
     applyBasicConfig: applyBasicConfig,
+    styleWithColor: styleWithColor,
   };
 });
