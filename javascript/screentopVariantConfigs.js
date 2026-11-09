@@ -2,6 +2,53 @@
 // Grid of anchors
 //-------------------------
 export default function(anchor, index) {
+  var orderedAnchorPairs = [
+    [-595, -690],
+    [-425, -690],
+    [-255, -690],
+    [-85., -690],
+    [85, -690],
+    [255, -690],
+    [425, -690],
+
+    [605, -510],
+    [605, -340],
+
+    [425, -160],
+    [255, -160],
+    [85, -160],
+    [-85, -160],
+    [-255, -160],
+    [-425, -160],
+
+    [-605, 20],
+    [-605, 190],
+
+    [-425, 370],
+    [-255, 370],
+    [-85., 370],
+    [85, 370],
+    [255, 370],
+    [425, 370],
+
+    [605, 550],
+    [605, 720],
+  ];
+
+  var adjustedIndex = index - 1;
+  var pair = orderedAnchorPairs[adjustedIndex];
+  var x = pair[0];
+  var y = pair[1];
+
+  return {
+    x: x,
+    y: y
+  };
+}
+
+
+
+export default function(anchor, index) {
   var anchorsPerRow = 5;
   var initialX = 80;
   var initialY = 28;
@@ -97,11 +144,6 @@ export default function(variant, index) {
   };
 }
 
-//-------------------------------
-//
-// Cards with n equal sized decks, card backs in front.
-//
-//-------------------------------
 
 //-------------------------------
 //

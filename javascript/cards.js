@@ -6,6 +6,7 @@ define([
   "dojo/dom-style",
   "sharedJavascript/debugLog",
   "sharedJavascript/genericMeasurements",
+  "sharedJavascript/genericUtils",
   "sharedJavascript/htmlUtils",
   "sharedJavascript/systemConfigs",
   "dojo/domReady!",
@@ -15,6 +16,7 @@ define([
   domStyle,
   debugLogModule,
   genericMeasurements,
+  genericUtils,
   htmlUtils,
   systemConfigs,
 ) {
@@ -412,16 +414,20 @@ define([
           cardsToAddThisPage,
         );
 
-        // If we're adding backs, add a page of backs.
-        htmlUtils.initCurrentPageOfItems();
-        addPagedCardBacks(
-          backConfigs,
-          addPageOfCardBacks,
-          addRowOfCards,
-          numCardFronts,
-          cardsAddedSoFar,
-          cardsToAddThisPage,
-        );
+        var queryParams = genericUtils.getCommonQueryParams();
+        var skipCardBacks = queryParams.skipCardBacks ? true : false;
+        if (!skipCardBacks) {
+          // If we're adding backs, add a page of backs.
+          htmlUtils.initCurrentPageOfItems();
+          addPagedCardBacks(
+            backConfigs,
+            addPageOfCardBacks,
+            addRowOfCards,
+            numCardFronts,
+            cardsAddedSoFar,
+            cardsToAddThisPage,
+          );
+        }
       }
     }
 
