@@ -165,13 +165,12 @@ define([
   // Print one instance of each back config.
   // Use callbacks to get proper page/row.
   function dumpCardBacks(backConfigs, addPageCallback, addRowCallback) {
+    debugLog("dumpCardBacks", "backConfigs = ", JSON.stringify(backConfigs));
     // Dump one of each back.
     for (var i = 0; i < backConfigs.length; i++) {
+      debugLog("dumpCardBacks", "i = " + i);
       var backConfig = backConfigs[i];
-      debugLog(
-        "addCards",
-        "calling addNthCard for backConfig index = " + i.toString(),
-      );
+      debugLog("dumpCardBacks", "backConfig = ", JSON.stringify(backConfig));
       var parentNode = htmlUtils.getCurrentPageOfItemsNextParentNode(
         addPageCallback,
         addRowCallback,
@@ -369,8 +368,10 @@ define([
 
     // Pageless:
     if (sc.pageless) {
+      debugLog("addCards", "pageless mode: adding all card backs first");
       // First dump all backs then dump all fronts.
       dumpCardBacks(backConfigs, addPageOfCards, addRowOfCards);
+      debugLog("addCards", "pageless mode: adding all card fronts next");
       dumpCardFronts(
         frontCallback,
         addPageOfCards,
