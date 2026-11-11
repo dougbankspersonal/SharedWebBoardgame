@@ -95,13 +95,17 @@ define([
       ? overrides.cardHeightPx
       : genericMeasurements.standardCardHeightPx;
 
-    var itemsPerPage =
-      Math.floor(genericMeasurements.adjustedPageWidth / cardWidthPx) *
-      Math.floor(genericMeasurements.adjustedPageHeight / cardHeightPx);
+    var rowPadding = 0;
+    if (overrides.extraRowPadding !== undefined) {
+      rowPadding = overrides.extraRowPadding;
+    }
+    var pageWidthAvailableForRow =
+      genericMeasurements.adjustedPageWidth - rowPadding;
+    var itemsPerRow = Math.floor(pageWidthAvailableForRow / cardWidthPx);
 
-    var itemsPerRow = Math.floor(
-      genericMeasurements.adjustedPageWidth / cardWidthPx,
-    );
+    var itemsPerPage =
+      itemsPerRow *
+      Math.floor(genericMeasurements.adjustedPageHeight / cardHeightPx);
 
     debugLog("addCardSystemConfigs", "itemsPerRow = " + itemsPerRow);
     debugLog(

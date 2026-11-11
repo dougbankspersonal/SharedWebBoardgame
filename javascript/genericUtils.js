@@ -498,7 +498,7 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
 
     // Permute the rest.
     var permutationsOfRestOfArray =
-      generarteAllUniquePermutationsOfArray(restOfArray);
+      generateAllUniquePermutationsOfArray(restOfArray);
 
     // Pop in the first element in all possible positions.
     var retVal = [];
@@ -554,7 +554,7 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
   }
 
   // Input elements may repeat.
-  function generarteAllUniquePermutationsOfArray(array) {
+  function generateAllUniquePermutationsOfArray(array) {
     // First get non-unique, then prune.
     var nonUniquePermutations = generarteAllPermutationsOfArray(array);
 
@@ -577,7 +577,7 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
   }
 
   // True iff arrayOfElements has at least one element that shows up n or more times.
-  function arrayHasAnElemententWithMoreThanNCopies(arrayOfElements, n) {
+  function arrayHasAnElementWithMoreThanNCopies(arrayOfElements, n) {
     // arrayOfElements should be an array.
     console.assert(
       typeof arrayOfElements === "object" && Array.isArray(arrayOfElements),
@@ -623,36 +623,34 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
   }
 
   return {
+    arrayHasAnElementWithMoreThanNCopies: arrayHasAnElementWithMoreThanNCopies,
+    arraysMatch: arraysMatch,
+    arrayToCountHistogram: arrayToCountHistogram,
     assertIsNumber: assertIsNumber,
-    sanityCheckTable: sanityCheckTable,
-    getIndexOfFirstInstanceInArray: getIndexOfFirstInstanceInArray,
-    getRandomInt: getRandomInt,
+    copyAndShuffleArray: copyAndShuffleArray,
     createSeededGetZeroToOneRandomFunction:
       createSeededGetZeroToOneRandomFunction,
-    getRandomIntInRange: getRandomIntInRange,
+    darkenColor: darkenColor,
+    generateAllArrays: generateAllArrays,
+    generateNonMatchingHistograms: generateNonMatchingHistograms,
+    generateRandomizedArray: generateRandomizedArray,
+    generateAllUniquePermutationsOfArray: generateAllUniquePermutationsOfArray,
+    getCommonQueryParams: getCommonQueryParams,
+    getIndexOfFirstInstanceInArray: getIndexOfFirstInstanceInArray,
     getRandomArrayElement: getRandomArrayElement,
     getRandomArrayElementNotMatching: getRandomArrayElementNotMatching,
-    getRandomNonRepeatingArrayElements: getRandomNonRepeatingArrayElements,
-    getRandomMaybeRepeatingArrayElements: getRandomMaybeRepeatingArrayElements,
     getRandomArrayElementWeighted: getRandomArrayElementWeighted,
+    getRandomInt: getRandomInt,
+    getRandomIntInRange: getRandomIntInRange,
     getRandomKeyFromHistogram: getRandomKeyFromHistogram,
-    growOptStringArray: growOptStringArray,
-    stringToBoolean: stringToBoolean,
-    getCommonQueryParams: getCommonQueryParams,
-    generateNonMatchingHistograms: generateNonMatchingHistograms,
-    tablesMatch: tablesMatch,
-    randomHistogramFromArray: randomHistogramFromArray,
-    arrayToCountHistogram: arrayToCountHistogram,
-    sumHistogram: sumHistogram,
-    copyAndShuffleArray: copyAndShuffleArray,
+    getRandomMaybeRepeatingArrayElements: getRandomMaybeRepeatingArrayElements,
+    getRandomNonRepeatingArrayElements: getRandomNonRepeatingArrayElements,
     getRandomsFromArrayWithControls: getRandomsFromArrayWithControls,
-    generateRandomizedArray: generateRandomizedArray,
-    generarteAllUniquePermutationsOfArray:
-      generarteAllUniquePermutationsOfArray,
-    arraysMatch: arraysMatch,
-    generateAllArrays: generateAllArrays,
-    arrayHasAnElemententWithMoreThanNCopies:
-      arrayHasAnElemententWithMoreThanNCopies,
-    darkenColor: darkenColor,
+    growOptStringArray: growOptStringArray,
+    randomHistogramFromArray: randomHistogramFromArray,
+    sanityCheckTable: sanityCheckTable,
+    stringToBoolean: stringToBoolean,
+    sumHistogram: sumHistogram,
+    tablesMatch: tablesMatch,
   };
 });

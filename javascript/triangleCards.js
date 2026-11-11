@@ -4,6 +4,7 @@ define([
   "sharedJavascript/cards",
   "sharedJavascript/debugLog",
   "sharedJavascript/genericMeasurements",
+  "sharedJavascript/genericUtils",
   "sharedJavascript/htmlUtils",
   "sharedJavascript/triangleCardUtils",
   "dojo/domReady!",
@@ -13,6 +14,7 @@ define([
   cards,
   debugLogModule,
   genericMeasurements,
+  genericUtils,
   htmlUtils,
   triangleCardUtils,
 ) {
@@ -103,15 +105,39 @@ define([
     return sectorNode;
   }
 
-  function addCardFront(parentNode, cardConfigs, index) {
+  function addTriangleCardFront(
+    parentNode,
+    cardConfigs,
+    index,
+    opt_backConfigs,
+  ) {
     var cardConfig = cards.getCardConfigAtIndex(cardConfigs, index);
-    debugLog("addCardFront", "cardConfig = ", JSON.stringify(cardConfig));
-    debugLog("addCardFront", "index = ", index);
+    debugLog(
+      "addTriangleCardFront",
+      "cardConfig = ",
+      JSON.stringify(cardConfig),
+    );
+    debugLog("addTriangleCardFront", "index = ", JSON.stringify(index));
+    debugLog(
+      "addTriangleCardFront",
+      "opt_backConfigs = ",
+      JSON.stringify(opt_backConfigs),
+    );
 
     var [cardFrontNode, frontWrapperNode] =
       triangleCardUtils.addCardFrontAndWrapper(parentNode, cardConfig, index);
-
     var sectorDescriptors = cardConfig.sectorDescriptors;
+
+    var isScreentop = genericUtils.getCommonQueryParams().isScreentop;
+
+    if (!isScreentop && opt_backConfigs) {
+      var backConfigs = opt_backConfigs;
+      var totalCards = cards.getNumCardsFromConfigs(cardConfigs);
+      var cardsUsingEachBack = Math.floor(totalCards / backConfigs.length);
+      var backIndex = Math.floor(index / cardsUsingEachBack);
+      var backConfig = backConfigs[backIndex];
+      cards.addCardBack(cardFrontNode, index, backConfig);
+    }
 
     // Should be the right number of these.
     console.assert(
@@ -148,7 +174,7 @@ define([
 
     // If there's a card index, add that.
     debugLog(
-      "addCardFront",
+      "addTriangleCardFront",
       "cardConfig.cardIndex = ",
       JSON.stringify(cardConfig.cardIndex),
     );
@@ -167,7 +193,7 @@ define([
 
     // If there's customSectorConfiguration function call that.
     debugLog(
-      "addCardFront",
+      "addTriangleCardFront",
       "cardConfig.customSectorConfiguration = ",
       JSON.stringify(cardConfig.customSectorConfiguration),
     );
@@ -275,7 +301,7 @@ define([
 
   // This returned object becomes the defined value of this module
   return {
-    addCardFront: addCardFront,
+    addTriangleCardFront: addTriangleCardFront,
     addTriangleCardBack: addTriangleCardBack,
     addPlayerSpecificTriangleCardBack: addPlayerSpecificTriangleCardBack,
   };

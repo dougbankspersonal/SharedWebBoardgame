@@ -416,7 +416,15 @@ define([
         );
 
         var queryParams = genericUtils.getCommonQueryParams();
-        var skipCardBacks = queryParams.skipCardBacks ? true : false;
+        var skipCardBacks;
+        if (backConfigs == null || backConfigs.length === 0) {
+          // If there are no card backs, of course we will skip them.
+          skipCardBacks = true;
+        } else {
+          // If query params explicitly say no backs.
+          skipCardBacks = queryParams.skipCardBacks ? true : false;
+        }
+
         if (!skipCardBacks) {
           // If we're adding backs, add a page of backs.
           htmlUtils.initCurrentPageOfItems();
@@ -437,14 +445,14 @@ define([
 
   // This returned object becomes the defined value of this module
   return {
+    addCardBack: addCardBack,
+    addCardFront: addCardFront,
+    addCards: addCards,
+    addFormattedCardFront: addFormattedCardFront,
     getCardConfigAtIndex: getCardConfigAtIndex,
     getIndexWithinConfig: getIndexWithinConfig,
-    addFormattedCardFront: addFormattedCardFront,
-    getNumCardsFromConfigs: getNumCardsFromConfigs,
     getInstanceCountFromConfig: getInstanceCountFromConfig,
-    addCardFront: addCardFront,
+    getNumCardsFromConfigs: getNumCardsFromConfigs,
     setCardSize: setCardSize,
-    addCardBack: addCardBack,
-    addCards: addCards,
   };
 });

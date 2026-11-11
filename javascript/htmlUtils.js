@@ -160,6 +160,10 @@ define([
     var classes = opt_classes || [];
     var pagingClass = sc.pageless ? "pageless" : "paged";
     classes = classes.concat(["page-of-items", pagingClass]);
+    var isScreentop = genericUtils.getCommonQueryParams().isScreentop;
+    if (!isScreentop) {
+      classes.push("not-screentop");
+    }
 
     var pageId = "pageOfItems_".concat(pageNumber.toString());
     pageNumber++;
