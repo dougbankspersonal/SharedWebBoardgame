@@ -102,6 +102,19 @@ define([
     var pageWidthAvailableForRow =
       genericMeasurements.adjustedPageWidth - rowPadding;
     var itemsPerRow = Math.floor(pageWidthAvailableForRow / cardWidthPx);
+    debugLog(
+      "addCardSystemConfigs",
+      "genericMeasurements.adjustedPageWidth = " +
+        genericMeasurements.adjustedPageWidth,
+    );
+    debugLog("addCardSystemConfigs", "rowPadding = " + rowPadding);
+    debugLog(
+      "addCardSystemConfigs",
+      "genericMeasurements.adjustedPageWidth = " +
+        genericMeasurements.adjustedPageWidth,
+    );
+    debugLog("addCardSystemConfigs", "cardWidthPx = " + cardWidthPx);
+    debugLog("addCardSystemConfigs", "itemsPerRow = " + itemsPerRow);
 
     var itemsPerPage =
       itemsPerRow *

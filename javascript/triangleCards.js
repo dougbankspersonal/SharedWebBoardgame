@@ -6,6 +6,7 @@ define([
   "sharedJavascript/genericMeasurements",
   "sharedJavascript/genericUtils",
   "sharedJavascript/htmlUtils",
+  "sharedJavascript/systemConfigs",
   "sharedJavascript/triangleCardUtils",
   "dojo/domReady!",
 ], function (
@@ -16,6 +17,7 @@ define([
   genericMeasurements,
   genericUtils,
   htmlUtils,
+  systemConfigs,
   triangleCardUtils,
 ) {
   var debugLog = debugLogModule.debugLog;
@@ -25,27 +27,40 @@ define([
   // Constants
   //
   //-----------------------------------
-  // Triangle height = base/2 * rad(3).
-  // Row height is half that.
-  // This seems to need fudging a bit: hence the +2.
-  const gTriangleCardImageHeightPx =
-    genericMeasurements.triangleCardImageHeightPx;
-  const gRowHeightPx = gTriangleCardImageHeightPx / 2;
-  const gSectorWidthPx = genericMeasurements.standardCardWidthPx / 2;
-
   //-----------------------------------
   //
   // Functions
   //
   //-----------------------------------
-  function addRow(parentNode, rowIndex) {
+  function getTriangleCardHeightPx() {
+    var sc = systemConfigs.getSystemConfigs();
+    return sc.cardHeightPx;
+  }
+
+  function getTriangleCardWidthPx() {
+    var sc = systemConfigs.getSystemConfigs();
+    return sc.cardWidthPx;
+  }
+
+  function getSectorHeightPx() {
+    var cardHeightPx = getTriangleCardHeightPx();
+    return cardHeightPx / 2;
+  }
+
+  function getSectorWidthPx() {
+    var sc = systemConfigs.getSystemConfigs();
+    var cardWidthPx = sc.cardWidthPx;
+    return cardWidthPx / 2;
+  }
+
+  function addRowOfSectors(parentNode, rowIndex) {
     var rowNode = htmlUtils.addDiv(
       parentNode,
       ["sectors-row", "sectors-row-" + rowIndex],
       "sectors-row-" + rowIndex,
     );
     domStyle.set(rowNode, {
-      height: gRowHeightPx + "px",
+      height: getSectorHeightPx() + "px",
     });
     return rowNode;
   }
@@ -97,20 +112,15 @@ define([
       sectorIndex,
       sectorDescriptor.classes,
       {
-        height: gRowHeightPx + "px",
-        width: gSectorWidthPx + "px",
+        height: getSectorHeightPx() + "px",
+        width: getSectorWidthPx() + "px",
       },
     );
 
     return sectorNode;
   }
 
-  function addTriangleCardFront(
-    parentNode,
-    cardConfigs,
-    index,
-    opt_backConfigs,
-  ) {
+  function addTriangleCardFront(parentNode, cardConfigs, index) {
     var cardConfig = cards.getCardConfigAtIndex(cardConfigs, index);
     debugLog(
       "addTriangleCardFront",
@@ -118,26 +128,10 @@ define([
       JSON.stringify(cardConfig),
     );
     debugLog("addTriangleCardFront", "index = ", JSON.stringify(index));
-    debugLog(
-      "addTriangleCardFront",
-      "opt_backConfigs = ",
-      JSON.stringify(opt_backConfigs),
-    );
 
     var [cardFrontNode, frontWrapperNode] =
       triangleCardUtils.addCardFrontAndWrapper(parentNode, cardConfig, index);
     var sectorDescriptors = cardConfig.sectorDescriptors;
-
-    var isScreentop = genericUtils.getCommonQueryParams().isScreentop;
-
-    if (!isScreentop && opt_backConfigs) {
-      var backConfigs = opt_backConfigs;
-      var totalCards = cards.getNumCardsFromConfigs(cardConfigs);
-      var cardsUsingEachBack = Math.floor(totalCards / backConfigs.length);
-      var backIndex = Math.floor(index / cardsUsingEachBack);
-      var backConfig = backConfigs[backIndex];
-      cards.addCardBack(cardFrontNode, index, backConfig);
-    }
 
     // Should be the right number of these.
     console.assert(
@@ -159,7 +153,7 @@ define([
     const positionalIndexToSectorIndex = [1, 2, 0, 3];
 
     for (var rowIndex = 0; rowIndex < 2; rowIndex++) {
-      var rowNode = addRow(frontWrapperNode, rowIndex);
+      var rowNode = addRowOfSectors(frontWrapperNode, rowIndex);
 
       var columnCount = columnCountByRow[rowIndex];
       for (var columnIndex = 0; columnIndex < columnCount; columnIndex++) {
@@ -187,7 +181,7 @@ define([
       );
 
       domStyle.set(cardIndexNode, {
-        top: `${genericMeasurements.triangleCardImageHeightPx - 25}px`,
+        top: `${getTriangleCardHeightPx() - 25}px`,
       });
     }
 
@@ -208,8 +202,8 @@ define([
         "overlay",
       );
       domStyle.set(overlayNode, {
-        width: genericMeasurements.standardCardWidthPx + "px",
-        height: gTriangleCardImageHeightPx + "px",
+        width: getTriangleCardWidthPx() + "px",
+        height: getTriangleCardHeightPx() + "px",
       });
     }
 
@@ -237,8 +231,8 @@ define([
     );
 
     domStyle.set(wrapperNode, {
-      width: genericMeasurements.standardCardWidthPx + "px",
-      height: gTriangleCardImageHeightPx + "px",
+      width: getTriangleCardWidthPx() + "px",
+      height: getTriangleCardHeightPx() + "px",
     });
 
     if (opt_wrapperCallback) {
@@ -299,10 +293,53 @@ define([
     return cardBackNode;
   }
 
+  function generateTriangleCards(cardsData) {
+    var isScreentop = genericUtils.getCommonQueryParams().isScreentop;
+
+    var cardWidthPx;
+    var cardHeightPx;
+    var itemsPerRow;
+    if (isScreentop) {
+      cardWidthPx = genericMeasurements.triangleCardWidthPx;
+      cardHeightPx = genericMeasurements.triangleCardHeightPx;
+      itemsPerRow = 10;
+    } else {
+      cardWidthPx = genericMeasurements.nonScreentopTriangleCardWidthPx;
+      cardHeightPx = genericMeasurements.nonScreentopTriangleCardHeightPx;
+    }
+
+    var sc = systemConfigs.getCardSystemConfigs({
+      cardHeightPx: cardHeightPx,
+      cardWidthPx: cardWidthPx,
+      itemsPerRow: itemsPerRow,
+    });
+
+    systemConfigs.setSystemConfigs(sc);
+
+    var numCards = cardsData.getNumCards();
+    var cardConfigs = cardsData.getCardConfigs();
+    var backConfigs = cardsData.getBackConfigs();
+
+    debugLog(
+      "generateTriangleCards",
+      "backConfigs = ",
+      JSON.stringify(backConfigs),
+    );
+
+    cards.addCards(
+      numCards,
+      function (parentNode, index) {
+        return addTriangleCardFront(parentNode, cardConfigs, index);
+      },
+      backConfigs,
+    );
+  }
+
   // This returned object becomes the defined value of this module
   return {
     addTriangleCardFront: addTriangleCardFront,
     addTriangleCardBack: addTriangleCardBack,
     addPlayerSpecificTriangleCardBack: addPlayerSpecificTriangleCardBack,
+    generateTriangleCards: generateTriangleCards,
   };
 });

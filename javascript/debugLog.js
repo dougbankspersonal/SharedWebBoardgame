@@ -7,8 +7,16 @@ define(["dojo/domReady!"], function () {
     }
   }
 
+  function setsAreEqual(a, b) {
+    return a.size === b.size && [...a].every((x) => b.has(x));
+  }
+
   function setEnabledFlags(flags) {
-    gEnabledFlags = new Set(flags);
+    var newEnabledFlags = new Set(flags);
+    if (!setsAreEqual(newEnabledFlags, gEnabledFlags)) {
+      console.log("Enabled flags changed:", [...newEnabledFlags]);
+    }
+    gEnabledFlags = newEnabledFlags;
   }
 
   return {

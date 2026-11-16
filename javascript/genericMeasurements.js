@@ -29,11 +29,14 @@ define(["dojo/domReady!"], function () {
   const standardCardWidthPx = standardCardWidthInches * pixelsPerInch;
   const standardCardHeightPx = standardCardHeightInches * pixelsPerInch;
 
-  const triangleCardImageHeightPx = (standardCardWidthPx * Math.sqrt(3)) / 2;
-  // We need to embed the card in a rect s.t. center of rect is centroid of card.
-  // Centroid of triangle is 2/3 from top, down.
-  // So I need a padding of extra 1/3 of height below the card.
-  const triangleCardScreentopActualHeightPx = triangleCardImageHeightPx; // (triangleCardImageHeightPx * 4) / 3;
+  const triangleCardHeightPx = (standardCardWidthPx * Math.sqrt(3)) / 2;
+  const triangleCardWidthPx = standardCardWidthPx;
+
+  const nonScreentopTriangleCardMultiplier = 1.5;
+  const nonScreentopTriangleCardHeightPx =
+    triangleCardHeightPx * nonScreentopTriangleCardMultiplier;
+  const nonScreentopTriangleCardWidthPx =
+    standardCardWidthPx * nonScreentopTriangleCardMultiplier;
 
   const standardBorderWidthPx = 2;
   const pageOfItemsMarginPx = 10;
@@ -73,12 +76,6 @@ define(["dojo/domReady!"], function () {
   const smallCardWidthPx = 160;
   const smallCardHeightPx = 1.4 * smallCardWidthPx;
   const smallCardBackFontSize = 24;
-  // Math is going bad here somehow, just be explicit.
-  const smallCardsPerRow = 4;
-  const smallCardsPerColumn = Math.floor(
-    adjustedPageHeight / smallCardHeightPx,
-  );
-
   const screentopitemsPerRow = 10;
 
   return {
@@ -91,10 +88,15 @@ define(["dojo/domReady!"], function () {
     printedPagePortraitHeightPx: printedPagePortraitHeightPx,
     printedPageLandscapeWidthPx: printedPageLandscapeWidthPx,
     printedPageLandscapeHeightPx: printedPageLandscapeHeightPx,
+
     standardCardWidthPx: standardCardWidthPx,
     standardCardHeightPx: standardCardHeightPx,
-    triangleCardImageHeightPx: triangleCardImageHeightPx,
-    triangleCardScreentopActualHeightPx: triangleCardScreentopActualHeightPx,
+
+    triangleCardHeightPx: triangleCardHeightPx,
+    triangleCardWidthPx: triangleCardWidthPx,
+    nonScreentopTriangleCardHeightPx: nonScreentopTriangleCardHeightPx,
+    nonScreentopTriangleCardWidthPx: nonScreentopTriangleCardWidthPx,
+
     cardBackFontSize: cardBackFontSize,
     cardBorderWidthPx: cardBorderWidthPx,
 

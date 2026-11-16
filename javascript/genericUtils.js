@@ -177,9 +177,6 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
       ? debugLogFlagsString.split(",")
       : [];
 
-    // Just set it now:
-    console.log("debugLogFlagsArray = ", JSON.stringify(debugLogFlagsArray));
-
     debugLogModule.setEnabledFlags(debugLogFlagsArray);
     return {
       isScreentop: isScreentop,
