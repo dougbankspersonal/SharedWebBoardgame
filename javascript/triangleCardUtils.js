@@ -148,11 +148,10 @@ define([
 
     // Throw out anything where one type shows up too much.
     var filteredCombos1 = allCombos.filter((elementAsArray, _index, _array) => {
-      var hasTooManyCopies =
-        genericUtils.arrayHasAnElemententWithMoreThanNCopies(
-          elementAsArray,
-          gSectorsInTriangle - 2,
-        );
+      var hasTooManyCopies = genericUtils.arrayHasAnElementWithMoreThanNCopies(
+        elementAsArray,
+        gSectorsInTriangle - 2,
+      );
       return !hasTooManyCopies;
     });
 
@@ -165,7 +164,7 @@ define([
     // Throw out anything where there are 0 dups.
     var filteredCombos2 = filteredCombos1.filter(
       (elementAsArray, _index, _array) => {
-        var hasDups = genericUtils.arrayHasAnElemententWithMoreThanNCopies(
+        var hasDups = genericUtils.arrayHasAnElementWithMoreThanNCopies(
           elementAsArray,
           1,
         );

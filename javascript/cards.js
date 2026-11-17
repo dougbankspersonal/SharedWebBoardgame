@@ -142,7 +142,7 @@ define([
   // use callbacks to generate new page/row if needed.
   // startIndex: index of first card we're adding.
   // numberToDump: how many cards to add starting from startIndex.
-  function dumpCardFronts(
+  function addCardFronts(
     frontCallback,
     addPageCallback,
     addRowCallback,
@@ -166,13 +166,13 @@ define([
 
   // Print one instance of each back config.
   // Use callbacks to get proper page/row.
-  function dumpCardBacks(backConfigs, addPageCallback, addRowCallback) {
-    debugLog("dumpCardBacks", "backConfigs = ", JSON.stringify(backConfigs));
+  function addCardBacks(backConfigs, addPageCallback, addRowCallback) {
+    debugLog("addCardBacks", "backConfigs = ", JSON.stringify(backConfigs));
     // Dump one of each back.
     for (var i = 0; i < backConfigs.length; i++) {
-      debugLog("dumpCardBacks", "i = " + i);
+      debugLog("addCardBacks", "i = " + i);
       var backConfig = backConfigs[i];
-      debugLog("dumpCardBacks", "backConfig = ", JSON.stringify(backConfig));
+      debugLog("addCardBacks", "backConfig = ", JSON.stringify(backConfig));
       var parentNode = htmlUtils.getCurrentPageOfItemsNextParentNode(
         addPageCallback,
         addRowCallback,
@@ -372,9 +372,9 @@ define([
     if (sc.pageless) {
       debugLog("addCards", "pageless mode: adding all card backs first");
       // First dump all backs then dump all fronts.
-      dumpCardBacks(backConfigs, addPageOfCards, addRowOfCards);
+      addCardBacks(backConfigs, addPageOfCards, addRowOfCards);
       debugLog("addCards", "pageless mode: adding all card fronts next");
-      dumpCardFronts(
+      addCardFronts(
         frontCallback,
         addPageOfCards,
         addRowOfCards,
@@ -407,7 +407,7 @@ define([
           numCardFronts - i * sc.itemsPerPage,
         );
         htmlUtils.initCurrentPageOfItems();
-        dumpCardFronts(
+        addCardFronts(
           frontCallback,
           addPageOfCards,
           addRowOfCards,
@@ -416,7 +416,15 @@ define([
         );
 
         var queryParams = genericUtils.getCommonQueryParams();
-        var skipCardBacks = queryParams.skipCardBacks ? true : false;
+        var skipCardBacks;
+        if (backConfigs == null || backConfigs.length === 0) {
+          // If there are no card backs, of course we will skip them.
+          skipCardBacks = true;
+        } else {
+          // If query params explicitly say no backs.
+          skipCardBacks = queryParams.skipCardBacks ? true : false;
+        }
+
         if (!skipCardBacks) {
           // If we're adding backs, add a page of backs.
           htmlUtils.initCurrentPageOfItems();
@@ -437,14 +445,14 @@ define([
 
   // This returned object becomes the defined value of this module
   return {
+    addCardBack: addCardBack,
+    addCardFront: addCardFront,
+    addCards: addCards,
+    addFormattedCardFront: addFormattedCardFront,
     getCardConfigAtIndex: getCardConfigAtIndex,
     getIndexWithinConfig: getIndexWithinConfig,
-    addFormattedCardFront: addFormattedCardFront,
-    getNumCardsFromConfigs: getNumCardsFromConfigs,
     getInstanceCountFromConfig: getInstanceCountFromConfig,
-    addCardFront: addCardFront,
+    getNumCardsFromConfigs: getNumCardsFromConfigs,
     setCardSize: setCardSize,
-    addCardBack: addCardBack,
-    addCards: addCards,
   };
 });

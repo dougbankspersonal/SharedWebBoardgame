@@ -1,3 +1,16 @@
+.cards.page-of-items.not-screentop {
+  overflow: visible;
+}
+.cards.page-of-items.not-screentop .rows-wrapper {
+  overflow: visible;
+}
+.cards.page-of-items.not-screentop .rows-wrapper .row-of-items {
+  overflow: visible;
+}
+.cards.page-of-items.not-screentop .rows-wrapper .row-of-items .card.triangle {
+  overflow: visible;
+}
+
 .card.triangle {
   padding: 2px;
   display: flex;
@@ -25,6 +38,11 @@
   border: initial;
   border-width: initial;
   border-style: initial;
+  position: relative;
+}
+.card.front.triangle .card.back.triangle {
+  position: absolute;
+  transform: translateX(50%) rotate(180deg);
 }
 .card.front.triangle .overlay {
   background-size: contain;

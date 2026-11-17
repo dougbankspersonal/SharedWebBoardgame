@@ -1,3 +1,19 @@
+.cards.page-of-items.not-screentop {
+  overflow: visible;
+
+  .rows-wrapper {
+    overflow: visible;
+
+    .row-of-items {
+      overflow: visible;
+
+      .card.triangle {
+        overflow: visible;
+      }
+    }
+  }
+}
+
 .card.triangle {
   padding: 2px;
   display: flex;
@@ -27,6 +43,14 @@
   border: initial;
   border-width: initial;
   border-style: initial;
+  position: relative;
+
+  // When printing for PnP, the backs are stuffed into the fronts so we can cut and fold.
+  .card.back.triangle {
+    position: absolute;
+    transform: translateX(50%) rotate(180deg);
+  }
+
 
   .overlay {
     background-size: contain;

@@ -17,67 +17,66 @@ define(["dojo/domReady!"], function () {
     return count;
   }
 
-  var printedPagePortraitWidthPx = 816;
-  var printedPagePortraitHeightPx = 1056;
+  const printedPagePortraitWidthPx = 816;
+  const printedPagePortraitHeightPx = 1056;
 
-  var printedPagePortraitWidthIn = 8.5;
+  const printedPagePortraitWidthIn = 8.5;
 
-  var pixelsPerInch = printedPagePortraitWidthPx / printedPagePortraitWidthIn;
+  const pixelsPerInch = printedPagePortraitWidthPx / printedPagePortraitWidthIn;
 
-  var standardCardWidthInches = 2.5;
-  var standardCardHeightInches = 3.5;
-  var standardCardWidthPx = standardCardWidthInches * pixelsPerInch;
-  var standardCardHeightPx = standardCardHeightInches * pixelsPerInch;
+  const standardCardWidthInches = 2.5;
+  const standardCardHeightInches = 3.5;
+  const standardCardWidthPx = standardCardWidthInches * pixelsPerInch;
+  const standardCardHeightPx = standardCardHeightInches * pixelsPerInch;
 
-  var triangleCardImageHeightPx = (standardCardWidthPx * Math.sqrt(3)) / 2;
-  // We need to embed the card in a rect s.t. center of rect is centroid of card.
-  // Centroid of triangle is 2/3 from top, down.
-  // So I need a padding of extra 1/3 of height below the card.
-  var triangleCardScreentopActualHeightPx = triangleCardImageHeightPx; // (triangleCardImageHeightPx * 4) / 3;
+  const triangleCardHeightPx = (standardCardWidthPx * Math.sqrt(3)) / 2;
+  const triangleCardWidthPx = standardCardWidthPx;
 
-  var standardBorderWidthPx = 2;
-  var pageOfItemsMarginPx = 10;
-  var pageOfItemsCardsMarginPx = 40;
+  const nonScreentopTriangleCardMultiplier = 1.5;
+  const nonScreentopTriangleCardHeightPx =
+    triangleCardHeightPx * nonScreentopTriangleCardMultiplier;
+  const nonScreentopTriangleCardWidthPx =
+    standardCardWidthPx * nonScreentopTriangleCardMultiplier;
 
-  var printedPageLandscapeWidthPx = printedPagePortraitHeightPx;
-  var printedPageLandscapeHeightPx = printedPagePortraitWidthPx;
-  var pagePadding = 10;
+  const standardBorderWidthPx = 2;
+  const pageOfItemsMarginPx = 10;
+  const pageOfItemsCardsMarginPx = 40;
 
-  var cardBackFontSize = standardCardWidthPx * 0.2;
-  var cardBorderWidthPx = 5;
+  const printedPageLandscapeWidthPx = printedPagePortraitHeightPx;
+  const printedPageLandscapeHeightPx = printedPagePortraitWidthPx;
+  const pagePadding = 10;
 
-  var adjustedPageWidth = printedPagePortraitWidthPx - 2 * pagePadding;
-  var adjustedPageHeight = printedPagePortraitHeightPx - 2 * pagePadding;
-  var standardPageGap = 1;
+  const cardBackFontSize = standardCardWidthPx * 0.2;
+  const cardBorderWidthPx = 5;
 
-  var cardFrontBorderWidthPx = 10;
+  const adjustedPageWidth = printedPagePortraitWidthPx - 2 * pagePadding;
+  const adjustedPageHeight = printedPagePortraitHeightPx - 2 * pagePadding;
+  const standardPageGap = 1;
 
-  var cardColumnsPerPage = getNumberThatFitAccountingForGap(
+  const cardFrontBorderWidthPx = 10;
+
+  const cardColumnsPerPage = getNumberThatFitAccountingForGap(
     adjustedPageWidth,
     standardCardWidthPx,
     standardPageGap,
   );
-  var cardRowsPerPage = getNumberThatFitAccountingForGap(
+  const cardRowsPerPage = getNumberThatFitAccountingForGap(
     adjustedPageHeight,
     standardCardHeightPx,
     standardPageGap,
   );
 
-  var dieWidthPx = 150;
-  var dieHeightPx = dieWidthPx;
+  const dieWidthPx = 150;
+  const dieHeightPx = dieWidthPx;
 
-  var dieFaceInches = 0.63;
-  var physicalDieWidthPx = dieFaceInches * pixelsPerInch;
-  var physicalDieHeightPx = physicalDieWidthPx;
+  const dieFaceInches = 0.63;
+  const physicalDieWidthPx = dieFaceInches * pixelsPerInch;
+  const physicalDieHeightPx = physicalDieWidthPx;
 
-  var smallCardWidthPx = 160;
-  var smallCardHeightPx = 1.4 * smallCardWidthPx;
-  var smallCardBackFontSize = 24;
-  // Math is going bad here somehow, just be explicit.
-  var smallCardsPerRow = 4;
-  var smallCardsPerColumn = Math.floor(adjustedPageHeight / smallCardHeightPx);
-
-  var screentopitemsPerRow = 10;
+  const smallCardWidthPx = 160;
+  const smallCardHeightPx = 1.4 * smallCardWidthPx;
+  const smallCardBackFontSize = 24;
+  const screentopitemsPerRow = 10;
 
   return {
     getNumberThatFitAccountingForGap: getNumberThatFitAccountingForGap,
@@ -89,10 +88,15 @@ define(["dojo/domReady!"], function () {
     printedPagePortraitHeightPx: printedPagePortraitHeightPx,
     printedPageLandscapeWidthPx: printedPageLandscapeWidthPx,
     printedPageLandscapeHeightPx: printedPageLandscapeHeightPx,
+
     standardCardWidthPx: standardCardWidthPx,
     standardCardHeightPx: standardCardHeightPx,
-    triangleCardImageHeightPx: triangleCardImageHeightPx,
-    triangleCardScreentopActualHeightPx: triangleCardScreentopActualHeightPx,
+
+    triangleCardHeightPx: triangleCardHeightPx,
+    triangleCardWidthPx: triangleCardWidthPx,
+    nonScreentopTriangleCardHeightPx: nonScreentopTriangleCardHeightPx,
+    nonScreentopTriangleCardWidthPx: nonScreentopTriangleCardWidthPx,
+
     cardBackFontSize: cardBackFontSize,
     cardBorderWidthPx: cardBorderWidthPx,
 
