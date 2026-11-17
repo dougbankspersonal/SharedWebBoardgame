@@ -50,9 +50,9 @@ export default function(anchor, index) {
 
 export default function(anchor, index) {
   var anchorsPerRow = 5;
-  var initialX = 80;
-  var initialY = 28;
-  var xStep = 69;
+  var initialX = -280;
+  var initialY = 0;
+  var xStep = 140;
   var yStep = 0;
 
   var adjustedIndex = index - 1;
