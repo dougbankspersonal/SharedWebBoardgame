@@ -49,11 +49,11 @@ export default function(anchor, index) {
 
 
 export default function(anchor, index) {
-  var anchorsPerRow = 5;
-  var initialX = -280;
-  var initialY = 0;
-  var xStep = 140;
-  var yStep = 0;
+  var anchorsPerRow = 7;
+  var initialX = -670;
+  var initialY = -470;
+  var xStep = 200;
+  var yStep = 200;
 
   var adjustedIndex = index - 1;
   var x = initialX + (adjustedIndex % anchorsPerRow) * xStep;
@@ -193,7 +193,7 @@ export default function(variant, index) {
     "#d7f7f7",
     "#f5f5f5",
   ];
-  var fillColor = gExtraLightenedSeatColors[index-1];
+  var fillColor = gSeatColors[index-1];
   return {
     baseFillColor: fillColor,
     coverFillColor: fillColor,
